@@ -1,41 +1,19 @@
-<!--
-    Option – fetch-Include:
-      <div id="students_ethics"></div>
-      <script>
-        fetch('charts/ethik-chart.html')
-          .then(r => r.text())
-          .then(html => {
-            document.getElementById('students_ethics').innerHTML = html;
-            // Trigger the chart init after injection:
-            initEthikChart();
-          });
-        </script>
-
-
-  CSS-Anpassung:
-    Die Farben stehen als CSS-Custom-Properties am Anfang des <style>-Blocks.
-    Ersetze sie durch deine Brand-Farben aus der main.css, z. B.:
-      --c-agree-full: var(--brand-primary);
-    Schriftart wird ebenfalls über eine Variable gesteuert.
-    -->
 
 <section class="ethik-chart-section" aria-label="Ethisches Selbstverständnis von Ingenieuren">
 
   <style>
-    /* ── Design tokens – hier an deine main.css anpassen ─────────────────── */
-    .ethik-chart-section {
-      --font-main:   'IBM Plex Sans', system-ui, sans-serif; /* ← deine Schrift */
-      --font-label:  'IBM Plex Mono', monospace;
+      .ethik-chart-section {
+          --c-no:           var(--accent);         /* rot  */
+          --c-rather-no:    #e07060;               /* kein direktes Äquivalent */
+          --c-somewhat-no:  #e8a898;
+         --c-somewhat-yes: var(--teal-light);
+          --c-rather-yes:   var(--teal);
+          --c-yes:          var(--purple);         /* dunkelste Zustimmung */
+         --c-no-answer:    var(--rule);
 
-      /* Likert-Farben (von Ablehnung → Zustimmung) */
-      --c-no:            #c0392b;   /* trifft nicht zu         */
-      --c-rather-no:     #e07060;   /* trifft weniger zu       */
-      --c-somewhat-no:   #e8a898;   /* trifft eher weniger zu  */
-      --c-somewhat-yes:  #a8c8e0;   /* trifft etwas zu         */
-      --c-rather-yes:    #5a9fc8;   /* trifft größtenteils zu  */
-      --c-yes:           #1a5f8a;   /* trifft voll zu          */
-      --c-no-answer:     #d8d8d8;   /* keine Antwort           */
-
+         --font-main:  'Source Serif 4', Georgia, serif;  /* Body-Schrift */
+        --font-label: 'DM Sans', sans-serif;             /* UI-Schrift   */
+      }
       /* Layout */
       --bar-height:      28px;
       --label-width:     320px;
