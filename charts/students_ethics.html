@@ -3,17 +3,17 @@
 
   <style>
       .ethik-chart-section {
-          --c-no:           var(--accent);         /* rot  */
-          --c-rather-no:    #e07060;               /* kein direktes Äquivalent */
-          --c-somewhat-no:  #e8a898;
-         --c-somewhat-yes: var(--teal-light);
-          --c-rather-yes:   var(--teal);
-          --c-yes:          var(--purple);         /* dunkelste Zustimmung */
-         --c-no-answer:    var(--rule);
+        --c-no:           #c8441a;         
+        --c-rather-no:    #e07060;              
+        --c-somewhat-no:  #e8a898;
+        --c-somewhat-yes: #e0f0ed;
+        --c-rather-yes:   #0d6b5e;
+        --c-yes:          #3d2d6e;       
+        --c-no-answer:    #e0dcd6;
 
-         --font-main:  'Source Serif 4', Georgia, serif;  /* Body-Schrift */
+        --font-main:  'Source Serif 4', Georgia, serif;  /* Body-Schrift */
         --font-label: 'DM Sans', sans-serif;             /* UI-Schrift   */
-        
+      
       /* Layout */
       --bar-height:      28px;
       --label-width:     320px;
@@ -72,7 +72,7 @@
       gap: var(--chart-gap);
       align-items: center;
 
-      /* Scrollytelling: Zeilen starten unsichtbar */
+      /* Scrollytelling: Zeilen starten unsichtbar!!! */
       opacity: 0;
       transform: translateY(12px);
       transition: opacity 0.5s ease, transform 0.5s ease;
