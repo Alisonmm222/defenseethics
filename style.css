@@ -1,4 +1,4 @@
-<style>
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
@@ -641,4 +641,4 @@
           .section-illo { flex-direction: column; text-align: center; }
           .bar-label-text { width: 130px; font-size: 12px; }
         }
-    </style>
+   

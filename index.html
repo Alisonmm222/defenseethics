@@ -237,12 +237,51 @@
         </div>
     </div>
 
-    <div class="prose fade-in">
+ <div class="prose fade-in">
         <p>
             Auffällig: Der Verteidigungsbereich liegt bei der Akzeptanz weit hinter allen anderen Sektoren — obwohl die fachlichen Tätigkeiten sich oft kaum unterscheiden. Ein Aeroingenieur entwickelt Triebwerke, egal ob für Airbus oder Rheinmetall. Die moralische Valenz des Arbeitgebers, nicht die Aufgabe, entscheidet.
         </p>
     </div>
 
+
+    <!-- Umfrage: Militärische Forschung an Hochschulen -->
+<div class="chart-block fade-in" id="umfrage-chart">
+    <div class="chart-header">
+        <h4>Bevölkerungsumfrage: Militärische Forschung an deutschen Hochschulen</h4>
+        <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-faint);margin:6px 0 12px;">„Sollte zur militärischen Verteidigung nutzbare Forschung an deutschen Hochschulen stattfinden?"</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;">
+            <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);margin-bottom:6px;width:100%;">Merkmal filtern:</div>
+            <button class="tab-btn active" onclick="umfrageFilter('all',this)">Alle Gruppen</button>
+            <button class="tab-btn" onclick="umfrageFilter('geschlecht',this)">Geschlecht</button>
+            <button class="tab-btn" onclick="umfrageFilter('alter',this)">Alter</button>
+            <button class="tab-btn" onclick="umfrageFilter('bildung',this)">Bildung</button>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+            <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);margin-bottom:6px;width:100%;">Ansicht:</div>
+            <button class="tab-btn active" onclick="umfrageView('stacked',this)">Gestapelt</button>
+            <button class="tab-btn" onclick="umfrageView('netto',this)">Netto-Zustimmung</button>
+        </div>
+    </div>
+    <div class="chart-body">
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:20px;">
+            <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#b03a2e;display:inline-block;flex-shrink:0;"></span>stimme gar nicht zu</span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#d9a89a;display:inline-block;flex-shrink:0;"></span>stimme eher nicht zu</span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#d4b96a;display:inline-block;flex-shrink:0;"></span>ambivalent</span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#5caa8a;display:inline-block;flex-shrink:0;"></span>stimme eher zu</span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#0d6b5e;display:inline-block;flex-shrink:0;"></span>stimme sehr stark zu</span>
+        </div>
+        <div id="umfrage-rows" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <div id="umfrage-netto-note" style="display:none;margin-top:12px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);">Netto-Zustimmung = (stimme eher zu + stimme sehr stark zu) − (stimme gar nicht zu + stimme eher nicht zu)</div>
+    </div>
+</div>
+
+<div class="prose fade-in">
+        <p>
+            Die Bevölkerung ist insgesamt mehrheitlich dafür, dass militärisch nutzbare Forschung an Hochschulen stattfinden sollte — wobei Männer deutlich zustimmender sind als Frauen, die sich häufiger ambivalent zeigen.
+        </p>
+    </div>
+
+   
     <!-- Section illo -->
     <div class="section-illo fade-in">
         <svg class="illo-svg" viewBox="0 0 120 120" fill="none">
@@ -267,6 +306,21 @@
             Zwischen individuellem Kompass<br>und gesellschaftlicher Pflicht:<br><strong>wo stehen Ingenieur:innen?</strong>
         </p>
     </div>
+
+<div class="stat-row fade-in">
+    <div class="stat-cell">
+        <div class="big-num" style="color: var(--purple)">75</div>
+        <div class="big-label">Hochschulen haben eine Zivilklausel verankert</div>
+    </div>
+    <div class="stat-cell">
+        <div class="big-num" style="color: var(--teal)">16</div>
+        <div class="big-label">Hochschulen sind Mitglied der GEHBa</div>
+    </div>
+    <div class="stat-cell">
+        <div class="big-num" style="color: var(--accent)">422–426</div>
+        <div class="big-label">Hochschulen insgesamt in Deutschland</div>
+    </div>
+</div> 
 
     <!-- Quote grid -->
     <div class="quote-grid fade-in">
@@ -426,6 +480,107 @@
       document.getElementById('tensionResult').innerHTML =
         `<strong>${v} von 10</strong> — ${msg}<br><span style="color:rgba(255,255,255,0.45);font-size:13px;margin-top:6px;display:block">Ihr Wert liegt ${comp} unserer Befragten.</span>`;
     }
+
+    // ── UMFRAGE DIAGRAMM ──
+const umfrageData = [
+  { label: 'Gesamt',                     group: 'all',        garNicht: 9,  eherNicht: 8,  ambivalent: 33, eherZu: 28, sehrStark: 22 },
+  { label: 'Männer',                     group: 'geschlecht', garNicht: 9,  eherNicht: 7,  ambivalent: 24, eherZu: 31, sehrStark: 29 },
+  { label: 'Frauen',                     group: 'geschlecht', garNicht: 9,  eherNicht: 9,  ambivalent: 42, eherZu: 25, sehrStark: 14 },
+  { label: '16–34 Jahre',                group: 'alter',      garNicht: 9,  eherNicht: 10, ambivalent: 37, eherZu: 29, sehrStark: 15 },
+  { label: '35–64 Jahre',                group: 'alter',      garNicht: 10, eherNicht: 7,  ambivalent: 33, eherZu: 27, sehrStark: 23 },
+  { label: '65 Jahre und älter',         group: 'alter',      garNicht: 8,  eherNicht: 9,  ambivalent: 27, eherZu: 29, sehrStark: 27 },
+  { label: 'Akademisch Gebildete',       group: 'bildung',    garNicht: 11, eherNicht: 7,  ambivalent: 31, eherZu: 30, sehrStark: 21 },
+  { label: 'Nicht akademisch Gebildete', group: 'bildung',    garNicht: 9,  eherNicht: 8,  ambivalent: 34, eherZu: 28, sehrStark: 21 },
+];
+
+const COLORS = ['#b03a2e','#d9a89a','#d4b96a','#5caa8a','#0d6b5e'];
+let umfrageCurrentGroup = 'all';
+let umfrageCurrentView  = 'stacked';
+
+function umfrageGetFiltered() {
+  if (umfrageCurrentGroup === 'all') return umfrageData;
+  return umfrageData.filter(d => d.group === umfrageCurrentGroup || d.group === 'all');
+}
+
+function umfrageRender() {
+  const data = umfrageGetFiltered();
+  const container = document.getElementById('umfrage-rows');
+  const nettoNote = document.getElementById('umfrage-netto-note');
+  container.innerHTML = '';
+
+  if (umfrageCurrentView === 'netto') {
+    nettoNote.style.display = 'block';
+    const max = 60;
+    data.forEach(d => {
+      const netto = (d.eherZu + d.sehrStark) - (d.garNicht + d.eherNicht);
+      const pos   = netto >= 0;
+      const pct   = Math.min(Math.abs(netto) / max * 100, 100);
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = `
+        <div class="bar-label-text">${d.label}</div>
+        <div style="flex:1;display:flex;align-items:center;gap:8px;">
+          <div style="flex:1;height:28px;background:#eeebe6;border-radius:4px;overflow:hidden;position:relative;">
+            <div style="
+              position:absolute;
+              ${pos ? 'left' : 'right'}:0;
+              width:${pct}%;
+              height:100%;
+              background:${pos ? '#0d6b5e' : '#b03a2e'};
+              border-radius:4px;
+              display:flex;align-items:center;
+              ${pos ? 'justify-content:flex-end;padding-right:8px;' : 'justify-content:flex-start;padding-left:8px;'}
+            ">
+              <span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${netto > 0 ? '+' : ''}${netto}%</span>
+            </div>
+          </div>
+        </div>`;
+      container.appendChild(row);
+    });
+    return;
+  }
+
+  nettoNote.style.display = 'none';
+  const fields = ['garNicht','eherNicht','ambivalent','eherZu','sehrStark'];
+  data.forEach(d => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    let segments = '';
+    fields.forEach((f, i) => {
+      const pct = d[f];
+      if (pct === 0) return;
+      segments += `<div style="width:${pct}%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);">
+        ${pct >= 8 ? `<span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${pct}%</span>` : ''}
+      </div>`;
+    });
+    row.innerHTML = `
+      <div class="bar-label-text">${d.label}</div>
+      <div style="flex:1;height:30px;background:#eeebe6;border-radius:4px;overflow:hidden;display:flex;">
+        ${segments}
+      </div>`;
+    container.appendChild(row);
+  });
+}
+
+function umfrageFilter(group, btn) {
+  umfrageCurrentGroup = group;
+  document.querySelectorAll('#umfrage-chart .tab-btn').forEach(b => {
+    if (['all','geschlecht','alter','bildung'].includes(b.getAttribute('onclick').match(/'([^']+)'/)[1])) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  umfrageRender();
+}
+
+function umfrageView(view, btn) {
+  umfrageCurrentView = view;
+  document.querySelectorAll('#umfrage-chart .tab-btn').forEach(b => {
+    if (['stacked','netto'].includes(b.getAttribute('onclick').match(/'([^']+)'/)[1])) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  umfrageRender();
+}
+
+umfrageRender();
 </script>
 
 </body>
