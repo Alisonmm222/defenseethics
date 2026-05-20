@@ -165,15 +165,287 @@
         </p>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- Chart von Lea -->
-    <div id="students_ethics"></div>
-    <script>
-        fetch('charts/students_ethics.html')
-            .then(r => r.text())
-            .then(html => {
-                document.getElementById('students_ethics').innerHTML = html;
-            });
-    </script>
+<!-- ── students_ethics PIE CHARTS – direkt in index.html einfügen ── -->
+<section class="ethik-pies-section" aria-label="Ethisches Selbstverständnis von Ingenieuren">
+
+  <style>
+    .ethik-pies-section {
+      font-family: 'DM Sans', sans-serif;
+      max-width: var(--max);
+      margin: 2rem auto;
+      padding: 0;
+    }
+
+    .ethik-pies-section .ethik-chart-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .ethik-pies-section .ethik-chart-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--ink-faint);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Legende */
+    .ethik-pie-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1rem;
+      margin-bottom: 2rem;
+    }
+    .ethik-pie-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--ink-light);
+    }
+    .ethik-pie-legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Grid: 2 pro Zeile */
+    .ethik-pie-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem 2rem;
+    }
+
+    .ethik-pie-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .ethik-pie-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ethik-pie-label {
+      font-size: 13px;
+      line-height: 1.45;
+      text-align: center;
+      color: var(--ink-light);
+      max-width: 240px;
+    }
+
+    /* SVG wrapper – overflow visible für hover-scale */
+    .ethik-pie-wrap {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    .ethik-pie-wrap svg {
+      width: 180px;
+      height: 180px;
+      overflow: visible;
+    }
+
+    /* Jedes Segment: scale-transform vom Mittelpunkt */
+    .pie-slice {
+      transform-origin: 90px 90px;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+    .pie-slice:hover {
+      transform: scale(1.08);
+    }
+
+    /* Tooltip */
+    .ethik-pie-tooltip {
+      position: fixed;
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .ethik-pie-tooltip.show { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .ethik-pie-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <p class="ethik-chart-title">Das Bild des Ingenieurs und sein ethisches Selbstverständnis aus der Sicht der Studierenden</p>
+  <p class="ethik-chart-subtitle">Stichprobenumfang: 117 Befragte · 2019</p>
+  <p class="ethik-chart-subtitle">Breuer et al., “Studierende definieren eine Ethik in den Ingenieurwissenschaften.”</p>
+
+  <div class="ethik-pie-legend" id="ethikPieLegend"></div>
+  <div class="ethik-pie-grid" id="ethikPieGrid"></div>
+
+  <div class="ethik-pie-tooltip" id="ethikTooltip"></div>
+
+  <script>
+  (function () {
+    const COLORS = {
+      no:           '#c0392b',
+      rather_no:    '#d96b50',
+      somewhat_no:  '#e8a898',
+      somewhat_yes: '#b2ddd7',   /* teal-light ähnlich */
+      rather_yes:   '#0d6b5e',   /* var(--teal) */
+      yes:          '#3d2d6e',   /* var(--purple) */
+      none:         '#e0dcd6',   /* var(--rule) */
+    };
+
+    const LABELS = {
+      no:           'trifft nicht zu',
+      rather_no:    'trifft weniger zu',
+      somewhat_no:  'trifft eher weniger zu',
+      somewhat_yes: 'trifft etwas zu',
+      rather_yes:   'trifft größtenteils zu',
+      yes:          'trifft voll zu',
+      none:         'keine Antwort',
+    };
+
+    const ROWS = [
+      { label: '"Ethik bietet für mich eine Orientierung für mein Handeln."',
+        values: { no: 6, rather_no: 6, somewhat_no: 12, somewhat_yes: 29, rather_yes: 34, yes: 12, none: 1 } },
+      { label: '"Ein Ingenieur soll immer das Allgemeinwohl berücksichtigen."',
+        values: { no: 1, rather_no: 7, somewhat_no: 8, somewhat_yes: 22, rather_yes: 41, yes: 20, none: 2 } },
+      { label: '"Ein Ingenieur soll immer nach ethischen Grundzügen handeln."',
+        values: { no: 3, rather_no: 9, somewhat_no: 13, somewhat_yes: 19, rather_yes: 39, yes: 15, none: 2 } },
+      { label: '"Ingenieure und Ingenieurinnen urteilen bei ethischen Fragen gleich."',
+        values: { no: 15, rather_no: 29, somewhat_no: 13, somewhat_yes: 13, rather_yes: 20, yes: 6, none: 5 } },
+      { label: '"Ein Ingenieur ist nur seinem Arbeitgeber gegenüber verpflichtet."',
+        values: { no: 22, rather_no: 33, somewhat_no: 19, somewhat_yes: 14, rather_yes: 9, yes: 2, none: 2 } },
+      { label: '"Ein Ingenieur ist für den ethisch vertretbaren Gebrauch seiner Erfindung verantwortlich."',
+        values: { no: 9, rather_no: 8, somewhat_no: 13, somewhat_yes: 20, rather_yes: 29, yes: 21, none: 1 } },
+    ];
+
+    const KEY_ORDER = ['no','rather_no','somewhat_no','somewhat_yes','rather_yes','yes','none'];
+    const cx = 90, cy = 90, r = 80;
+
+    // Legende
+    const legendEl = document.getElementById('ethikPieLegend');
+    legendEl.innerHTML = KEY_ORDER.map(k => `
+      <div class="ethik-pie-legend-item">
+        <div class="ethik-pie-legend-swatch" style="background:${COLORS[k]}"></div>
+        <span>${LABELS[k]}</span>
+      </div>`).join('');
+
+    // Tooltip
+    const tooltip = document.getElementById('ethikTooltip');
+    document.addEventListener('mousemove', e => {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top  = (e.clientY - 28) + 'px';
+    });
+
+    // Hilfsfunktion: Bogenpfad
+    function slicePath(startAngle, endAngle, cx, cy, r) {
+      const toRad = a => (a - 90) * Math.PI / 180;
+      const x1 = cx + r * Math.cos(toRad(startAngle));
+      const y1 = cy + r * Math.sin(toRad(startAngle));
+      const x2 = cx + r * Math.cos(toRad(endAngle));
+      const y2 = cy + r * Math.sin(toRad(endAngle));
+      const large = (endAngle - startAngle) > 180 ? 1 : 0;
+      return `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
+    }
+
+    // Grid aufbauen
+    const grid = document.getElementById('ethikPieGrid');
+
+    ROWS.forEach((row, i) => {
+      const total = KEY_ORDER.reduce((s, k) => s + (row.values[k] ?? 0), 0);
+
+      let angle = 0;
+      const slices = KEY_ORDER.map(k => {
+        const pct = row.values[k] ?? 0;
+        const deg = (pct / total) * 360;
+        const path = slicePath(angle, angle + deg - 0.3, cx, cy, r);
+        angle += deg;
+        return { k, pct, path };
+      });
+
+      const svgSlices = slices.map(({ k, pct, path }) => `
+        <path class="pie-slice"
+          d="${path}"
+          fill="${COLORS[k]}"
+          data-label="${LABELS[k]}"
+          data-pct="${pct}"
+        />`).join('');
+
+      const card = document.createElement('div');
+      card.className = 'ethik-pie-card';
+      card.style.transitionDelay = `${i * 100}ms`;
+      card.innerHTML = `
+        <div class="ethik-pie-label">${row.label}</div>
+        <div class="ethik-pie-wrap">
+          <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+            ${svgSlices}
+          </svg>
+        </div>`;
+
+      grid.appendChild(card);
+
+      // Tooltip events
+      card.querySelectorAll('.pie-slice').forEach(slice => {
+        slice.addEventListener('mouseenter', () => {
+          tooltip.textContent = `${slice.dataset.label}: ${slice.dataset.pct} %`;
+          tooltip.classList.add('show');
+        });
+        slice.addEventListener('mouseleave', () => {
+          tooltip.classList.remove('show');
+        });
+      });
+    });
+
+    // Scroll-Animation
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    grid.querySelectorAll('.ethik-pie-card').forEach(c => observer.observe(c));
+  })();
+  </script>
+
+</section>
+<!-- ── Ende students_ethics pie charts ── -->
+
+
+
+
+
+
+
+
 
     <!-- Chart Block -->
     <div class="chart-block fade-in">
