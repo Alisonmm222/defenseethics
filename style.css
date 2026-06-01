@@ -102,7 +102,19 @@
         }
 
         .byline-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-faint); }
-
+        /* ── PRIORITY CHART ── */
+.priority-chart { display: flex; flex-direction: column; gap: 20px; }
+    .priority-row { display: grid; grid-template-columns: 160px 1fr 1fr; align-items: center; gap: 12px; }
+    .priority-label { font-family: 'DM Sans', sans-serif; font-size: 13px; color: #a09bdc; text-align: right; line-height: 1.3; }
+    .priority-side { display: flex; flex-direction: column; gap: 5px; }
+    .priority-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .priority-bar-track { flex: 1; height: 22px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+    .priority-bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; justify-content: flex-end; transition: width 0.5s ease; }
+    .priority-bar-fill span { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); padding-right: 7px; }
+    .priority-study-tag { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #5c5898; text-align: center; }
+    .priority-divider { width: 1px; background: rgba(255,255,255,0.08); align-self: stretch; margin: 0 4px; }
+    .priority-header-row { display: grid; grid-template-columns: 160px 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+    .priority-header-label { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #5c5898; text-align: center; }
         /* ── HERO ILLUSTRATION ── */
         .hero-illo {
           max-width: 560px;
@@ -139,6 +151,8 @@
           border: none;
           border-top: 1px solid var(--rule);
           margin: 64px 0 48px;
+          opacity: 0.15;
+
         }
 
         .section-number {
@@ -150,6 +164,98 @@
           color: var(--ink-faint);
           margin-bottom: 12px;
         }
+                /* ── KPI ── */
+
+            .kpi-verlauf {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0;
+                padding: 32px 0;
+                border-top: 1px solid rgba(255,255,255,0.07);
+                border-bottom: 1px solid rgba(255,255,255,0.07);
+                margin: 24px 0;
+            }
+            .kpi-item {
+                text-align: center;
+                flex: 1;
+                max-width: 200px;
+            }
+            .kpi-year {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #5c5898;
+                margin-bottom: 8px;
+            }
+            .kpi-num {
+                font-family: 'Playfair Display', serif;
+                font-size: 52px;
+                font-weight: 700;
+                line-height: 1;
+                margin-bottom: 10px;
+            }
+            .kpi-label {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 12px;
+                color: #7a77aa;
+                line-height: 1.4;
+                max-width: 140px;
+                margin: 0 auto;
+            }
+            .kpi-arrow {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                flex: 1;
+                max-width: 160px;
+                color: var(--accent);
+            }
+            .kpi-arrow-line {
+                width: 60px;
+                height: 1px;
+                background: linear-gradient(to right, rgba(200,68,26,0.2), rgba(200,68,26,0.6));
+            }
+            .kpi-arrow-delta {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 13px;
+                font-weight: 700;
+                color: #c8441a;
+                letter-spacing: 0.04em;
+                white-space: nowrap;
+            }
+            .kpi-arrow-head {
+                font-size: 20px;
+                color: #c8441a;
+                line-height: 1;
+            }
+    .pq-setup {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: #e0dff5;
+        line-height: 1.2;
+        margin-bottom: 16px;
+    }
+    .pq-body {
+        font-family: 'Source Serif 4', serif;
+        font-size: 16px;
+        font-weight: 300;
+        color: #a09bdc;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+    .pq-question {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: rgba(255,255,255,0.5);
+        margin-bottom: 0;
+    }
 
         h2.section-title {
           font-family: 'Playfair Display', serif;
@@ -163,11 +269,127 @@
 
         h3.sub-heading {
           font-family: 'Playfair Display', serif;
-          font-size: 22px;
+          font-size: 28px;
           font-weight: 700;
           margin: 44px 0 16px;
           color: var(--ink);
-        }
+        }    .pq-eyebrow {
+                 font-family: 'DM Sans', sans-serif;
+                 font-size: 10px;
+                 font-weight: 700;
+                 text-transform: uppercase;
+                 letter-spacing: 0.12em;
+                 color: rgba(255,255,255,0.25);
+                 margin-bottom: 14px;
+             }
+            /* Toggle buttons */
+            .toggle-question {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0;
+                margin-bottom: 28px;
+            }
+            .toggle-btn {
+                flex: 1;
+                max-width: 200px;
+                padding: 20px 12px;
+                border: 2px solid rgba(255,255,255,0.08);
+                background: rgba(255,255,255,0.03);
+                border-radius: 8px;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                transition: all 0.25s ease;
+                outline: none;
+            }
+            .toggle-btn:hover { background: rgba(255,255,255,0.07); }
+            .toggle-btn.active.ja  { border-color: #7F77DD; background: rgba(127,119,221,0.12); }
+            .toggle-btn.active.nein { border-color: #c8441a; background: rgba(200,68,26,0.12); }
+            .toggle-pct {
+                font-family: 'Playfair Display', serif;
+                font-size: 36px;
+                font-weight: 700;
+                color: #e0dff5;
+                line-height: 1;
+            }
+            .toggle-btn.active.ja  .toggle-pct { color: #7F77DD; }
+            .toggle-btn.active.nein .toggle-pct { color: #c8441a; }
+            .toggle-label {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 13px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #7a77aa;
+            }
+            .toggle-btn.active .toggle-label { color: #e0dff5; }
+            .toggle-divider {
+                width: 40px;
+                text-align: center;
+                font-family: 'DM Sans', sans-serif;
+                font-size: 11px;
+                color: #5c5898;
+                flex-shrink: 0;
+                position: relative;
+            }
+            .toggle-divider::before { content: 'vs'; }
+
+            /* Panels */
+            .gruende-panel {
+                display: none;
+                animation: fadeSlide 0.35s ease;
+            }
+            .gruende-panel.active { display: block; }
+            @keyframes fadeSlide {
+                from { opacity: 0; transform: translateY(8px); }
+                to   { opacity: 1; transform: translateY(0); }
+            }
+            .gruende-title {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: 14px;
+            }
+
+            /* Bars inside panel — reuse existing bar styles */
+            .gruende-bars { display: flex; flex-direction: column; gap: 10px; }
+            .gruende-row { display: flex; align-items: center; gap: 12px; }
+            .gruende-label {
+                width: 220px;
+                flex-shrink: 0;
+                font-family: 'DM Sans', sans-serif;
+                font-size: 13px;
+                color: #a09bdc;
+                line-height: 1.3;
+            }
+            .gruende-track {
+                flex: 1;
+                height: 26px;
+                background: rgba(255,255,255,0.06);
+                border-radius: 3px;
+                overflow: hidden;
+            }
+            .gruende-fill {
+                height: 100%;
+                border-radius: 3px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                transition: width 0.5s ease;
+            }
+            .gruende-fill span {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                color: rgba(255,255,255,0.85);
+                padding-right: 8px;
+            }
+
 
         /* ── PULL QUOTE ── */
         .pull-quote {
@@ -284,7 +506,7 @@
 
         .chart-header h4 {
           font-family: 'DM Sans', sans-serif;
-          font-size: 14px;
+          font-size: 20px;
           font-weight: 500;
           color: var(--ink);
           margin-bottom: 12px;
@@ -435,6 +657,22 @@
           font-size: 12px;
           color: rgba(255,255,255,0.35);
         }
+
+    /* ── Stacked Bar Chart ── */
+            .pair { margin-bottom: 20px; }
+            .pair + .pair { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 18px; }
+            .pair-label { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 500; color: #a09bdc; margin-bottom: 8px; line-height: 1.4; }
+            .stacked-track { display: flex; flex-direction: row; width: 100%; height: 30px; border-radius: 4px; overflow: hidden; background: rgba(255,255,255,0.06); }
+            .segment { height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); overflow: hidden; white-space: nowrap; }
+            .segment-pct { padding: 0 5px; }
+            .stacked-legend { margin-top: 22px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; }
+            .stacked-legend-title { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5c5898; margin-bottom: 12px; }
+            .stacked-legend-items { display: flex; gap: 16px; flex-wrap: wrap; }
+            .stacked-legend-item { display: flex; align-items: flex-start; gap: 8px; flex: 1; min-width: 180px; }
+            .stacked-legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; margin-top: 3px; }
+            .stacked-legend-name { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; color: #c4bff5; margin-bottom: 2px; }
+            .stacked-legend-desc { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #7a77aa; line-height: 1.5; }
+
 
         /* ── QUOTE CARDS ── */
         .quote-grid {
