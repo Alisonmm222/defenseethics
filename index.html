@@ -138,6 +138,22 @@
             <div class="kpi-label">empfanden die Sicherheitslage als bedrohlich</div>
         </div>
     </div>
+
+    <div class="chart-block fade-in">
+        <div class="chart-header">
+            <h4>Standorte</h4>
+        </div>
+        <div class="chart-body">
+            <div class="map-block" id="map-block">
+                <svg class="deutschland" id="deutschland-svg" viewBox="0 0 500 560"></svg>
+                <div class="map-tooltip" id="map-tooltip">
+                    <div class="map-tooltip-city" id="tooltip-city"></div>
+                    <div class="map-tooltip-text" id="tooltip-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="stat-row fade-in">
         <div class="stat-cell">
             <div class="big-num" style="color: var(--accent)">57%</div>
@@ -426,7 +442,7 @@
 
 <script>
 // ══════════════════════════════════════════════
-// DATEN — Gründe und Prozentwerte anpassen
+// DATEN FÜR GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
 // ══════════════════════════════════════════════
 const gruendeJa = [
     { label: "Gesellschaftliche Verantwortung",   pct: 71 },
@@ -569,7 +585,7 @@ categories.forEach(cat => {
     }
 
 // ══════════════════════════════════════
-// PRIORITÄTEN — Werte anpassen
+// PRIORITÄTEN
 // ══════════════════════════════════════
 const priorityData = [
     { label: "Jobsicherheit",                       usa: 68, de: 30 },
@@ -625,6 +641,101 @@ priorityData.forEach(item => {
     `;
     chart.appendChild(row);
 });
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+    // ══════════════════════════════════════════════════════
+    // PUNKTE — Koordinaten in [Längengrad, Breitengrad]
+    // ══════════════════════════════════════════════════════
+    const punkte = [
+      { coords: [10.000, 53.550], city: "Hamburg",   text: "Platzhaltertext für Hamburg" },
+      { coords: [13.405, 52.520], city: "Berlin",    text: "Platzhaltertext für Berlin" },
+      { coords: [6.960,  50.938], city: "Köln",      text: "Platzhaltertext für Köln" },
+      { coords: [8.682,  50.110], city: "Frankfurt", text: "Platzhaltertext für Frankfurt" },
+      { coords: [11.078, 49.448], city: "Nürnberg",  text: "TH Nürnberg — Standort der Studie" },
+      { coords: [9.182,  48.776], city: "Stuttgart", text: "Platzhaltertext für Stuttgart" },
+      { coords: [11.576, 48.137], city: "München",   text: "Platzhaltertext für München" },
+      { coords: [7.011,  51.462], city: "Dortmund",  text: "Platzhaltertext für Dortmund" },
+    ];
+
+    const svgEl = document.getElementById('deutschland-svg');
+    const tooltip = document.getElementById('map-tooltip');
+    const tooltipCity = document.getElementById('tooltip-city');
+    const tooltipText = document.getElementById('tooltip-text');
+    const mapBlock = document.getElementById('map-block');
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    const width = 500, height = 560;
+    const projection = d3.geoMercator()
+      .center([10.5, 51.2])
+      .scale(3000)
+      .translate([width / 2, height / 2]);
+    const path = d3.geoPath().projection(projection);
+
+    // GeoJSON Deutschland von öffentlicher Quelle
+    fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bundeslaender/4_niedrig.geo.json")
+      .then(r => r.json())
+      .then(geojson => {
+        const svg = d3.select('#deutschland-svg');
+
+        svg.selectAll('path')
+          .data(geojson.features)
+          .enter()
+          .append('path')
+          .attr('class', 'bundesland')
+          .attr('d', path);
+
+        // Punkte
+        const g = document.createElementNS(svgNS, 'g');
+        svgEl.appendChild(g);
+
+        punkte.forEach(p => {
+          const [x, y] = projection(p.coords);
+          const group = document.createElementNS(svgNS, 'g');
+          group.classList.add('map-punkt');
+
+          const ring = document.createElementNS(svgNS, 'circle');
+          ring.classList.add('ring');
+          ring.setAttribute('cx', x);
+          ring.setAttribute('cy', y);
+          ring.setAttribute('r', 5);
+          ring.style.animationDelay = (Math.random() * 2.5).toFixed(2) + 's';
+
+          const dot = document.createElementNS(svgNS, 'circle');
+          dot.classList.add('dot');
+          dot.setAttribute('cx', x);
+          dot.setAttribute('cy', y);
+          dot.setAttribute('r', 5);
+
+          group.appendChild(ring);
+          group.appendChild(dot);
+          g.appendChild(group);
+
+          group.addEventListener('mouseenter', (e) => {
+            tooltipCity.textContent = p.city;
+            tooltipText.textContent = p.text;
+            tooltip.classList.add('visible');
+            positionTooltip(e);
+          });
+          group.addEventListener('mousemove', positionTooltip);
+          group.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+        });
+      })
+      .catch(err => {
+        svgEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#7a77aa" font-family="DM Sans,sans-serif" font-size="13">Karte konnte nicht geladen werden</text>';
+        console.error(err);
+      });
+
+    function positionTooltip(e) {
+      const rect = mapBlock.getBoundingClientRect();
+      let x = e.clientX - rect.left + 14;
+      let y = e.clientY - rect.top - 10;
+      if (x + 230 > rect.width) x -= 240;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top  = y + 'px';
+    }
+
 </script>
 </body>
 </html>

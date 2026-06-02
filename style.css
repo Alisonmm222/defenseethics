@@ -457,6 +457,66 @@
           color: var(--purple);
         }
 
+            /* ── MAP ── */
+  .map-block { position: relative; max-width: 460px; margin: 0 auto; }
+  .map-block svg.deutschland { width: 100%; height: auto; display: block; }
+
+  .bundesland {
+    fill: rgba(61,45,110,0.35);
+    stroke: rgba(127,119,221,0.4);
+    stroke-width: 0.6;
+    stroke-linejoin: round;
+    transition: fill 0.2s;
+  }
+  .bundesland:hover { fill: rgba(127,119,221,0.22); }
+
+  .map-punkt { cursor: pointer; }
+  .map-punkt circle.ring {
+    fill: none;
+    stroke: #7F77DD;
+    stroke-width: 1.5;
+    opacity: 0.5;
+    animation: mappulse 2.4s ease-out infinite;
+  }
+  .map-punkt circle.dot {
+    fill: #7F77DD;
+    transition: r 0.15s, fill 0.15s;
+  }
+  .map-punkt:hover circle.dot { fill: #e0dff5; }
+  @keyframes mappulse {
+    0%   { r: 5;  opacity: 0.5; }
+    100% { r: 20; opacity: 0; }
+  }
+
+  .map-tooltip {
+    position: absolute;
+    background: #12122a;
+    border: 1px solid rgba(127,119,221,0.45);
+    border-radius: 6px;
+    padding: 10px 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s;
+    z-index: 10;
+    min-width: 150px;
+    max-width: 220px;
+  }
+  .map-tooltip.visible { opacity: 1; }
+  .map-tooltip-city {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #AFA9EC;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .map-tooltip-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: #7a77aa;
+    line-height: 1.5;
+  }
         /* ── BIG STAT BLOCK ── */
         .stat-row {
           display: grid;
