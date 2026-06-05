@@ -15,7 +15,7 @@
 <nav class="site-nav">
     <div class="nav-brand">Ingenieur&shy;ethik</div>
     <div class="nav-links">
-        <a href="#zeitenwende">Zeitenwende</a>
+        <a href="#zeitenwende">Lagebild</a>
         <a href="#berufsethik">Daten</a>
         <a href="#umfrage">Mehr Daten</a>
     </div>
@@ -139,9 +139,9 @@
         </div>
     </div>
 
-    <div class="chart-block fade-in">
-        <div class="chart-header">
-            <h4>Standorte</h4>
+    <div class="fade-in">
+        <div class="sub-heading">
+            <h4>Die Lage an den Hochschulen</h4>
         </div>
         <div class="chart-body">
             <div class="map-block" id="map-block">
@@ -169,9 +169,6 @@
         </div>
     </div>
 
-    <div class="callout fade-in">
-        <p><strong>Hinweis zu den Daten:</strong> Alle hier angezeigten Zahlen aus externen Quellen sind Platzhalterwerte auf Basis veröffentlichter Trends.</p>
-    </div>
 
     <hr class="section-divider" id="berufsethik">
 
@@ -353,19 +350,44 @@
         </div>
     </div>
 
-    <div class="tension-block fade-in">
-        <h4>Und Sie? Wo stehen Sie?</h4>
-        <p>Stellen Sie sich vor, Ihr Arbeitgeber entwickelt eine Technologie, die auch militärisch eingesetzt werden könnte. Wie stark fühlen Sie die ethische Spannung?</p>
-        <div class="slider-labels">
-            <span>Keine Spannung</span>
-            <span>Starke Spannung</span>
+
+    <section class="fullscreen-block">
+        <div class="fullscreen-inner" id="tensionInner">
+            <div class="tension-block">
+
+                <div class="tension-eyebrow">Ihre Einschätzung</div>
+                <h4>Wie stark spüren Sie<br>die ethische Spannung?</h4>
+                <p>Stellen Sie sich vor, Ihr Arbeitgeber entwickelt eine Technologie, die auch militärisch genutzt werden könnte.</p>
+
+                <div class="slider-labels">
+                    <span>Keine Spannung</span>
+                    <span>Starke Spannung</span>
+                </div>
+
+                <div class="slider-track-wrap">
+                    <div class="slider-track">
+                        <div class="slider-fill" id="sliderFill"></div>
+                    </div>
+                    <input type="range" min="0" max="10" value="5" step="1"
+                           class="tension-slider" id="tensionSlider"
+                           oninput="updateTension(this.value)">
+                </div>
+
+                <div class="tension-result-row">
+                    <div class="tension-result-num" id="tensionNum">5</div>
+                    <div class="tension-result-text" id="tensionText">von 10 — Bewegen Sie den Schieberegler.</div>
+                </div>
         </div>
-        <input type="range" min="0" max="10" value="5" class="tension-slider" id="tensionSlider" oninput="updateTension(this.value)">
-        <div class="tension-result" id="tensionResult">
-            <strong>5 von 10</strong> — Bewegen Sie den Schieberegler, um Ihre Position einzutragen.
+            <div class="tension-comparison">
+                <div class="comparison-bar-wrap">
+                    <div class="comparison-bars" id="comparisonBars">
+                    </div>
+                </div>
+                <div class="comparison-text" id="comparisonText"></div>
+            </div>
         </div>
-        <div class="tension-avg">Durchschnittswert in unserer Umfrage: <strong style="color:rgba(255,255,255,0.6)">6,4 von 10</strong></div>
-    </div>
+    </section>
+
 
     <div class="fade-in">
         <h3 class="sub-heading">Unsere Befunde</h3>
@@ -379,7 +401,6 @@
             </div>
         </div>
 
-        <!-- HTML -->
         <div class="chart-block fade-in">
             <div class="chart-header">
                 <h4>Können Sie sich vorstellen, im Verteidigungsbereich zu arbeiten?</h4>
@@ -428,8 +449,6 @@
             Die vollständige Auswertung — mit Unterschieden nach Geschlecht, Fachrichtung und Berufsstatus — folgt in den nächsten Abschnitten dieser Website. Was sich bereits jetzt abzeichnet: <em>Die Zeitenwende ist im Ingenieursberuf angekommen. Die ethischen Antworten noch nicht.</em>
         </p>
     </div>
-
-
 </main>
 
 <!-- FOOTER -->
@@ -440,302 +459,7 @@
     <div class="footer-brand">Berufsethik<br><em style="font-weight:400">Defense</em></div>
 </footer>
 
-<script>
-// ══════════════════════════════════════════════
-// DATEN FÜR GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
-// ══════════════════════════════════════════════
-const gruendeJa = [
-    { label: "Gesellschaftliche Verantwortung",   pct: 71 },
-    { label: "Interessante technische Aufgaben",  pct: 64 },
-    { label: "Gute Vergütung",                    pct: 58 },
-    { label: "Jobsicherheit",                     pct: 47 },
-    { label: "Beitrag zur nationalen Sicherheit", pct: 43 },
-];
-
-const gruendeNein = [
-    { label: "Moralische Bedenken",               pct: 76 },
-    { label: "Angst vor Dual-Use-Verantwortung",  pct: 61 },
-    { label: "Gesellschaftliche Stigmatisierung", pct: 54 },
-    { label: "Persönliche Überzeugungen",         pct: 49 },
-    { label: "Fehlende Informationen",            pct: 38 },
-];
-
-const colorJa   = "#7F77DD";
-const colorNein = "#c8441a";
-
-function buildBars(containerId, data, color) {
-    const container = document.getElementById(containerId);
-    data.forEach(item => {
-        const row = document.createElement('div');
-        row.className = 'gruende-row';
-        row.innerHTML = `
-            <div class="gruende-label">${item.label}</div>
-            <div class="gruende-track">
-                <div class="gruende-fill" style="width:${item.pct}%; background:${color}">
-                    <span>${item.pct}%</span>
-                </div>
-            </div>
-        `;
-        container.appendChild(row);
-    });
-}
-
-buildBars('bars-ja',   gruendeJa,   colorJa);
-buildBars('bars-nein', gruendeNein, colorNein);
-
-function showGruende(which) {
-    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.gruende-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('btn-' + which).classList.add('active');
-    document.getElementById('panel-' + which).classList.add('active');
-}
-
-// Ja standardmäßig aktiv
-showGruende('ja');
-
-
-    // ══════════════════════════════════════════════════════
-    // STACKED BAR CHART DATA
-    // ══════════════════════════════════════════════════════
-const categories = [
-    { name: "Kategorie 1", desc: "Ich unterstütze meinen Arbeitgeber dabei, sich um Rüstungsaufträge zu bewerben, auch wenn die Ergebnisse auf dem Schlachtfeld zum Einsatz kommen", color: "#3d2d6e" },
-    { name: "Kategorie 2", desc: "Ich unterstütze meinen Arbeitgeber dabei, sich um Rüstungsaufträge zu bewerben, solange die Ergebnisse nicht auf dem Schlachtfeld zum Einsatz kommen", color: "#7F77DD" },
-    { name: "Kategorie 3", desc: "Ich bin nicht damit einverstanden, dass mein Arbeitgeber sich um Rüstungsaufträge bemüht", color: "#AFA9EC" }
-];
-
-const rows = [
-    { label: "Fast die Hälfte der Befragten TechWorkern aus dem USA sind damit einverstanden, dass ihre Produkte auf dem Schlachtfeld verwendet werden", values: [48, 31, 21] }
-];
-
-function makeStackedBar(values) {
-    const track = document.createElement('div');
-    track.className = 'stacked-track';
-    values.forEach((pct, i) => {
-        const seg = document.createElement('div');
-        seg.className = 'segment';
-        seg.style.width = pct + '%';
-        seg.style.background = categories[i].color;
-        seg.title = categories[i].name + ': ' + pct + '%';
-        if (pct >= 10) seg.innerHTML = '<span class="segment-pct">' + pct + '%</span>';
-        track.appendChild(seg);
-    });
-    return track;
-}
-
-const container = document.getElementById('chart-pairs');
-rows.forEach(row => {
-    const pair = document.createElement('div');
-    pair.className = 'pair';
-    const label = document.createElement('div');
-    label.className = 'pair-label';
-    label.textContent = row.label;
-    pair.appendChild(label);
-    pair.appendChild(makeStackedBar(row.values));
-    container.appendChild(pair);
-});
-
-const legendEl = document.getElementById('stacked-legend');
-categories.forEach(cat => {
-    const item = document.createElement('div');
-    item.className = 'stacked-legend-item';
-    item.innerHTML = `
-        <div class="stacked-legend-dot" style="background:${cat.color}"></div>
-        <div>
-            <div class="stacked-legend-name">${cat.name}</div>
-            <div class="stacked-legend-desc">${cat.desc}</div>
-        </div>
-    `;
-    legendEl.appendChild(item);
-});
-
-    // ── Scroll fade-in ──
-    const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
-
-    // ── Chart tabs ──
-    function switchTab(key, btn) {
-        document.querySelectorAll('.bars').forEach(b => b.style.display = 'none');
-        document.getElementById('bars-' + key).style.display = 'flex';
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    // ── Tension slider ──
-    const messages = [
-        [0, 2,  "Keine merkliche Spannung — Sie sehen das pragmatisch."],
-        [3, 4,  "Leichte Bedenken — Sie würden es wohl akzeptieren, aber nicht ohne Nachdenken."],
-        [5, 6,  "Spürbare Spannung — die Frage lässt Sie nicht ganz los."],
-        [7, 8,  "Starke innere Zerrissenheit — Sie würden das Gespräch mit dem Arbeitgeber suchen."],
-        [9, 10, "Maximale Spannung — für Sie wäre das ein Kündigungsgrund."]
-    ];
-    function updateTension(val) {
-        const v = parseInt(val);
-        let msg = '';
-        for (const [lo, hi, text] of messages) {
-            if (v >= lo && v <= hi) { msg = text; break; }
-        }
-        const diff = v - 6.4;
-        const comp = diff > 0.4 ? `höher als der Durchschnitt (6,4)` : diff < -0.4 ? `niedriger als der Durchschnitt (6,4)` : `nahe am Durchschnitt (6,4)`;
-        document.getElementById('tensionResult').innerHTML =
-            `<strong>${v} von 10</strong> — ${msg}<br><span style="color:rgba(255,255,255,0.45);font-size:13px;margin-top:6px;display:block">Ihr Wert liegt ${comp} unserer Befragten.</span>`;
-    }
-
-// ══════════════════════════════════════
-// PRIORITÄTEN
-// ══════════════════════════════════════
-const priorityData = [
-    { label: "Jobsicherheit",                       usa: 68, de: 30 },
-    { label: "Gehalt",                              usa: 66, de: 30 },
-    { label: "Work-Life-Balance",                   usa: 63, de: 30 },
-    { label: "Im Einklang\nmit meinen Werten",      usa: 47, de: 30 },
-    { label: "Im Einklang\n mit meinen Interessen", usa: 54, de: 30 },
-    { label: "Gutes Arbeitsklima",                  usa: 52, de: 30 },
-    { label: "Karriere\nAufsteig",                  usa: 30, de: 30 },
-    { label: "Gesellschaftlicher\nBeitrag",         usa: 30, de: 30 },
-];
-
-const colorUSA = "#3d2d6e";
-const colorDE  = "#7F77DD";
-
-const chart = document.getElementById('priority-chart');
-
-// Header
-const header = document.createElement('div');
-header.className = 'priority-header-row';
-header.innerHTML = `
-    <div></div>
-    <div class="priority-header-label" style="color:#AFA9EC"> USA</div>
-    <div class="priority-header-label" style="color:#7F77DD"> DE</div>
-`;
-chart.appendChild(header);
-
-// Rows
-priorityData.forEach(item => {
-    const row = document.createElement('div');
-    row.className = 'priority-row';
-
-    row.innerHTML = `
-        <div class="priority-label">${item.label.replace('\n','<br>')}</div>
-        <div class="priority-side">
-            <div class="priority-bar-wrap">
-                <div class="priority-bar-track">
-                    <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA}">
-                        <span>${item.usa}%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="priority-side">
-            <div class="priority-bar-wrap">
-                <div class="priority-bar-track">
-                    <div class="priority-bar-fill" style="width:${item.de}%; background:${colorDE}">
-                        <span>${item.de}%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    chart.appendChild(row);
-});
-
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script>
-    // ══════════════════════════════════════════════════════
-    // PUNKTE — Koordinaten in [Längengrad, Breitengrad]
-    // ══════════════════════════════════════════════════════
-    const punkte = [
-      { coords: [10.000, 53.550], city: "Hamburg",   text: "Platzhaltertext für Hamburg" },
-      { coords: [13.405, 52.520], city: "Berlin",    text: "Platzhaltertext für Berlin" },
-      { coords: [6.960,  50.938], city: "Köln",      text: "Platzhaltertext für Köln" },
-      { coords: [8.682,  50.110], city: "Frankfurt", text: "Platzhaltertext für Frankfurt" },
-      { coords: [11.078, 49.448], city: "Nürnberg",  text: "TH Nürnberg — Standort der Studie" },
-      { coords: [9.182,  48.776], city: "Stuttgart", text: "Platzhaltertext für Stuttgart" },
-      { coords: [11.576, 48.137], city: "München",   text: "Platzhaltertext für München" },
-      { coords: [7.011,  51.462], city: "Dortmund",  text: "Platzhaltertext für Dortmund" },
-    ];
-
-    const svgEl = document.getElementById('deutschland-svg');
-    const tooltip = document.getElementById('map-tooltip');
-    const tooltipCity = document.getElementById('tooltip-city');
-    const tooltipText = document.getElementById('tooltip-text');
-    const mapBlock = document.getElementById('map-block');
-    const svgNS = "http://www.w3.org/2000/svg";
-
-    const width = 500, height = 560;
-    const projection = d3.geoMercator()
-      .center([10.5, 51.2])
-      .scale(3000)
-      .translate([width / 2, height / 2]);
-    const path = d3.geoPath().projection(projection);
-
-    // GeoJSON Deutschland von öffentlicher Quelle
-    fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bundeslaender/4_niedrig.geo.json")
-      .then(r => r.json())
-      .then(geojson => {
-        const svg = d3.select('#deutschland-svg');
-
-        svg.selectAll('path')
-          .data(geojson.features)
-          .enter()
-          .append('path')
-          .attr('class', 'bundesland')
-          .attr('d', path);
-
-        // Punkte
-        const g = document.createElementNS(svgNS, 'g');
-        svgEl.appendChild(g);
-
-        punkte.forEach(p => {
-          const [x, y] = projection(p.coords);
-          const group = document.createElementNS(svgNS, 'g');
-          group.classList.add('map-punkt');
-
-          const ring = document.createElementNS(svgNS, 'circle');
-          ring.classList.add('ring');
-          ring.setAttribute('cx', x);
-          ring.setAttribute('cy', y);
-          ring.setAttribute('r', 5);
-          ring.style.animationDelay = (Math.random() * 2.5).toFixed(2) + 's';
-
-          const dot = document.createElementNS(svgNS, 'circle');
-          dot.classList.add('dot');
-          dot.setAttribute('cx', x);
-          dot.setAttribute('cy', y);
-          dot.setAttribute('r', 5);
-
-          group.appendChild(ring);
-          group.appendChild(dot);
-          g.appendChild(group);
-
-          group.addEventListener('mouseenter', (e) => {
-            tooltipCity.textContent = p.city;
-            tooltipText.textContent = p.text;
-            tooltip.classList.add('visible');
-            positionTooltip(e);
-          });
-          group.addEventListener('mousemove', positionTooltip);
-          group.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
-        });
-      })
-      .catch(err => {
-        svgEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#7a77aa" font-family="DM Sans,sans-serif" font-size="13">Karte konnte nicht geladen werden</text>';
-        console.error(err);
-      });
-
-    function positionTooltip(e) {
-      const rect = mapBlock.getBoundingClientRect();
-      let x = e.clientX - rect.left + 14;
-      let y = e.clientY - rect.top - 10;
-      if (x + 230 > rect.width) x -= 240;
-      tooltip.style.left = x + 'px';
-      tooltip.style.top  = y + 'px';
-    }
-
-</script>
+<script src="index.js"></script>
 </body>
 </html>
