@@ -22,6 +22,10 @@ const colorNein = "#c8441a";
 
 function buildReasonBars(containerId, data, color) {
     const container = document.getElementById(containerId);
+    if (!container) {
+        console.warn('buildReasonBars: container not found', containerId);
+        return;
+    }
     data.forEach(item => {
         const row = document.createElement('div');
         row.className = 'gruende-row';
@@ -50,149 +54,486 @@ function showGruende(which) {
 // Ja standardmäßig aktiv
 showGruende('ja');
 
+// ══════════════════════════════════════════════
+// OPINION EXPLORER (REPLACEMENT für STACKED CHART)
+// ══════════════════════════════════════════════
 
-    // ══════════════════════════════════════════════════════
-    // STACKED BAR CHART DATA
-    // ══════════════════════════════════════════════════════
-const categories = [
-    { name: "Kategorie 1", desc: "Ich unterstütze meinen Arbeitgeber dabei, sich um Rüstungsaufträge zu bewerben, auch wenn die Ergebnisse auf dem Schlachtfeld zum Einsatz kommen", color: "#3d2d6e" },
-    { name: "Kategorie 2", desc: "Ich unterstütze meinen Arbeitgeber dabei, sich um Rüstungsaufträge zu bewerben, solange die Ergebnisse nicht auf dem Schlachtfeld zum Einsatz kommen", color: "#7F77DD" },
-    { name: "Kategorie 3", desc: "Ich bin nicht damit einverstanden, dass mein Arbeitgeber sich um Rüstungsaufträge bemüht", color: "#AFA9EC" }
+const opinionData = [
+  {
+    id: 0,
+    value: 48,
+    title: "Auch auf dem Schlachtfeld",
+    desc: "Ich unterstütze militärische Nutzung aktiv.",
+    color: "#3d2d6e"
+  },
+  {
+    id: 1,
+    value: 31,
+    title: "Nur defensive Nutzung",
+    desc: "Ich unterstütze nur nicht-kampforientierte Anwendungen.",
+    color: "#7F77DD"
+  },
+  {
+    id: 2,
+    value: 21,
+    title: "Lehnt ab",
+    desc: "Ich lehne Rüstungsaufträge grundsätzlich ab.",
+    color: "#AFA9EC"
+  }
 ];
 
-const rows = [
-    { label: "Fast die Hälfte der Befragten TechWorkern aus dem USA sind damit einverstanden, dass ihre Produkte auf dem Schlachtfeld verwendet werden", values: [48, 31, 21] }
-];
+let activeOpinion = null;
 
-function makeStackedBar(values) {
-    const track = document.createElement('div');
-    track.className = 'stacked-track';
-    values.forEach((pct, i) => {
-        const seg = document.createElement('div');
-        seg.className = 'segment';
-        seg.style.width = pct + '%';
-        seg.style.background = categories[i].color;
-        seg.title = categories[i].name + ': ' + pct + '%';
-        if (pct >= 10) seg.innerHTML = '<span class="segment-pct">' + pct + '%</span>';
-        track.appendChild(seg);
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+window.addEventListener("DOMContentLoaded", () => {
+  renderOpinionExplorer();
+  setActiveOpinion(null);
+
+  // allow keyboard users to reset selection with Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setActiveOpinion(null);
+  });
+});
+
+// ══════════════════════════════════════
+// RENDER CARDS + BAR
+// ══════════════════════════════════════
+function renderOpinionExplorer() {
+  const container = document.getElementById("chart-pairs");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "opinion-wrapper";
+
+  // Section heading (Überschrift) for the opinion explorer
+  const sectionHead = document.createElement('div');
+  sectionHead.className = 'opinion-section-head';
+  sectionHead.textContent = 'USA Tech Worker';
+  wrapper.appendChild(sectionHead);
+
+  // Note: we intentionally do not render the card list here — UI shows only radial badges (circles)
+
+  // Chart -> replace bars with compact radial badges (circles) to save vertical space and be more distinctive
+  const chart = document.createElement("div");
+  chart.className = "opinion-chart";
+
+  opinionData.forEach(item => {
+    const circleWrap = document.createElement('div');
+    circleWrap.className = 'opinion-circle';
+    circleWrap.dataset.id = item.id;
+    circleWrap.setAttribute('role', 'button');
+    circleWrap.setAttribute('tabindex', '0');
+    circleWrap.setAttribute('aria-label', `${item.title} ${item.value}%`);
+
+    // SVG donut — radius 16 for easy math
+    const size = 36;
+    const r = 16;
+    const c = Math.PI * 2 * r;
+    const pct = Math.max(0, Math.min(100, item.value));
+    const dash = Math.round((pct / 100) * c);
+
+    // ring-fg starts with 0 length; we store target dash/c in data attributes for animation
+    circleWrap.innerHTML = `
+      <svg viewBox="0 0 ${size} ${size}" class="opinion-svg" aria-hidden="true">
+        <circle class="ring-bg" cx="18" cy="18" r="${r}" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none"></circle>
+        <circle class="ring-fg" cx="18" cy="18" r="${r}" stroke="${item.color}" stroke-width="3" fill="none" stroke-linecap="round"
+          data-dash="${dash}" data-c="${c}" style="stroke-dasharray: 0 ${c}; stroke-dashoffset: 0; transition: stroke-dasharray 900ms cubic-bezier(.22,1,.36,1);"></circle>
+      </svg>
+      <div class="opinion-circle-label">${item.value}%</div>
+    `;
+
+    // interactions
+    circleWrap.addEventListener('click', () => setActiveOpinion(item.id));
+    circleWrap.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveOpinion(item.id); } });
+    circleWrap.addEventListener('mouseenter', () => { circleWrap.classList.add('hover'); });
+    circleWrap.addEventListener('mouseleave', () => { circleWrap.classList.remove('hover'); });
+
+    chart.appendChild(circleWrap);
+  });
+
+  wrapper.appendChild(chart);
+
+  // floating insight box — will be positioned under the active circle
+  const floatInsight = document.createElement('div');
+  floatInsight.id = 'opinion-float-insight';
+  floatInsight.className = 'opinion-insight-floating';
+  floatInsight.innerHTML = `
+    <div class="opinion-insight">
+      Klicken Sie auf eine Kategorie, um Details zu sehen.
+    </div>
+  `;
+  wrapper.appendChild(floatInsight);
+
+  container.appendChild(wrapper);
+
+  // initial animation: expand donut strokes to their target dash values
+  requestAnimationFrame(() => {
+    opinionData.forEach(item => {
+      const fg = chart.querySelector(`[data-id="${item.id}"] .ring-fg`);
+      if (fg) {
+        const dash = fg.getAttribute('data-dash');
+        const cVal = fg.getAttribute('data-c');
+        fg.style.strokeDasharray = `${dash} ${cVal}`;
+      }
     });
-    return track;
+  });
 }
 
-const container = document.getElementById('chart-pairs');
-rows.forEach(row => {
-    const pair = document.createElement('div');
-    pair.className = 'pair';
-    const label = document.createElement('div');
-    label.className = 'pair-label';
-    label.textContent = row.label;
-    pair.appendChild(label);
-    pair.appendChild(makeStackedBar(row.values));
-    container.appendChild(pair);
-});
+// Position the floating insight under the clicked circle (clamped inside wrapper)
+function positionFloatingInsight(circleEl) {
+  const floatEl = document.getElementById('opinion-float-insight');
+  if (!floatEl || !circleEl) return;
 
-const legendEl = document.getElementById('stacked-legend');
-categories.forEach(cat => {
-    const item = document.createElement('div');
-    item.className = 'stacked-legend-item';
-    item.innerHTML = `
-        <div class="stacked-legend-dot" style="background:${cat.color}"></div>
-        <div>
-            <div class="stacked-legend-name">${cat.name}</div>
-            <div class="stacked-legend-desc">${cat.desc}</div>
-        </div>
-    `;
-    legendEl.appendChild(item);
-});
+  const wrapper = circleEl.closest('.opinion-wrapper');
+  if (!wrapper) return;
 
-    // ── Scroll fade-in ──
-    const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+  // ensure wrapper is positioned for absolute child
+  wrapper.style.position = wrapper.style.position || 'relative';
 
-    // ── Chart tabs ──
-    function switchTab(key, btn) {
-        document.querySelectorAll('.bars').forEach(b => b.style.display = 'none');
-        document.getElementById('bars-' + key).style.display = 'flex';
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+  const wrapRect = wrapper.getBoundingClientRect();
+  const cirRect = circleEl.getBoundingClientRect();
+
+  // temporarily make visible to measure size
+  floatEl.classList.add('visible');
+  floatEl.style.left = '0px';
+  floatEl.style.top = '0px';
+  const fRect = floatEl.getBoundingClientRect();
+
+  // compute center of circle relative to wrapper
+  let left = (cirRect.left - wrapRect.left) + (cirRect.width / 2) - (fRect.width / 2);
+  const top = (cirRect.bottom - wrapRect.top) + 12; // 12px gap
+
+  // clamp within wrapper
+  const minLeft = 8;
+  const maxLeft = wrapRect.width - fRect.width - 8;
+  if (left < minLeft) left = minLeft;
+  if (left > maxLeft) left = Math.max(minLeft, maxLeft);
+
+  floatEl.style.left = Math.round(left) + 'px';
+  floatEl.style.top = Math.round(top) + 'px';
+  floatEl.classList.add('visible');
+}
+
+// ensure the floating element is fully visible in the viewport; scrolls the window smoothly if needed
+function ensureVisibleInViewport(el) {
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const padding = 16; // keep some breathing room
+  let delta = 0;
+  if (rect.top < padding) {
+    // element is above viewport top — scroll up
+    delta = rect.top - padding;
+  } else if (rect.bottom > window.innerHeight - padding) {
+    // element is below viewport bottom — scroll down
+    delta = rect.bottom - (window.innerHeight - padding);
+  }
+  if (delta !== 0) {
+    // animate scroll; use window.scrollBy relative movement
+    window.scrollBy({ top: delta, left: 0, behavior: 'smooth' });
+  }
+}
+
+// ══════════════════════════════════════
+// INTERACTION
+// ══════════════════════════════════════
+function setActiveOpinion(id) {
+  activeOpinion = id;
+
+  const circles = document.querySelectorAll(".opinion-circle");
+
+  const isReset = id === null;
+
+  circles.forEach(c => {
+    const match = parseInt(c.dataset.id);
+    if (isReset) {
+      c.classList.remove("dim", "active", 'hover');
+      c.setAttribute('aria-pressed', 'false');
+    } else {
+      const activeNow = match === id;
+      c.classList.toggle("active", activeNow);
+      c.classList.toggle("dim", !activeNow);
+      c.setAttribute('aria-pressed', activeNow ? 'true' : 'false');
     }
+  });
 
-// ── Tension slider ──
-const messages = [
-  'Ich sehe hier kein Problem.',
-  'Eine leise Frage im Hinterkopf.',
-  'Ich denke gelegentlich daran.',
-  'Es beschäftigt mich manchmal.',
-  'Eine gewisse Ambivalenz ist da.',
-  'Die Frage lässt mich nicht los.',
-  'Ich spüre einen deutlichen Konflikt.',
-  'Es bereitet mir echtes Unbehagen.',
-  'Das würde ich kaum akzeptieren.',
-  'Eine starke innere Ablehnung.',
-  'Diesen Job würde ich nicht annehmen.'
+
+  updateInsight(id);
+
+  // position the floating insight under the active circle (if any)
+  const floatEl = document.getElementById('opinion-float-insight');
+  if (!floatEl) return;
+  if (id === null) {
+    floatEl.classList.remove('visible');
+  } else {
+    const activeCircle = document.querySelector(`.opinion-circle[data-id="${id}"]`);
+    if (activeCircle) positionFloatingInsight(activeCircle);
+    // after positioning, ensure the floating box is visible in the viewport
+    const f = document.getElementById('opinion-float-insight');
+    if (f) ensureVisibleInViewport(f);
+  }
+}
+
+// ══════════════════════════════════════
+// INSIGHT TEXT (Story Layer)
+// ══════════════════════════════════════
+function updateInsight(id) {
+  // We no longer render details under #stacked-legend — show them only in the floating insight
+  const target = document.getElementById("stacked-legend");
+  if (target) target.innerHTML = ""; // clear legacy legend content
+
+  const floatEl = document.getElementById('opinion-float-insight');
+  if (!floatEl) return;
+
+  if (id === null) {
+    floatEl.innerHTML = `<div class="opinion-insight">Klicken Sie auf eine Kategorie, um Details zu sehen.</div>`;
+    floatEl.classList.remove('visible');
+    return;
+  }
+
+  const item = opinionData[id];
+  // write the original detailed HTML into the floating insight only
+  floatEl.innerHTML = `
+    <div class="opinion-insight active">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <div style="width:12px;height:12px;background:${item.color};border-radius:3px;flex-shrink:0"></div>
+        <div style="font-weight:700">${item.title}</div>
+      </div>
+      <div><strong>${item.value}%</strong> der Befragten:<br>${item.desc}</div>
+    </div>
+  `;
+}
+
+// ── Tension sliders (zwei separate Skalen) ──
+// Zustimmung
+const messagesZustimmung = [
+  'Stimme überhaupt nicht zu',
+  'Stimme eher nicht zu',
+  'teils-teils',
+  'Stimme eher zu',
+  'Stimme voll und ganz zu',
 ];
+const studyDataZustimmung = [10, 20, 30, 30, 20];
 
-// Beispieldaten — ersetze mit echten Prozentwerten (Summe = 100)
-const studyData = [3, 4, 5, 8, 10, 18, 20, 10, 5, 3];
+// Szenario
+const messagesSzenario = [
+  'Ich würde Angebot A nehmen',
+  'Ich würde Angebot A nehmen, aber der Gehaltsunterschied lässt mich zögern',
+  'Ich würde intensiv abwägen und beide Angebote in Betracht ziehen',
+  'Ich würde Angebot B nehmen, weil das Gehalt ein legitimer Grund ist',
+  'Ich würde Angebot B aus anderen Gründen wählen',
+];
+const studyDataSzenario = [5, 15, 30, 35, 15];
 
-function buildComparisonBars() {
-  const wrap = document.getElementById('comparisonBars');
+const sliderConfigs = {
+  zustimmung: {
+    messages: messagesZustimmung,
+    data: studyDataZustimmung,
+    ids: {
+      slider: 'tensionSlider',
+      fill: 'sliderFill',
+      num: 'tensionNum',
+      text: 'tensionText',
+      bars: 'comparisonBars',
+      compText: 'comparisonText'
+    }
+  },
+  szenario: {
+    messages: messagesSzenario,
+    data: studyDataSzenario,
+    ids: {
+      slider: 'tensionSliderScenario',
+      fill: 'sliderFillScenario',
+      num: 'tensionNumScenario',
+      text: 'tensionTextScenario',
+      bars: 'comparisonBarsScenario',
+      compText: 'comparisonTextScenario'
+    }
+  }
+};
+
+function buildComparisonBarsFor(containerId, data, prefix) {
+  const wrap = document.getElementById(containerId);
   if (!wrap) return;
-  const max = Math.max(...studyData);
-  wrap.innerHTML = studyData.map((val, i) => {
+  const max = Math.max(...data);
+  wrap.innerHTML = data.map((val, i) => {
     const h = Math.round((val / max) * 100);
-    return `<div class="comp-bar" id="bar-${i}" style="height:${h}%"></div>`;
+    // id namespaced by prefix to avoid collision
+    return `<div class="comp-bar" id="${containerId}-bar-${i}" style="height:${h}%"></div>`;
   }).join('');
 }
 
-function updateTension(v) {
-  v = parseInt(v);
-  document.getElementById('sliderFill').style.width = (v * 10) + '%';
-  document.getElementById('tensionNum').textContent = v;
-  document.getElementById('tensionText').textContent = 'von 10 — ' + messages[v];
+function updateTensionFor(key, v) {
+  const cfg = sliderConfigs[key];
+  if (!cfg) return;
+  const messages = cfg.messages;
+  const studyData = cfg.data;
+  const ids = cfg.ids;
 
-  // Balken aktualisieren
+  const scaleMin = 1;
+  const scaleMax = messages.length;
+
+  if (typeof v === 'undefined' || v === null || v === '') {
+    const s = document.getElementById(ids.slider);
+    v = s ? parseInt(s.value) : Math.round((scaleMin + scaleMax) / 2);
+  } else {
+    v = parseInt(v);
+  }
+
+  // clamp index to valid range to avoid undefined messages or studyData
+  let idx = v - scaleMin;
+  if (idx < 0) idx = 0;
+  if (idx > messages.length - 1) idx = messages.length - 1;
+
+  const span = scaleMax - scaleMin;
+  const fillEl = document.getElementById(ids.fill);
+  if (fillEl) {
+    // Scope the track to this slider's wrapper so multiple sliders don't interfere
+    const sliderEl = document.getElementById(ids.slider);
+    let trackEl = null;
+    if (sliderEl) {
+      const wrap = sliderEl.closest('.slider-track-wrap');
+      if (wrap) trackEl = wrap.querySelector('.slider-track');
+    }
+
+    // Compute thumb width dynamically from slider height (robust across browsers)
+    let thumbWidth = 18;
+    if (sliderEl) {
+      try {
+        const h = sliderEl.getBoundingClientRect().height;
+        if (h && !Number.isNaN(h)) thumbWidth = Math.max(8, Math.round(h * 0.75));
+      } catch (e) {
+        // fallback to default
+      }
+    }
+
+    if (trackEl) {
+      const trackRect = trackEl.getBoundingClientRect();
+      const trackW = trackRect.width;
+      const ratio = span > 0 ? ((v - scaleMin) / span) : 1;
+      let posPx = Math.round(ratio * trackW);
+      let adj = posPx - Math.round(thumbWidth / 2);
+      if (adj < 0) adj = 0;
+      if (adj > trackW) adj = trackW;
+      fillEl.style.width = adj + 'px';
+    } else {
+      const fillPct = span > 0 ? Math.round(((v - scaleMin) / span) * 100) : 100;
+      fillEl.style.width = fillPct + '%';
+    }
+  }
+
+  const numEl = document.getElementById(ids.num);
+  if (numEl) numEl.textContent = v;
+
+  const textEl = document.getElementById(ids.text);
+  if (textEl) textEl.textContent = `von ${scaleMax} — ${messages[idx] || ''}`;
+
+  // Balken aktualisieren; ids for bars are namespaced
   studyData.forEach((_, i) => {
-    const bar = document.getElementById('bar-' + i);
-    if (bar) bar.classList.toggle('active', i === v);
+    const bar = document.getElementById(`${ids.bars}-bar-${i}`);
+    if (bar) bar.classList.toggle('active', i === idx);
   });
 
-  // Vergleichstext
-  const pct = studyData[v];
-  document.getElementById('comparisonText').innerHTML =
-    `<strong>${pct}% der Befragten</strong> haben ebenfalls <strong>${v} von 10</strong> angegeben.`;
+  const pct = studyData[idx] || 0;
+  const comp = document.getElementById(ids.compText);
+  if (comp) comp.innerHTML = `<strong>${pct}% der Befragten</strong> haben ebenfalls <strong>${v} von ${scaleMax}</strong> angegeben.`;
 }
 
 window.addEventListener('load', () => {
-  buildComparisonBars();
-  updateTension(5);
+  // ── Fade-in observer for general elements with class .fade-in (make content appear while scrolling)
+  const fadeEls = document.querySelectorAll('.fade-in');
+  if (fadeEls.length) {
+    const fadeObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    fadeEls.forEach(el => fadeObs.observe(el));
+    // fallback: ensure they become visible after a short delay if observer doesn't fire
+    setTimeout(() => {
+      fadeEls.forEach(el => { if (!el.classList.contains('visible')) el.classList.add('visible'); });
+    }, 350);
+  }
+  // Setup für beide Slider-Konfigurationen
+  Object.keys(sliderConfigs).forEach(key => {
+    const cfg = sliderConfigs[key];
+    const ids = cfg.ids;
+    const messages = cfg.messages;
+    const scaleMinLocal = 1;
+    const scaleMaxLocal = messages.length;
 
-  // ── Fade-in beim Reinscrolle ──
-  const el = document.getElementById('tensionInner');
-  if (el) {
-    const fadeObserver = new IntersectionObserver(entries => {
+    const sliderEl = document.getElementById(ids.slider);
+    if (sliderEl) {
+      sliderEl.min = scaleMinLocal;
+      sliderEl.max = scaleMaxLocal;
+      if (!sliderEl.value) sliderEl.value = Math.round((scaleMinLocal + scaleMaxLocal) / 2);
+      // attach inline change handler to call update function (also supports keyboard)
+      sliderEl.addEventListener('input', (e) => updateTensionFor(key, e.target.value));
+    }
+
+    buildComparisonBarsFor(ids.bars, cfg.data, key);
+    updateTensionFor(key);
+  });
+
+  // ── Fade-in für alle fullscreen-inner Elemente (sichtbar machen, wenn sie in den Viewport kommen)
+  const fullscreenInners = document.querySelectorAll('.fullscreen-inner');
+  if (fullscreenInners.length) {
+    const innerObserver = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) e.target.classList.add('visible');
       });
     }, { threshold: 0.15 });
-    fadeObserver.observe(el);
+    fullscreenInners.forEach(el => innerObserver.observe(el));
+    // Fallback: falls IntersectionObserver nicht feuert (z. B. in älteren Browsern), machen wir die Elemente sichtbar
+    setTimeout(() => {
+      fullscreenInners.forEach(el => {
+        if (!el.classList.contains('visible')) el.classList.add('visible');
+      });
+    }, 300);
   }
 
-  // ── Nav ausblenden beim Reinscrolle ──
+  // ── Nav ausblenden beim Reinscrolle UND beim Scroll-Down (wie auf der anderen Seite)
   const nav = document.querySelector('nav');
   const block = document.querySelector('.fullscreen-block');
-  if (nav && block) {
-    const navObserver = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        nav.style.opacity = e.isIntersecting ? '0' : '1';
-        nav.style.pointerEvents = e.isIntersecting ? 'none' : 'auto';
-      });
-    }, { threshold: 0.2 });
-    navObserver.observe(block);
+  if (nav) {
+    // Wenn die fullscreen-block in Sicht ist, verberge die Nav (IntersectionObserver)
+    if (block) {
+      const navObserver = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) nav.classList.add('nav-hidden');
+          else nav.classList.remove('nav-hidden');
+        });
+      }, { threshold: 0.2 });
+      navObserver.observe(block);
+    }
+
+    // Zusätzlich: zeige/verstecke Nav beim Scrollen (runter = verstecken, hoch = zeigen)
+    let lastY = window.scrollY;
+    let ticking = false;
+    const SCROLL_DELTA = 8; // minimale Bewegung, bevor wir reagieren
+
+    function handleScroll() {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY) < SCROLL_DELTA) return;
+      if (y > lastY && y > 80) {
+        // Scrollt nach unten: verstecken
+        nav.classList.add('nav-hidden');
+      } else {
+        // Scrollt nach oben: zeigen
+        nav.classList.remove('nav-hidden');
+      }
+      lastY = y;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => { handleScroll(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
   }
 });
 
@@ -212,45 +553,48 @@ const colorUSA = "#3d2d6e";
 const colorDE  = "#7F77DD";
 
 const chart = document.getElementById('priority-chart');
-
-// Header
-const header = document.createElement('div');
-header.className = 'priority-header-row';
-header.innerHTML = `
+if (chart) {
+  // Header
+  const header = document.createElement('div');
+  header.className = 'priority-header-row';
+  header.innerHTML = `
     <div></div>
     <div class="priority-header-label" style="color:#AFA9EC"> USA</div>
     <div class="priority-header-label" style="color:#7F77DD"> DE</div>
-`;
-chart.appendChild(header);
+  `;
+  chart.appendChild(header);
 
-// Rows
-priorityData.forEach(item => {
-    const row = document.createElement('div');
-    row.className = 'priority-row';
+  // Rows
+  priorityData.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'priority-row';
 
-    row.innerHTML = `
-        <div class="priority-label">${item.label.replace('\n','<br>')}</div>
-        <div class="priority-side">
-            <div class="priority-bar-wrap">
-                <div class="priority-bar-track">
-                    <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA}">
-                        <span>${item.usa}%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="priority-side">
-            <div class="priority-bar-wrap">
-                <div class="priority-bar-track">
-                    <div class="priority-bar-fill" style="width:${item.de}%; background:${colorDE}">
-                        <span>${item.de}%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    chart.appendChild(row);
-});
+      row.innerHTML = `
+          <div class="priority-label">${item.label.replace('\n','<br>')}</div>
+          <div class="priority-side">
+              <div class="priority-bar-wrap">
+                  <div class="priority-bar-track">
+                      <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA}">
+                          <span>${item.usa}%</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="priority-side">
+              <div class="priority-bar-wrap">
+                  <div class="priority-bar-track">
+                      <div class="priority-bar-fill" style="width:${item.de}%; background:${colorDE}">
+                          <span>${item.de}%</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      `;
+      chart.appendChild(row);
+  });
+} else {
+  console.warn('priority-chart element not found; skipping priority chart render');
+}
 
  // ══════════════════════════════════════════════════════
     // PUNKTE — Koordinaten in [Längengrad, Breitengrad]
@@ -278,6 +622,10 @@ const padding = 24;
 fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bundeslaender/4_niedrig.geo.json")
   .then(r => r.json())
   .then(geojson => {
+    if (!svgEl) {
+      console.warn('deutschland-svg not found; aborting map render');
+      return;
+    }
     const fc = { type: "FeatureCollection", features: geojson.features };
 
     // Auto-fit projection to GeoJSON
@@ -305,20 +653,22 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
 
     punkte.forEach(p => {
       const [x, y] = projection(p.coords);
+      const cx = Math.round(x);
+      const cy = Math.round(y);
       const group = document.createElementNS(svgNS, 'g');
       group.classList.add('map-punkt');
 
       const ring = document.createElementNS(svgNS, 'circle');
       ring.classList.add('ring');
-      ring.setAttribute('cx', x);
-      ring.setAttribute('cy', y);
+      ring.setAttribute('cx', cx);
+      ring.setAttribute('cy', cy);
       ring.setAttribute('r', 5);
       ring.style.animationDelay = (Math.random() * 2.5).toFixed(2) + 's';
 
       const dot = document.createElementNS(svgNS, 'circle');
       dot.classList.add('dot');
-      dot.setAttribute('cx', x);
-      dot.setAttribute('cy', y);
+      dot.setAttribute('cx', cx);
+      dot.setAttribute('cy', cy);
       dot.setAttribute('r', 5);
 
       group.appendChild(ring);
@@ -326,18 +676,18 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
       g.appendChild(group);
 
       group.addEventListener('mouseenter', (e) => {
-        tooltipCity.textContent = p.city;
-        tooltipText.textContent = p.text;
-        tooltip.classList.add('visible');
+        if (tooltipCity) tooltipCity.textContent = p.city;
+        if (tooltipText) tooltipText.textContent = p.text;
+        if (tooltip) tooltip.classList.add('visible');
         positionTooltip(e);
       });
       group.addEventListener('mousemove', positionTooltip);
-      group.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+      group.addEventListener('mouseleave', () => { if (tooltip) tooltip.classList.remove('visible'); });
     });
   })
   .catch(err => {
-    svgEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#7a77aa" font-family="DM Sans,sans-serif" font-size="13">Karte konnte nicht geladen werden</text>';
-    console.error(err);
+    if (svgEl) svgEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#7a77aa" font-family="DM Sans,sans-serif" font-size="13">Karte konnte nicht geladen werden</text>';
+    console.error('Fehler beim Laden der Karte:', err);
   });
 
 function positionTooltip(e) {

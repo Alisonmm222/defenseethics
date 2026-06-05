@@ -16,6 +16,16 @@
           --max: 680px;
         }
 
+                /* utility: visually hidden content for accessibility */
+                .visually-hidden {
+                  position: absolute !important;
+                  height: 1px; width: 1px;
+                  overflow: hidden;
+                  clip: rect(1px, 1px, 1px, 1px);
+                  white-space: nowrap;
+                  border: 0; padding: 0; margin: -1px;
+                }
+
         html { background: var(--cream); color: var(--ink); scroll-behavior: smooth; }
 
       body {
@@ -42,7 +52,14 @@
           top: 0;
           background: var(--cream);
           z-index: 100;
-          transition: opacity 0.4s ease;
+          /* animate both opacity and vertical position for smooth hide/show on scroll */
+          transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+        /* When hidden (scrolling down), move nav out of view and reduce pointer events */
+        .site-nav.nav-hidden {
+          transform: translateY(-110%);
+          opacity: 0;
+          pointer-events: none;
         }
         .nav-brand { color: var(--ink); font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; }
         .nav-links { display: flex; gap: 28px; }
@@ -809,18 +826,134 @@
     /* ── Stacked Bar Chart ── */
             .pair { margin-bottom: 20px; }
             .pair + .pair { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 18px; }
-            .pair-label { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 500; color: #a09bdc; margin-bottom: 8px; line-height: 1.4; }
+            /* make the stacked chart labels as prominent as the "Prioritäten" headings */
+            .pair-label { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 8px; line-height: 1.4; }
             .stacked-track { display: flex; flex-direction: row; width: 100%; height: 30px; border-radius: 4px; overflow: hidden; background: rgba(255,255,255,0.06); }
             .segment { height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); overflow: hidden; white-space: nowrap; }
             .segment-pct { padding: 0 5px; }
-            .stacked-legend { margin-top: 22px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; }
-            .stacked-legend-title { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5c5898; margin-bottom: 12px; }
-            .stacked-legend-items { display: flex; gap: 16px; flex-wrap: wrap; }
-            .stacked-legend-item { display: flex; align-items: flex-start; gap: 8px; flex: 1; min-width: 180px; }
+            /* reduced vertical spacing and tighter items so the legend fits better */
+            .stacked-legend { margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; }
+            .stacked-legend-items { display: flex; gap: 12px; flex-wrap: wrap; }
+            .stacked-legend-item { display: flex; align-items: flex-start; gap: 8px; flex: 1; min-width: 140px; }
             .stacked-legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; margin-top: 3px; }
             .stacked-legend-name { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; color: #c4bff5; margin-bottom: 2px; }
-            .stacked-legend-desc { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #7a77aa; line-height: 1.5; }
+            .stacked-legend-desc { font-family: 'DM Sans', sans-serif; font-size: 13px; color: #7a77aa; line-height: 1.45; }
 
+          .opinion-wrapper {
+            display: grid;
+            gap: 40px;
+            position: relative; /* container for floating insight */
+            /* reserve space below the opinion explorer so the floating tooltip
+               doesn't overlap the next chart and block clicks */
+            padding-bottom: 140px;
+          }
+
+          .opinion-section-head {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: 0.06em;
+            text-transform: none;
+            margin-bottom: -8px;
+          }
+
+          .opinion-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+          }
+
+          .opinion-card {
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+            cursor: pointer;
+            transition: all .3s ease;
+          }
+
+          .opinion-card:hover {
+            transform: translateY(-4px);
+          }
+
+          .opinion-card.active {
+            transform: scale(1.03);
+            background: rgba(255,255,255,0.08);
+          }
+
+          .opinion-card.dim {
+            opacity: 0.4;
+          }
+
+          /* Opinion explorer: compact radial badges instead of vertical bars */
+          .opinion-chart {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            justify-content: space-between; /* spread the circles across the full width */
+            width: 100%;
+          }
+
+          .opinion-circle {
+            /* allow circles to grow so they evenly fill available space */
+            flex: 1 1 0;
+            max-width: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform .18s ease, box-shadow .18s ease;
+            padding: 6px 6px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.02);
+          }
+
+          .opinion-circle.hover { transform: translateY(-6px); box-shadow: 0 10px 24px rgba(61,45,110,0.06); }
+          .opinion-circle.active { transform: translateY(-8px) scale(1.04); background: rgba(127,119,221,0.08); }
+          .opinion-circle.dim { opacity: 0.45; }
+          .opinion-circle:focus { outline: 3px solid rgba(127,119,221,0.12); }
+
+          .opinion-svg { width: 36px; height: 36px; display: block; }
+          .opinion-svg .ring-bg { stroke-width: 3; }
+          .opinion-svg .ring-fg { stroke-width: 3; transform: rotate(-90deg); transform-origin: 50% 50%; }
+
+          .opinion-circle-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ink);
+            color: #5c5898;
+          }
+
+          .opinion-card.hover { box-shadow: 0 8px 20px rgba(61,45,110,0.06); transform: translateY(-6px); }
+          .opinion-card.dim { opacity: 0.5; }
+
+          /* floating insight that follows the active circle */
+          .opinion-insight-floating {
+            position: absolute;
+            left: 0;
+            top: 100%;
+            transform: translateY(8px);
+            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 220ms ease, transform 220ms ease;
+            z-index: 30;
+            width: 320px;
+            max-width: calc(100% - 16px);
+          }
+          .opinion-insight-floating.visible { opacity: 1; transform: translateY(0); }
+          .opinion-insight-floating .opinion-insight {
+            background: white;
+            color: var(--ink);
+            padding: 14px 16px;
+            border-radius: 8px;
+            box-shadow: 0 12px 30px rgba(20,18,30,0.12);
+            border: 1px solid rgba(0,0,0,0.04);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+          }
+          .opinion-insight-floating .opinion-insight strong { color: var(--ink); }
 
         /* ── QUOTE CARDS ── */
         .quote-grid {

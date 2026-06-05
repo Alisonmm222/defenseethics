@@ -16,8 +16,8 @@
     <div class="nav-brand">Ingenieur&shy;ethik</div>
     <div class="nav-links">
         <a href="#zeitenwende">Lagebild</a>
-        <a href="#berufsethik">Daten</a>
-        <a href="#umfrage">Mehr Daten</a>
+        <a href="#berufsethik">Berufsethik</a>
+        <a href="#umfrage">Unsere Daten</a>
     </div>
 </nav>
 
@@ -70,17 +70,48 @@
         </p>
     </div>
 
-    <div class="pull-quote fade-in">
-        <div class="pq-eyebrow">Stell dir vor …</div>
-        <p class="pq-setup">Auf deinem Tisch liegen zwei Angebote.</p>
-        <p class="pq-body">
-            Eines von einem zivilen Unternehmen, eines von einem Rüstungskonzern.
-            Die Aufgaben faszinieren dich beide, aber der Rüstungskonzern zahlt
-            <em>20&nbsp;% mehr Gehalt.</em>
-        </p>
-        <p class="pq-question">Wie würdest du dich entscheiden?</p>
-        <cite>↓ Das Ergebnis erfährst du weiter unten</cite>
-    </div>
+        <section class="fullscreen-block">
+            <div class="fullscreen-inner" id="tensionInnerScenario">
+                <div class="tension-block">
+
+                    <div class="tension-eyebrow">Ihre Einschätzung</div>
+                    <h4>Stell dir vor auf deinem Tisch liegen zwei Angebote...</h4>
+                    <p class = "pq-body">
+                        Eines von einem zivilen Unternehmen (Angebot A), eines von einem Rüstungskonzern (Angebot B).
+                        Die Aufgaben faszinieren dich beide, aber der Rüstungskonzern zahlt
+                        20&nbsp;% mehr Gehalt.
+                    </p>
+
+                    <div class="slider-labels">
+                        <span>Ziviles Unternehmen</span>
+                        <span>Rüstungskonzern</span>
+                    </div>
+
+                    <div class="slider-track-wrap">
+                        <div class="slider-track">
+                            <div class="slider-fill" id="sliderFillScenario"></div>
+                        </div>
+                        <label class="visually-hidden" for="tensionSliderScenario">Szenario-Auswahl</label>
+                        <input aria-label="Szenario-Auswahl" type="range" min="1" max="5" value="3" step="1"
+                               class="tension-slider" id="tensionSliderScenario"
+                               oninput="updateTensionFor('szenario', this.value)">
+                    </div>
+
+                    <div class="tension-result-row">
+                        <div class="tension-result-num" id="tensionNumScenario">3</div>
+                        <div class="tension-result-text" id="tensionTextScenario">von 5 — Bewegen Sie den Schieberegler.</div>
+                    </div>
+                </div>
+                <div class="tension-comparison">
+                    <div class="comparison-bar-wrap">
+                        <div class="comparison-bars" id="comparisonBarsScenario">
+                        </div>
+                    </div>
+                    <div class="comparison-text" id="comparisonTextScenario"></div>
+                </div>
+            </div>
+
+    </section>
 
     <hr class="section-divider section-divider--light" id="zeitenwende">
 
@@ -127,7 +158,7 @@
 
         <div class="kpi-arrow">
             <div class="kpi-arrow-line"></div>
-            <div class="kpi-arrow-delta">+34 Punkte</div>
+            <div class="kpi-arrow-delta">Anstieg von 34%</div>
             <div class="kpi-arrow-line"></div>
             <div class="kpi-arrow-head">→</div>
         </div>
@@ -154,21 +185,25 @@
         </div>
     </div>
 
-    <div class="stat-row fade-in">
-        <div class="stat-cell">
-            <div class="big-num" style="color: var(--accent)">57%</div>
-            <div class="big-label">befürworten höhere Verteidigungsausgaben (2024)</div>
-        </div>
-        <div class="stat-cell">
-            <div class="big-num" style="color: var(--purple)">+19%</div>
-            <div class="big-label">mehr Zustimmung als 2020</div>
-        </div>
-        <div class="stat-cell">
-            <div class="big-num" style="color: var(--teal)">38%</div>
-            <div class="big-label">der Ingenieur:innen würden Verteidigungsjobs stärker in Betracht ziehen</div>
-        </div>
+    <div class="section-illo fade-in">
+        <svg class="illo-svg" viewBox="0 0 120 120" fill="none">
+            <line x1="60" y1="20" x2="60" y2="60" stroke="#3d2d6e" stroke-width="2"/>
+            <line x1="20" y1="60" x2="100" y2="60" stroke="#3d2d6e" stroke-width="2"/>
+            <line x1="30" y1="60" x2="25" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
+            <line x1="30" y1="60" x2="35" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
+            <rect x="15" y="80" width="30" height="6" rx="3" fill="#3d2d6e" opacity="0.2" stroke="#3d2d6e" stroke-width="1"/>
+            <text x="30" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#3d2d6e" font-weight="500">ETHIK</text>
+            <line x1="90" y1="60" x2="85" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
+            <line x1="90" y1="60" x2="95" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
+            <rect x="75" y="80" width="30" height="6" rx="3" fill="#0d6b5e" opacity="0.2" stroke="#0d6b5e" stroke-width="1"/>
+            <text x="90" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b5e" font-weight="500">PFLICHT</text>
+            <circle cx="60" cy="18" r="4" fill="white" stroke="#3d2d6e" stroke-width="1.5"/>
+            <circle cx="60" cy="18" r="2" fill="#3d2d6e"/>
+        </svg>
+        <p class="illo-text">
+            Zwischen individuellem Kompass<br>und gesellschaftlicher Pflicht:<br><strong>wo stehen Ingenieur:innen?</strong>
+        </p>
     </div>
-
 
     <hr class="section-divider" id="berufsethik">
 
@@ -176,23 +211,26 @@
         <div class="section-number">Teil Zwei</div>
         <h2 class="section-title">Was wissen wir schon über Berufsethik?</h2>
     </div>
-
     <div class="prose fade-in">
-        <p>Bevor wir unsere eigene Umfrage vorstellen, lohnt ein Blick auf bestehende Studien. Berufsethik ist kein neues Thema — aber es erfährt gerade eine Renaissance.</p>
+        <p>Bevor wir unsere eigene Umfrage vorstellen, lohnt ein Blick auf bestehende Studien. </p>
+    </div>
+    <div class="chart-block fade-in">
+        <div class="chart-header">
+            <h4>Prioritäten</h4>
+        </div>
+        <div class="chart-body">
+            <div class="priority-chart" id="priority-chart"></div>
+        </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         STACKED BAR CHART — TechWorker USA
-         ══════════════════════════════════════════════════════ -->
     <div id="chart-pairs"></div>
     <div class="stacked-legend">
-        <div class="stacked-legend-title">Legende</div>
         <div class="stacked-legend-items" id="stacked-legend"></div>
     </div>
 
     <div class="chart-block fade-in">
         <div class="chart-header">
-            <h4>Sekundärdaten: Berufsethik in der Ingenieurpraxis</h4>
+            <h4>Technik Radar</h4>
             <div class="tab-row">
                 <button class="tab-btn active" onclick="switchTab('bewusstsein', this)">Ethisches Bewusstsein</button>
                 <button class="tab-btn" onclick="switchTab('bereiche', this)">Tätigkeitsfelder</button>
@@ -261,54 +299,11 @@
         </div>
     </div>
 
-    <div class="prose fade-in">
-        <p>Auffällig: Der Verteidigungsbereich liegt bei der Akzeptanz weit hinter allen anderen Sektoren — obwohl die fachlichen Tätigkeiten sich oft kaum unterscheiden.</p>
-    </div>
-
-    <div class="section-illo fade-in">
-        <svg class="illo-svg" viewBox="0 0 120 120" fill="none">
-            <line x1="60" y1="20" x2="60" y2="60" stroke="#3d2d6e" stroke-width="2"/>
-            <line x1="20" y1="60" x2="100" y2="60" stroke="#3d2d6e" stroke-width="2"/>
-            <line x1="30" y1="60" x2="25" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
-            <line x1="30" y1="60" x2="35" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
-            <rect x="15" y="80" width="30" height="6" rx="3" fill="#3d2d6e" opacity="0.2" stroke="#3d2d6e" stroke-width="1"/>
-            <text x="30" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#3d2d6e" font-weight="500">ETHIK</text>
-            <line x1="90" y1="60" x2="85" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
-            <line x1="90" y1="60" x2="95" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
-            <rect x="75" y="80" width="30" height="6" rx="3" fill="#0d6b5e" opacity="0.2" stroke="#0d6b5e" stroke-width="1"/>
-            <text x="90" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b5e" font-weight="500">PFLICHT</text>
-            <circle cx="60" cy="18" r="4" fill="white" stroke="#3d2d6e" stroke-width="1.5"/>
-            <circle cx="60" cy="18" r="2" fill="#3d2d6e"/>
-        </svg>
-        <p class="illo-text">
-            Zwischen individuellem Kompass<br>und gesellschaftlicher Pflicht:<br><strong>wo stehen Ingenieur:innen?</strong>
-        </p>
-    </div>
-
-    <div class="quote-grid fade-in">
-        <div class="quote-card">
-            <blockquote>„Ich würde niemals für ein Unternehmen arbeiten, das Waffen herstellt. Das ist eine rote Linie für mich."</blockquote>
-            <footer>Maschinenbaustudentin, 24 · Platzhalterzitat</footer>
-        </div>
-        <div class="quote-card">
-            <blockquote>„Sicherheitstechnik schützt Menschen. Ich sehe das nicht als ethisches Problem, sondern als Verantwortung."</blockquote>
-            <footer>Ingenieur, 38, berufstätig · Platzhalterzitat</footer>
-        </div>
-        <div class="quote-card">
-            <blockquote>„Die Grenze zwischen ziviler und militärischer Anwendung ist in meiner Branche längst verschwommen."</blockquote>
-            <footer>Informatikerin, 31 · Platzhalterzitat</footer>
-        </div>
-        <div class="quote-card">
-            <blockquote>„Das Studium hat mich nicht vorbereitet, solche Entscheidungen zu treffen."</blockquote>
-            <footer>Elektrotechnikstudent, 22 · Platzhalterzitat</footer>
-        </div>
-    </div>
-
     <hr class="section-divider" id="umfrage">
 
     <div class="fade-in">
         <div class="section-number">Teil Drei</div>
-        <h2 class="section-title">Fünf Fragen, die wir selbst gestellt haben</h2>
+        <h2 class="section-title">Fünf Fragen, die wir gestellt haben</h2>
     </div>
 
     <div class="prose fade-in">
@@ -352,30 +347,31 @@
 
 
     <section class="fullscreen-block">
-        <div class="fullscreen-inner" id="tensionInner">
+        <div class="fullscreen-inner" id="tensionInnerZustimmung">
             <div class="tension-block">
 
                 <div class="tension-eyebrow">Ihre Einschätzung</div>
-                <h4>Wie stark spüren Sie<br>die ethische Spannung?</h4>
-                <p>Stellen Sie sich vor, Ihr Arbeitgeber entwickelt eine Technologie, die auch militärisch genutzt werden könnte.</p>
+                <h4>Wie stark empfindest du<br>die ethische Spannung?</h4>
+                <p>Hättest du Gewissenskonflikte, wenn du im Defense Bereich arbeiten würdest?</p>
 
                 <div class="slider-labels">
                     <span>Keine Spannung</span>
                     <span>Starke Spannung</span>
                 </div>
 
-                <div class="slider-track-wrap">
-                    <div class="slider-track">
-                        <div class="slider-fill" id="sliderFill"></div>
+                    <div class="slider-track-wrap">
+                        <div class="slider-track">
+                            <div class="slider-fill" id="sliderFill"></div>
+                        </div>
+                        <label class="visually-hidden" for="tensionSlider">Spannungs-Schieberegler</label>
+                        <input aria-label="Spannungs-Schieberegler" type="range" min="1" max="5" value="3" step="1"
+                               class="tension-slider" id="tensionSlider"
+                               oninput="updateTensionFor('zustimmung', this.value)">
                     </div>
-                    <input type="range" min="0" max="10" value="5" step="1"
-                           class="tension-slider" id="tensionSlider"
-                           oninput="updateTension(this.value)">
-                </div>
 
                 <div class="tension-result-row">
                     <div class="tension-result-num" id="tensionNum">5</div>
-                    <div class="tension-result-text" id="tensionText">von 10 — Bewegen Sie den Schieberegler.</div>
+                    <div class="tension-result-text" id="tensionText">von 5 — Bewegen Sie den Schieberegler.</div>
                 </div>
         </div>
             <div class="tension-comparison">
@@ -391,19 +387,9 @@
 
     <div class="fade-in">
         <h3 class="sub-heading">Unsere Befunde</h3>
-
         <div class="chart-block fade-in">
             <div class="chart-header">
-                <h4>Prioritäten</h4>
-            </div>
-            <div class="chart-body">
-                <div class="priority-chart" id="priority-chart"></div>
-            </div>
-        </div>
-
-        <div class="chart-block fade-in">
-            <div class="chart-header">
-                <h4>Können Sie sich vorstellen, im Verteidigungsbereich zu arbeiten?</h4>
+                <h4>Kannst du dir vorstellen, im Verteidigungsbereich zu arbeiten?</h4>
             </div>
             <div class="chart-body">
                 <div class="toggle-question">
@@ -428,26 +414,25 @@
                 </div>
             </div>
         </div>
-
-    <div class="stat-row fade-in">
-        <div class="stat-cell">
-            <div class="big-num" style="color: var(--purple)">68%</div>
-            <div class="big-label">sagen, Ethik sei ausschlaggebend bei der Jobwahl</div>
-        </div>
-        <div class="stat-cell">
-            <div class="big-num" style="color: var(--accent)">3 / 10</div>
-            <div class="big-label">würden im Verteidigungssektor arbeiten</div>
-        </div>
-        <div class="stat-cell">
-            <div class="big-num" style="color: var(--teal)">∅ 6,4</div>
-            <div class="big-label">empfundene Spannung zwischen Ethik und Pflicht (Skala 0–10)</div>
-        </div>
     </div>
 
-    <div class="prose fade-in">
-        <p>
-            Die vollständige Auswertung — mit Unterschieden nach Geschlecht, Fachrichtung und Berufsstatus — folgt in den nächsten Abschnitten dieser Website. Was sich bereits jetzt abzeichnet: <em>Die Zeitenwende ist im Ingenieursberuf angekommen. Die ethischen Antworten noch nicht.</em>
-        </p>
+    <div class="quote-grid fade-in">
+        <div class="quote-card">
+            <blockquote>„Ich würde niemals für ein Unternehmen arbeiten, das Waffen herstellt. Das ist eine rote Linie für mich."</blockquote>
+            <footer>Maschinenbaustudentin, 24 · Platzhalterzitat</footer>
+        </div>
+        <div class="quote-card">
+            <blockquote>„Sicherheitstechnik schützt Menschen. Ich sehe das nicht als ethisches Problem, sondern als Verantwortung."</blockquote>
+            <footer>Ingenieur, 38, berufstätig · Platzhalterzitat</footer>
+        </div>
+        <div class="quote-card">
+            <blockquote>„Die Grenze zwischen ziviler und militärischer Anwendung ist in meiner Branche längst verschwommen."</blockquote>
+            <footer>Informatikerin, 31 · Platzhalterzitat</footer>
+        </div>
+        <div class="quote-card">
+            <blockquote>„Das Studium hat mich nicht vorbereitet, solche Entscheidungen zu treffen."</blockquote>
+            <footer>Elektrotechnikstudent, 22 · Platzhalterzitat</footer>
+        </div>
     </div>
 </main>
 
