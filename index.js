@@ -647,43 +647,19 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
       .attr("class", "bundesland")
       .attr("d", path);
 
-    // Punkte
-    const g = document.createElementNS(svgNS, 'g');
-    svgEl.appendChild(g);
-
-    punkte.forEach(p => {
-      const [x, y] = projection(p.coords);
-      const cx = Math.round(x);
-      const cy = Math.round(y);
-      const group = document.createElementNS(svgNS, 'g');
-      group.classList.add('map-punkt');
-
-      const ring = document.createElementNS(svgNS, 'circle');
-      ring.classList.add('ring');
-      ring.setAttribute('cx', cx);
-      ring.setAttribute('cy', cy);
-      ring.setAttribute('r', 5);
-      ring.style.animationDelay = (Math.random() * 2.5).toFixed(2) + 's';
-
-      const dot = document.createElementNS(svgNS, 'circle');
-      dot.classList.add('dot');
-      dot.setAttribute('cx', cx);
-      dot.setAttribute('cy', cy);
-      dot.setAttribute('r', 5);
-
-      group.appendChild(ring);
-      group.appendChild(dot);
-      g.appendChild(group);
-
-      group.addEventListener('mouseenter', (e) => {
-        if (tooltipCity) tooltipCity.textContent = p.city;
-        if (tooltipText) tooltipText.textContent = p.text;
+    // Instead of rendering separate point markers we attach tooltip handlers
+    // to each Bundesland path so a single tooltip appears for the whole state.
+    svg.selectAll('path.bundesland')
+      .on('mouseenter', (event, d) => {
+        const props = (d && d.properties) ? d.properties : {};
+        const name = props.NAME || props.name || props.NAME_1 || props.GEN || props.name_de || 'Bundesland';
+        if (tooltipCity) tooltipCity.textContent = name;
+        if (tooltipText) tooltipText.textContent = `Platzhaltertext für ${name}`;
         if (tooltip) tooltip.classList.add('visible');
-        positionTooltip(e);
-      });
-      group.addEventListener('mousemove', positionTooltip);
-      group.addEventListener('mouseleave', () => { if (tooltip) tooltip.classList.remove('visible'); });
-    });
+        positionTooltip(event);
+      })
+      .on('mousemove', (event) => positionTooltip(event))
+      .on('mouseleave', () => { if (tooltip) tooltip.classList.remove('visible'); });
   })
   .catch(err => {
     if (svgEl) svgEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#7a77aa" font-family="DM Sans,sans-serif" font-size="13">Karte konnte nicht geladen werden</text>';
