@@ -26,7 +26,7 @@
                   border: 0; padding: 0; margin: -1px;
                 }
 
-        html { background: var(--cream); color: var(--ink); scroll-behavior: smooth; }
+      html { background: var(--cream); color: var(--ink); scroll-behavior: smooth; }
 
       body {
         font-family: 'Source Serif 4', Georgia, serif;
@@ -121,18 +121,99 @@
         .byline-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-faint); }
 
         /* ── PRIORITY CHART ── */
-.priority-chart { display: flex; flex-direction: column; gap: 20px; }
-    .priority-row { display: grid; grid-template-columns: 160px 1fr 1fr; align-items: center; gap: 12px; }
-    .priority-label { font-family: 'DM Sans', sans-serif; font-size: 13px; color: #a09bdc; text-align: right; line-height: 1.3; }
-    .priority-side { display: flex; flex-direction: column; gap: 5px; }
-    .priority-bar-wrap { display: flex; align-items: center; gap: 8px; }
-    .priority-bar-track { flex: 1; height: 22px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
-    .priority-bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; justify-content: flex-end; transition: width 0.5s ease; }
-    .priority-bar-fill span { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); padding-right: 7px; }
-    .priority-study-tag { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #5c5898; text-align: center; }
-    .priority-divider { width: 1px; background: rgba(255,255,255,0.08); align-self: stretch; margin: 0 4px; }
-    .priority-header-row { display: grid; grid-template-columns: 160px 1fr 1fr; gap: 12px; margin-bottom: 4px; }
-    .priority-header-label { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #5c5898; text-align: center; }
+.priority-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
+
+.priority-header-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.priority-header-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #5c5898;
+    text-align: center;
+}
+
+.priority-row {
+  display: grid;
+    grid-template-columns: 160px 1fr;
+    align-items: center;
+    gap: 12px;
+}
+
+.priority-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: #a09bdc;
+    text-align: right;
+    line-height: 1.3;
+}
+
+.priority-side {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.priority-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.priority-bar-track {
+    flex: 1;
+    height: 22px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.priority-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    transition: width 0.5s ease;
+}
+
+.priority-bar-fill span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    padding-right: 7px;
+}
+
+.priority-study-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #5c5898;
+    text-align: center;
+}
+
+.priority-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.08);
+    align-self: stretch;
+    margin: 0 4px;
+}
+
         /* ── HERO ILLUSTRATION ── */
         .hero-illo {
           max-width: 560px;
@@ -477,23 +558,7 @@
   }
   .bundesland:hover { fill: rgba(127,119,221,0.22); }
 
-  .map-punkt { cursor: pointer; }
-  .map-punkt circle.ring {
-    fill: none;
-    stroke: #7F77DD;
-    stroke-width: 1.5;
-    opacity: 0.5;
-    animation: mappulse 2.4s ease-out infinite;
-  }
-  .map-punkt circle.dot {
-    fill: #7F77DD;
-    transition: r 0.15s, fill 0.15s;
-  }
-  .map-punkt:hover circle.dot { fill: #e0dff5; }
-  @keyframes mappulse {
-    0%   { r: 5;  opacity: 0.5; }
-    100% { r: 20; opacity: 0; }
-  }
+
 .map-insight {
   display: flex;
   align-items: center;
@@ -507,7 +572,7 @@
   font-family: 'Playfair Display', serif;
   font-size: 52px;
   font-weight: 700;
-  color: var(--teal);
+  color: #c8441a;
   line-height: 1;
   flex-shrink: 0;
   min-width: 120px;
@@ -560,39 +625,7 @@
     color: #7a77aa;
     line-height: 1.5;
   }
-        /* ── BIG STAT BLOCK ── */
-        .stat-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: 1px;
-          background: var(--rule);
-          border: 1px solid var(--rule);
-          border-radius: 8px;
-          overflow: hidden;
-          margin: 44px 0;
-        }
 
-        .stat-cell {
-          background: var(--cream);
-          padding: 28px 20px;
-          text-align: center;
-        }
-
-        .stat-cell .big-num {
-          font-family: 'Playfair Display', serif;
-          font-size: 44px;
-          font-weight: 900;
-          line-height: 1;
-          margin-bottom: 8px;
-        }
-
-        .stat-cell .big-label {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 12px;
-          font-weight: 400;
-          color: var(--ink-faint);
-          line-height: 1.4;
-        }
 
         /* ── INTERACTIVE: CHART TABS ── */
         .chart-block {
@@ -613,6 +646,7 @@
           font-weight: 500;
           color: var(--ink);
           margin-bottom: 12px;
+          text-align: center;
         }
 
         .tab-row {
@@ -681,10 +715,70 @@
           white-space: nowrap;
         }
 
+ /* ──BAR CHART  ── */
+
+.likert-legend {
+    margin-bottom: 20px;
+}
+
+.likert-gradient {
+    height: 12px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        #2F1B69 0%,
+        #5D3BAD 25%,
+        #6D5BD0 50%,
+        #978AE6 75%,
+        #BDB4FA 100%
+    );
+}
+
+.likert-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+}
+.umfrage-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.umfrage-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.tab-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.tab-btn:hover {
+    background: rgba(93, 59, 173, 0.08);
+}
+
+.tab-btn.active {
+    background: #5D3BAD;
+    color: white;
+}
+
         /* ──FULLSCREEN TENSION SLIDER ── */
       .fullscreen-block {
         min-height: 100vh;
-        background: #0c0c0c;
+        background: #0D0D0D;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -879,9 +973,7 @@
           .opinion-wrapper {
             display: grid;
             gap: 40px;
-            position: relative; /* container for floating insight */
-            /* reserve space below the opinion explorer so the floating tooltip
-               doesn't overlap the next chart and block clicks */
+            position: relative;
             padding-bottom: 140px;
           }
 
@@ -922,17 +1014,15 @@
             opacity: 0.4;
           }
 
-          /* Opinion explorer: compact radial badges instead of vertical bars */
           .opinion-chart {
             display: flex;
             gap: 18px;
             align-items: center;
-            justify-content: space-between; /* spread the circles across the full width */
+            justify-content: space-between;
             width: 100%;
           }
 
           .opinion-circle {
-            /* allow circles to grow so they evenly fill available space */
             flex: 1 1 0;
             max-width: 160px;
             display: flex;

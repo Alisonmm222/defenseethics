@@ -370,10 +370,9 @@ window.addEventListener('load', () => {
       navObserver.observe(block);
     }
 
-    // Zusätzlich: zeige/verstecke Nav beim Scrollen (runter = verstecken, hoch = zeigen)
     let lastY = window.scrollY;
     let ticking = false;
-    const SCROLL_DELTA = 8; // minimale Bewegung, bevor wir reagieren
+    const SCROLL_DELTA = 8;
 
     function handleScroll() {
       const y = window.scrollY;
@@ -398,19 +397,18 @@ window.addEventListener('load', () => {
 });
 
   // PRIORITÄTEN
-    const priorityData = [
-    { label: "Jobsicherheit",                       usa: 68, de: 30 },
-    { label: "Gehalt",                              usa: 66, de: 30 },
-    { label: "Work-Life-Balance",                   usa: 63, de: 30 },
-    { label: "Im Einklang\nmit meinen Werten",      usa: 47, de: 30 },
-    { label: "Im Einklang\n mit meinen Interessen", usa: 54, de: 30 },
-    { label: "Gutes Arbeitsklima",                  usa: 52, de: 30 },
-    { label: "Karriere\nAufsteig",                  usa: 30, de: 30 },
-    { label: "Gesellschaftlicher\nBeitrag",         usa: 30, de: 30 },
+const priorityData = [
+    { label: "Jobsicherheit", usa: 68 },
+    { label: "Gehalt", usa: 66 },
+    { label: "Work-Life-Balance", usa: 63 },
+    { label: "Im Einklang\nmit meinen Interessen", usa: 54 },
+    { label: "Gutes Arbeitsklima", usa: 52 },
+    { label: "Im Einklang\nmit meinen Werten", usa: 47 },
+    { label: "Karriere\nAufstieg", usa: 30 },
+    { label: "Gesellschaftlicher\nBeitrag", usa: 30 },
 ];
 
 const colorUSA = "#3d2d6e";
-const colorDE  = "#7F77DD";
 
 const chart = document.getElementById('priority-chart');
 if (chart) {
@@ -420,36 +418,27 @@ if (chart) {
   header.innerHTML = `
     <div></div>
     <div class="priority-header-label" style="color:#AFA9EC"> USA</div>
-    <div class="priority-header-label" style="color:#7F77DD"> DE</div>
   `;
   chart.appendChild(header);
 
   // Rows
+
   priorityData.forEach(item => {
       const row = document.createElement('div');
       row.className = 'priority-row';
 
       row.innerHTML = `
           <div class="priority-label">${item.label.replace('\n','<br>')}</div>
-          <div class="priority-side">
-              <div class="priority-bar-wrap">
-                  <div class="priority-bar-track">
-                      <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA}">
-                          <span>${item.usa}%</span>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="priority-side">
-              <div class="priority-bar-wrap">
-                  <div class="priority-bar-track">
-                      <div class="priority-bar-fill" style="width:${item.de}%; background:${colorDE}">
-                          <span>${item.de}%</span>
-                      </div>
+
+          <div class="priority-bar-wrap">
+              <div class="priority-bar-track">
+                  <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA}">
+                      <span>${item.usa}%</span>
                   </div>
               </div>
           </div>
       `;
+
       chart.appendChild(row);
   });
 } else {
@@ -457,27 +446,8 @@ if (chart) {
 }
 
  // ══════════════════════════════════════════════════════
-    // PUNKTE — Koordinaten in [Längengrad, Breitengrad]
+    // DEUTSCHLAND KARTE (MIT TOOLTIP)
     // ══════════════════════════════════════════════════════
-   const punkte = [
-  { coords: [10.000, 53.550], city: "Hamburg",   text: "7 staatliche Hochschulen, davon 3 mit Zivilklauseln." },
-  { coords: [13.405, 52.520], city: "Berlin",    text: "9 staatliche Hochschulen, davon 2 mit Zivilklauseln." },
-  { coords: [6.960,  50.938], city: "Nordrhein-Westfalen",      text: "32 staatliche Hochschulen, davon alle mit Zivilklauseln." },
-  { coords: [8.682,  50.110], city: "Hessen", text: "13 staatliche Hochschulen, davon 5 mit Zivilklauseln." },
-  { coords: [11.078, 49.448], city: "Bayern",  text: "29 staatliche Hochschulen. In Bayern wurde 2024 ein Verbot für Zivilklauseln an Hochschulen ausgesprochen." },
-  { coords: [9.182,  48.776], city: "Baden-Württemberg", text: "46 staatliche Hochschulen, davon 2 mit Zivilklauseln." },
-  { coords: [], city: "Schleswig-Holstein",   text: "8 staatliche Hochschulen, davon zwei mit Zivilklauseln." },
-  { coords: [7.011,  51.462], city: "Mecklenburg-Vorpommern",  text: "6 staatliche Hochschulen, davon eine mit Zivilklausel." },
-  { coords: [], city: "Brandenburg",  text: "6 staatliche Hochschulen, davon eine mit Zivilklausel." },
-  { coords: [], city: "Sachsen-Anhalt",  text: "8 staatliche Hochschulen, davon zwei mit Zivilklauseln." },
-  { coords: [], city: "Sachsen",  text: "14 staatliche Hochschulen, davon eine mit Zivilklausel." },
-  { coords: [], city: "Thüringen",  text: "10 staatliche Hochschulen, davon 9 mit Zivilklauseln." },
-  { coords: [], city: "Rheinland-Pflanz",  text: "12 staatliche Hochschulen, davon keine mit Zivilklausel." },
-  { coords: [], city: "Saarland",  text: "3 staatliche Hochschulen, davon keine mit Zivilklausel." },
-  { coords: [], city: "Bremen",  text: "6 staatliche Hochschulen, davon 3mit Zivilklauseln." },
-  { coords: [], city: "Niedersachsen",  text: "15 staatliche Hochschulen, davon 5 mit Zivilklauseln." },
-  ];
-
 
 const svgEl = document.getElementById('deutschland-svg');
 const tooltip = document.getElementById('map-tooltip');
@@ -497,11 +467,9 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
     }
     const fc = { type: "FeatureCollection", features: geojson.features };
 
-    // Auto-fit projection to GeoJSON
     const projection = d3.geoMercator().fitSize([500, 560], fc);
     const path = d3.geoPath().projection(projection);
 
-    // Recalculate exact bounds and update viewBox
     const [[x0, y0], [x1, y1]] = d3.geoPath().projection(projection).bounds(fc);
     svgEl.setAttribute("viewBox", [
       x0 - padding, y0 - padding,
@@ -516,8 +484,6 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
       .attr("class", "bundesland")
       .attr("d", path);
 
-    // Instead of rendering separate point markers we attach tooltip handlers
-    // to each Bundesland path so a single tooltip appears for the whole state.
     svg.selectAll('path.bundesland')
       .on('mouseenter', (event, d) => {
         const props = (d && d.properties) ? d.properties : {};
@@ -573,7 +539,7 @@ const umfrageData = [
   { label: '35–64 Jahre',                group: 'alter',      garNicht: 10, eherNicht: 7,  ambivalent: 33, eherZu: 27, sehrStark: 23 },
   { label: '65 Jahre und älter',         group: 'alter',      garNicht: 8,  eherNicht: 9,  ambivalent: 27, eherZu: 29, sehrStark: 27 },
 ];
-const COLORS = ['#b03a2e','#d9a89a','#d4b96a','#5caa8a','#0d6b5e'];
+const COLORS = ['#2F1B69','#5D3BAD','#6D5BD0','#978AE6','#BDB4FA'];
 let umfrageCurrentGroup = 'all';
 let umfrageCurrentView  = 'stacked';
 

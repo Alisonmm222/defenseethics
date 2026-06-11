@@ -126,28 +126,22 @@
             <div class="tl-dot"></div>
             <div class="tl-year">Februar 2022</div>
             <div class="tl-head">Krieg in der Ukraine</div>
-            <div class="tl-text">Bundeskanzler verkündet angesichts des russischen Angriffskriegs gegen die Ukraine ein historisches Umdenken in der deutschen Sicherheits- und Verteidigungspolitik.</div>
         </div>
         <div class="tl-item">
             <div class="tl-dot"></div>
             <div class="tl-year">2022 – heute</div>
             <div class="tl-head">Rüstungsboom trifft Fachkräftemangel</div>
-            <div class="tl-text">Die deutschen Verteidigungsunternehmen suchen tausende Ingenieur:innen. Gleichzeitig bleibt die gesellschaftliche Ambivalenz tief — besonders unter Hochschulabsolvent:innen der technischen Fächer.</div>
         </div>
         <div class="tl-item">
             <div class="tl-dot"></div>
             <div class="tl-year">2024 – heute</div>
             <div class="tl-head">Ethikdebatte in den Hochschulen</div>
-            <div class="tl-text">
-                Zivilklauseln an Hochschulen, VDI-Ethikkodex und Berufsverbände stehen unter Druck:
-                Die Debatte, ob Rüstungsforschung auf dem Campus erlaubt sein soll.
-            </div>        </div>
+        </div>
     </div>
 
 
     <div class="fade-in">
         <h3 class="sub-heading">Was denkt die Bevölkerung?</h3>
-        <p class="prose">Das Meinungsklima in Deutschland hat sich verschoben. Laut mehreren Umfragen aus 2023 und 2024 befürworten deutlich mehr Deutsche als noch 2020 höhere Verteidigungsausgaben.</p>
     </div>
     <div class="kpi-verlauf fade-in">
         <div class="kpi-item">
@@ -195,29 +189,27 @@
     </div>
 </div>
 
-
     <!-- Umfrage: Militärische Forschung an Hochschulen -->
     <div class="chart-block fade-in" id="umfrage-chart">
         <div class="chart-header">
-            <h4>Bevölkerungsumfrage: Militärische Forschung an deutschen Hochschulen</h4>
-            <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-faint);margin:6px 0 12px;">„Sollte zur militärischen Verteidigung nutzbare Forschung an deutschen Hochschulen stattfinden?"</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;">
-                <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);margin-bottom:6px;width:100%;">Merkmal filtern:</div>
+            <h4>Sollte zur militärischen Verteidigung nutzbare Forschung an deutschen Hochschulen stattfinden?</h4>
+            <div class="umfrage-tabs">
                 <button class="tab-btn active" onclick="umfrageFilter('all',this)">Alle Gruppen</button>
                 <button class="tab-btn" onclick="umfrageFilter('geschlecht',this)">Geschlecht</button>
                 <button class="tab-btn" onclick="umfrageFilter('alter',this)">Alter</button>
             </div>
         </div>
         <div class="chart-body">
-            <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:20px;">
-                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#b03a2e;display:inline-block;flex-shrink:0;"></span>stimme gar nicht zu</span>
-                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#d9a89a;display:inline-block;flex-shrink:0;"></span>stimme eher nicht zu</span>
-                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#d4b96a;display:inline-block;flex-shrink:0;"></span>ambivalent</span>
-                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#5caa8a;display:inline-block;flex-shrink:0;"></span>stimme eher zu</span>
-                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#0d6b5e;display:inline-block;flex-shrink:0;"></span>stimme sehr stark zu</span>
+            <div class="likert-legend">
+                <div class="likert-gradient"></div>
+
+                <div class="likert-labels">
+                    <span>stimme gar nicht zu</span>
+                    <span>stimme sehr stark zu</span>
+                </div>
             </div>
-            <div id="umfrage-rows" style="display:flex;flex-direction:column;gap:10px;"></div>
-            <div id="umfrage-netto-note" style="display:none;margin-top:12px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);">Netto-Zustimmung = (stimme eher zu + stimme sehr stark zu) − (stimme gar nicht zu + stimme eher nicht zu)</div>
+            <div id="umfrage-rows" class="umfrage-rows"></div>
+            <div id="umfrage-netto-note" class="umfrage-netto-note"></div>
         </div>
     </div>
 
@@ -247,9 +239,6 @@
         <div class="section-number">Teil Zwei</div>
         <h2 class="section-title">Was wissen wir schon über Berufsethik?</h2>
     </div>
-    <div class="prose fade-in">
-        <p>Bevor wir unsere eigene Umfrage vorstellen, lohnt ein Blick auf bestehende Studien. </p>
-    </div>
     <div class="chart-block fade-in">
         <div class="chart-header">
             <h4>Prioritäten</h4>
@@ -259,92 +248,16 @@
         </div>
     </div>
 
-    <div id="chart-pairs"></div>
-    <div class="stacked-legend">
-        <div class="stacked-legend-items" id="stacked-legend"></div>
-    </div>
-
-    <div class="chart-block fade-in">
-        <div class="chart-header">
-            <h4>Technik Radar</h4>
-            <div class="tab-row">
-                <button class="tab-btn active" onclick="switchTab('bewusstsein', this)">Ethisches Bewusstsein</button>
-                <button class="tab-btn" onclick="switchTab('bereiche', this)">Tätigkeitsfelder</button>
-                <button class="tab-btn" onclick="switchTab('hemmnisse', this)">Hemmnisse</button>
-            </div>
-        </div>
-        <div class="chart-body">
-            <div class="bars" id="bars-bewusstsein">
-                <div class="bar-row">
-                    <div class="bar-label-text">Ethik beeinflusst Jobwahl stark</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:68%; background:#3d2d6e;"><span>68%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Würde wegen Ethik den Job wechseln</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:54%; background:#534AB7;"><span>54%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Ethikausbildung als unzureichend erlebt</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:72%; background:#7F77DD;"><span>72%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Kenntnis des VDI-Ethikkodex</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:41%; background:#AFA9EC;"><span>41%</span></div></div>
-                </div>
-            </div>
-            <div class="bars" id="bars-bereiche" style="display:none">
-                <div class="bar-row">
-                    <div class="bar-label-text">Erneuerbare Energie</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:81%; background:#0d6b5e;"><span>81%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Medizintechnik</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:74%; background:#1D9E75;"><span>74%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Automotive / Mobilität</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:63%; background:#5DCAA5;"><span>63%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Luft- und Raumfahrt</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:47%; background:#9FE1CB;"><span>47%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Verteidigung / Rüstung</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:29%; background:#c8441a;"><span>29%</span></div></div>
-                </div>
-            </div>
-            <div class="bars" id="bars-hemmnisse" style="display:none">
-                <div class="bar-row">
-                    <div class="bar-label-text">Moralische Bedenken</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:76%; background:#993C1D;"><span>76%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Angst vor Dual-Use-Verantwortung</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:61%; background:#D85A30;"><span>61%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Gesellschaftliche Stigmatisierung</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:58%; background:#F0997B;"><span>58%</span></div></div>
-                </div>
-                <div class="bar-row">
-                    <div class="bar-label-text">Fehlende Information über Tätigkeiten</div>
-                    <div class="bar-track"><div class="bar-fill" style="width:45%; background:#F5C4B3;"><span>45%</span></div></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <hr class="section-divider" id="umfrage">
 
     <div class="fade-in">
         <div class="section-number">Teil Drei</div>
-        <h2 class="section-title">Fünf Fragen, die wir gestellt haben</h2>
+        <h2 class="section-title">Fünf Fragen, die wir gestellt haben...</h2>
     </div>
 
     <div class="prose fade-in">
         <p>
-            In unserer eigenen Befragung haben wir <span class="stat-inline"><span class="num">387</span><span class="unit">Teilnehmende</span></span> erreicht — Ingenieursstudierende aller Fachrichtungen sowie bereits berufstätige Ingenieur:innen in Deutschland.
+            In unserer eigenen Befragung haben wir <span class="stat-inline"><span class="num">???</span><span class="unit">Teilnehmende</span></span> erreicht — Ingenieursstudierende aller Fachrichtungen sowie bereits berufstätige Ingenieur:innen in Deutschland.
         </p>
     </div>
 
