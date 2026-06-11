@@ -494,6 +494,42 @@
     0%   { r: 5;  opacity: 0.5; }
     100% { r: 20; opacity: 0; }
   }
+.map-insight {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-top: 24px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.map-insight-stat {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--teal);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 120px;
+  text-align: center;
+}
+
+.map-insight-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink-light);
+  line-height: 1.75;
+}
+
+@media (max-width: 480px) {
+  .map-insight {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .map-insight-stat {
+    font-size: 40px;
+  }
+}
 
   .map-tooltip {
     position: absolute;
