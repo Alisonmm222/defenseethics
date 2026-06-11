@@ -185,6 +185,37 @@
         </div>
     </div>
 
+    <!-- Umfrage: Militärische Forschung an Hochschulen -->
+    <div class="chart-block fade-in" id="umfrage-chart">
+        <div class="chart-header">
+            <h4>Bevölkerungsumfrage: Militärische Forschung an deutschen Hochschulen</h4>
+            <p style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-faint);margin:6px 0 12px;">„Sollte zur militärischen Verteidigung nutzbare Forschung an deutschen Hochschulen stattfinden?"</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;">
+                <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);margin-bottom:6px;width:100%;">Merkmal filtern:</div>
+                <button class="tab-btn active" onclick="umfrageFilter('all',this)">Alle Gruppen</button>
+                <button class="tab-btn" onclick="umfrageFilter('geschlecht',this)">Geschlecht</button>
+                <button class="tab-btn" onclick="umfrageFilter('alter',this)">Alter</button>
+                <button class="tab-btn" onclick="umfrageFilter('bildung',this)">Bildung</button>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+                <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);margin-bottom:6px;width:100%;">Ansicht:</div>
+                <button class="tab-btn active" onclick="umfrageView('stacked',this)">Gestapelt</button>
+                <button class="tab-btn" onclick="umfrageView('netto',this)">Netto-Zustimmung</button>
+            </div>
+        </div>
+        <div class="chart-body">
+            <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:20px;">
+                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#b03a2e;display:inline-block;flex-shrink:0;"></span>stimme gar nicht zu</span>
+                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#d9a89a;display:inline-block;flex-shrink:0;"></span>stimme eher nicht zu</span>
+                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#d4b96a;display:inline-block;flex-shrink:0;"></span>ambivalent</span>
+                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#5caa8a;display:inline-block;flex-shrink:0;"></span>stimme eher zu</span>
+                <span style="display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);"><span style="width:10px;height:10px;border-radius:2px;background:#0d6b5e;display:inline-block;flex-shrink:0;"></span>stimme sehr stark zu</span>
+            </div>
+            <div id="umfrage-rows" style="display:flex;flex-direction:column;gap:10px;"></div>
+            <div id="umfrage-netto-note" style="display:none;margin-top:12px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);">Netto-Zustimmung = (stimme eher zu + stimme sehr stark zu) − (stimme gar nicht zu + stimme eher nicht zu)</div>
+        </div>
+    </div>
+
     <div class="section-illo fade-in">
         <svg class="illo-svg" viewBox="0 0 120 120" fill="none">
             <line x1="60" y1="20" x2="60" y2="60" stroke="#3d2d6e" stroke-width="2"/>

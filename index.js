@@ -460,15 +460,24 @@ if (chart) {
     // PUNKTE — Koordinaten in [Längengrad, Breitengrad]
     // ══════════════════════════════════════════════════════
    const punkte = [
-  { coords: [10.000, 53.550], city: "Hamburg",   text: "Platzhaltertext für Hamburg" },
-  { coords: [13.405, 52.520], city: "Berlin",    text: "Platzhaltertext für Berlin" },
-  { coords: [6.960,  50.938], city: "Köln",      text: "Platzhaltertext für Köln" },
-  { coords: [8.682,  50.110], city: "Frankfurt", text: "Platzhaltertext für Frankfurt" },
-  { coords: [11.078, 49.448], city: "Nürnberg",  text: "TH Nürnberg — Standort der Studie" },
-  { coords: [9.182,  48.776], city: "Stuttgart", text: "Platzhaltertext für Stuttgart" },
-  { coords: [11.576, 48.137], city: "München",   text: "Platzhaltertext für München" },
-  { coords: [7.011,  51.462], city: "Dortmund",  text: "Platzhaltertext für Dortmund" },
-];
+  { coords: [10.000, 53.550], city: "Hamburg",   text: "7 staatliche Hochschulen, davon 3 mit Zivilklauseln." },
+  { coords: [13.405, 52.520], city: "Berlin",    text: "9 staatliche Hochschulen, davon 2 mit Zivilklauseln." },
+  { coords: [6.960,  50.938], city: "Nordrhein-Westfalen",      text: "32 staatliche Hochschulen, davon alle mit Zivilklauseln." },
+  { coords: [8.682,  50.110], city: "Hessen", text: "13 staatliche Hochschulen, davon 5 mit Zivilklauseln." },
+  { coords: [11.078, 49.448], city: "Bayern",  text: "29 staatliche Hochschulen. In Bayern wurde 2024 ein Verbot für Zivilklauseln an Hochschulen ausgesprochen." },
+  { coords: [9.182,  48.776], city: "Baden-Württemberg", text: "46 staatliche Hochschulen, davon 2 mit Zivilklauseln." },
+  { coords: [], city: "Schleswig-Holstein",   text: "8 staatliche Hochschulen, davon zwei mit Zivilklauseln." },
+  { coords: [7.011,  51.462], city: "Mecklenburg-Vorpommern",  text: "6 staatliche Hochschulen, davon eine mit Zivilklausel." },
+  { coords: [], city: "Brandenburg",  text: "6 staatliche Hochschulen, davon eine mit Zivilklausel." },
+  { coords: [], city: "Sachsen-Anhalt",  text: "8 staatliche Hochschulen, davon zwei mit Zivilklauseln." },
+  { coords: [], city: "Sachsen",  text: "14 staatliche Hochschulen, davon eine mit Zivilklausel." },
+  { coords: [], city: "Thüringen",  text: "10 staatliche Hochschulen, davon 9 mit Zivilklauseln." },
+  { coords: [], city: "Rheinland-Pflanz",  text: "12 staatliche Hochschulen, davon keine mit Zivilklausel." },
+  { coords: [], city: "Saarland",  text: "3 staatliche Hochschulen, davon keine mit Zivilklausel." },
+  { coords: [], city: "Bremen",  text: "6 staatliche Hochschulen, davon 3mit Zivilklauseln." },
+  { coords: [], city: "Niedersachsen",  text: "15 staatliche Hochschulen, davon 5 mit Zivilklauseln." },
+  ];
+
 
 const svgEl = document.getElementById('deutschland-svg');
 const tooltip = document.getElementById('map-tooltip');
@@ -534,3 +543,99 @@ function positionTooltip(e) {
   tooltip.style.left = x + 'px';
   tooltip.style.top  = y + 'px';
 }
+   // ── UMFRAGE DIAGRAMM ──
+
+const umfrageData = [
+  { label: 'Gesamt',                     group: 'all',        garNicht: 9,  eherNicht: 8,  ambivalent: 33, eherZu: 28, sehrStark: 22 },
+  { label: 'Männer',                     group: 'geschlecht', garNicht: 9,  eherNicht: 7,  ambivalent: 24, eherZu: 31, sehrStark: 29 },
+  { label: 'Frauen',                     group: 'geschlecht', garNicht: 9,  eherNicht: 9,  ambivalent: 42, eherZu: 25, sehrStark: 14 },
+  { label: '16–34 Jahre',                group: 'alter',      garNicht: 9,  eherNicht: 10, ambivalent: 37, eherZu: 29, sehrStark: 15 },
+  { label: '35–64 Jahre',                group: 'alter',      garNicht: 10, eherNicht: 7,  ambivalent: 33, eherZu: 27, sehrStark: 23 },
+  { label: '65 Jahre und älter',         group: 'alter',      garNicht: 8,  eherNicht: 9,  ambivalent: 27, eherZu: 29, sehrStark: 27 },
+];
+const COLORS = ['#b03a2e','#d9a89a','#d4b96a','#5caa8a','#0d6b5e'];
+let umfrageCurrentGroup = 'all';
+let umfrageCurrentView  = 'stacked';
+
+function umfrageGetFiltered() {
+  if (umfrageCurrentGroup === 'all') return umfrageData;
+  return umfrageData.filter(d => d.group === umfrageCurrentGroup || d.group === 'all');
+}
+
+function umfrageRender() {
+  const data = umfrageGetFiltered();
+  const container = document.getElementById('umfrage-rows');
+  const nettoNote = document.getElementById('umfrage-netto-note');
+  container.innerHTML = '';
+
+  if (umfrageCurrentView === 'netto') {
+    nettoNote.style.display = 'block';
+    const max = 60;
+    data.forEach(d => {
+      const netto = (d.eherZu + d.sehrStark) - (d.garNicht + d.eherNicht);
+      const pos   = netto >= 0;
+      const pct   = Math.min(Math.abs(netto) / max * 100, 100);
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = `
+        <div class="bar-label-text">${d.label}</div>
+        <div style="flex:1;display:flex;align-items:center;gap:8px;">
+          <div style="flex:1;height:28px;background:#eeebe6;border-radius:4px;overflow:hidden;position:relative;">
+            <div style="
+              position:absolute;
+              ${pos ? 'left' : 'right'}:0;
+              width:${pct}%;
+              height:100%;
+              background:${pos ? '#0d6b5e' : '#b03a2e'};
+              border-radius:4px;
+              display:flex;align-items:center;
+              ${pos ? 'justify-content:flex-end;padding-right:8px;' : 'justify-content:flex-start;padding-left:8px;'}
+            ">
+              <span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${netto > 0 ? '+' : ''}${netto}%</span>
+            </div>
+          </div>
+        </div>`;
+          container.appendChild(row);
+            });
+            return;
+          }
+  nettoNote.style.display = 'none';
+  const fields = ['garNicht','eherNicht','ambivalent','eherZu','sehrStark'];
+  data.forEach(d => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    let segments = '';
+    fields.forEach((f, i) => {
+      const pct = d[f];
+      if (pct === 0) return;
+      segments += `<div style="width:${pct}%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);">
+        ${pct >= 7 ? `<span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${pct}%</span>` : ''}
+      </div>`;
+    });
+    row.innerHTML = `
+      <div class="bar-label-text">${d.label}</div>
+      <div style="flex:1;height:30px;background:#eeebe6;border-radius:4px;overflow:hidden;display:flex;">
+        ${segments}
+      </div>`;
+    container.appendChild(row);
+  });
+}
+function umfrageFilter(group, btn) {
+  umfrageCurrentGroup = group;
+  document.querySelectorAll('#umfrage-chart .tab-btn').forEach(b => {
+    if (['all','geschlecht','alter','bildung'].includes(b.getAttribute('onclick').match(/'([^']+)'/)[1])) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  umfrageRender();
+}
+
+function umfrageView(view, btn) {
+  umfrageCurrentView = view;
+  document.querySelectorAll('#umfrage-chart .tab-btn').forEach(b => {
+    if (['stacked','netto'].includes(b.getAttribute('onclick').match(/'([^']+)'/)[1])) b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  umfrageRender();
+}
+
+umfrageRender();
