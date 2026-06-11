@@ -28,3 +28,45 @@
         <div id="umfrage-netto-note" style="display:none;margin-top:12px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink-faint);">Netto-Zustimmung = (stimme eher zu + stimme sehr stark zu) − (stimme gar nicht zu + stimme eher nicht zu)</div>
     </div>
 </div>
+
+<div class="prose fade-in">
+        <p>
+            Die Bevölkerung ist insgesamt mehrheitlich dafür, dass militärisch nutzbare Forschung an Hochschulen stattfinden sollte — wobei Männer deutlich zustimmender sind als Frauen, die sich häufiger ambivalent zeigen.
+        </p>
+    </div>
+
+    // Punkte
+        const g = document.createElementNS(svgNS, 'g');
+        svgEl.appendChild(g);
+
+        punkte.forEach(p => {
+          const [x, y] = projection(p.coords);
+          const group = document.createElementNS(svgNS, 'g');
+          group.classList.add('map-punkt');
+
+          const ring = document.createElementNS(svgNS, 'circle');
+          ring.classList.add('ring');
+          ring.setAttribute('cx', x);
+          ring.setAttribute('cy', y);
+          ring.setAttribute('r', 5);
+          ring.style.animationDelay = (Math.random() * 2.5).toFixed(2) + 's';
+
+          const dot = document.createElementNS(svgNS, 'circle');
+          dot.classList.add('dot');
+          dot.setAttribute('cx', x);
+          dot.setAttribute('cy', y);
+          dot.setAttribute('r', 5);
+
+          group.appendChild(ring);
+          group.appendChild(dot);
+          g.appendChild(group);
+
+          group.addEventListener('mouseenter', (e) => {
+            tooltipCity.textContent = p.city;
+            tooltipText.textContent = p.text;
+            tooltip.classList.add('visible');
+            positionTooltip(e);
+          });
+          group.addEventListener('mousemove', positionTooltip);
+          group.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+        });
