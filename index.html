@@ -248,6 +248,272 @@
         </div>
     </div>
 
+
+
+
+<!-- Chart von Lea -->
+<!-- ── Ethik Radar Chart – Chart.js ── -->
+<!-- Ersetzt den bisherigen <section class="ethik-radar-section"> Block -->
+
+<section class="ethik-radar-section" aria-label="Ethisches Selbstverständnis von Ingenieur:innen">
+
+  <style>
+    .ethik-radar-section {
+      font-family: 'DM Sans', sans-serif;
+      max-width: var(--max);
+      margin: 2.5rem auto 0;
+      padding: 0;
+    }
+
+    .ethik-radar-section .ethik-chart-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .ethik-radar-section .ethik-chart-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--ink-faint);
+      margin-bottom: 0.25rem;
+    }
+
+    .radar-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+
+    .radar-panel {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .radar-wrapper {
+      position: relative;
+      width: 100%;
+      height: 380px;
+    }
+
+    .radar-legend {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--ink-light);
+      margin-bottom: 1rem;
+    }
+
+    .radar-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: #534AB7;
+      opacity: 0.75;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .radar-grid > div:last-child {
+      max-width: 850px;
+      width: 100%;
+    }
+
+    .radar-note {
+      text-align: left;
+      font-size: 18px;
+      color: var(--ink-light);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .radar-note strong {
+      color: var(--ink);
+    }
+
+    .radar-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.85rem;
+      font-size: 14px;
+      color: var(--ink-light);
+      line-height: 1.65;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .radar-list li {
+      padding-left: 1.1rem;
+      position: relative;
+    }
+
+    .radar-list li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 18px;
+      line-height: 1;
+      top: 0.1rem;
+    }
+
+    .radar-source {
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-top: 0.75rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 860px) {
+        .radar-grid {
+        grid-template-columns: 1fr;
+      }
+
+        .radar-wrapper {
+        height: 450px;
+     }
+
+        .radar-list {
+        grid-template-columns: 1fr;
+     }
+    }
+  </style>
+
+  <p class="ethik-chart-title">Ein radarartiges Bild des ethischen Profils</p>
+  
+  <div class="radar-grid">
+
+    <div class="radar-panel">
+      <div class="radar-legend">
+        <span class="radar-legend-dot"></span>
+        Durchschnittliche Zustimmung
+      </div>
+      <div class="radar-wrapper">
+        <canvas id="ethikRadar"
+          role="img"
+          aria-label="Radar-Diagramm: Ethisches Selbstverständnis von Ingenieurstudierenden. Höchste Zustimmung für Allgemeinwohl (76%) und Verantwortung für Erfindung (73%). Geringste Zustimmung bei Arbeitgeberpflicht (32%) und Gleichheit bei Ethikurteilen (48%)."
+        >Ethik-Radar: 117 Ingenieurstudierende. Höchste Werte: Allgemeinwohl 76%, Verantwortung Erfindung 73%. Niedrigste: Arbeitgeberpflicht 32%, Gleichheit 48%.</canvas>
+      </div>
+      <p class="radar-source">
+        Breuer et al., „Studierende definieren eine Ethik in den Ingenieurwissenschaften." · 117 Studierende · 2019 · Likert-Skala, umgerechnet in Zustimmungsprozente (0–100).
+      </p>
+    </div>
+
+    <div>
+      <p class="radar-note"><strong>Zur Grafik:</strong> Je weiter die bläuliche Fläche nach außen reicht, desto stärker stimmt die Aussage mit dem ethischen Selbstverständnis der Befragten überein.</p>
+      <ul class="radar-list">
+        <li>"Ethik bietet für mich eine Orientierung für mein Handeln."</li>
+        <li>"Ein Ingenieur sollte immer das Allgemeinwohlberücksichtigen."</li>
+        <li>"Ein Ingenieur soll immer nach ethischen Grundsätzen handeln."</li>
+        <li>"Ingenieure und Ingenieurinnen urteilen bei ethischen Fragen gleich."</li>
+        <li>"Ein Ingenieur ist nur seinem Arbeitgeber gegenüber verplichtet."</li>
+        <li>"Ein Ingenieur ist für den ethisch vertretbaren Gebrauch seiner Erfindung verantwortlich."</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script>
+  (function () {
+    const weights = { no: 0, rather_no: 20, somewhat_no: 40, somewhat_yes: 60, rather_yes: 80, yes: 100 };
+
+    const rows = [
+      { label: ['Ethik als', 'Orientierung'],              values: { no: 6,  rather_no: 6,  somewhat_no: 12, somewhat_yes: 29, rather_yes: 34, yes: 12 } },
+      { label: ['Allgemeinwohl', 'berücksichtigen'],        values: { no: 1,  rather_no: 7,  somewhat_no: 8,  somewhat_yes: 22, rather_yes: 41, yes: 20 } },
+      { label: ['Handeln nach', 'ethischen Grundsätzen'],  values: { no: 3,  rather_no: 9,  somewhat_no: 13, somewhat_yes: 19, rather_yes: 39, yes: 15 } },
+      { label: ['Gleiches Urteil', 'bei Ethikfragen'],     values: { no: 15, rather_no: 29, somewhat_no: 13, somewhat_yes: 13, rather_yes: 20, yes: 6  } },
+      { label: ['Verpflichtung', 'nur zum Arbeitgeber'],   values: { no: 22, rather_no: 33, somewhat_no: 19, somewhat_yes: 14, rather_yes: 9,  yes: 2  } },
+      { label: ['Verantwortung', 'für die Erfindung'],     values: { no: 9,  rather_no: 8,  somewhat_no: 13, somewhat_yes: 20, rather_yes: 29, yes: 21 } },
+    ];
+
+    function score(v) {
+      const keys = ['no', 'rather_no', 'somewhat_no', 'somewhat_yes', 'rather_yes', 'yes'];
+      const total = keys.reduce((s, k) => s + (v[k] || 0), 0);
+      return Math.round(keys.reduce((s, k) => s + (v[k] || 0) * weights[k], 0) / total);
+    }
+
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const fillColor   = isDark ? 'rgba(127,119,221,0.35)' : 'rgba(83,74,183,0.25)';
+    const strokeColor = isDark ? '#AFA9EC' : '#534AB7';
+    const gridColor   = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
+    const tickColor   = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
+    const labelColor  = isDark ? '#cccccc' : '#333333';
+
+    new Chart(document.getElementById('ethikRadar'), {
+      type: 'radar',
+      data: {
+        labels: rows.map(r => r.label),
+        datasets: [{
+          data: rows.map(r => score(r.values)),
+          backgroundColor: fillColor,
+          borderColor: strokeColor,
+          borderWidth: 2.5,
+          pointBackgroundColor: '#c8441a',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: ctx => ctx[0].label.join(' '),
+              label: ctx => 'Zustimmung: ' + ctx.raw + ' %'
+            },
+            backgroundColor: isDark ? '#2c2c2a' : '#1a1814',
+            titleColor: '#ffffff',
+            bodyColor: 'rgba(255,255,255,0.75)',
+            padding: 10,
+            cornerRadius: 6,
+          }
+        },
+        scales: {
+          r: {
+            min: 0,
+            max: 100,
+            ticks: {
+              stepSize: 25,
+              color: tickColor,
+              font: { size: 11 },
+              backdropColor: 'transparent',
+              callback: v => v + '%'
+            },
+            grid:        { color: gridColor },
+            angleLines:  { color: gridColor },
+            pointLabels: {
+              color: labelColor,
+              font: { size: 12.5 },
+              padding: 8,
+            }
+          }
+        }
+      }
+    });
+  })();
+  </script>
+
+</section>
+<!-- ── Ende Ethik Radar Chart ── -->
+
+
+
+
     <hr class="section-divider" id="umfrage">
 
     <div class="fade-in">
