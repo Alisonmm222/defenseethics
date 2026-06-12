@@ -503,22 +503,22 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
   });
 
   const bundeslaender = {
-    "Hamburg": "7 staatliche Hochschulen, davon 3 mit Zivilklauseln.",
-    "Berlin": "9 staatliche Hochschulen, davon 2 mit Zivilklauseln.",
-    "Nordrhein-Westfalen": "32 staatliche Hochschulen, davon alle mit Zivilklauseln.",
-    "Hessen": "13 staatliche Hochschulen, davon 5 mit Zivilklauseln.",
-    "Bayern": "29 staatliche Hochschulen. In Bayern wurde 2024 ein Verbot für Zivilklauseln an Hochschulen ausgesprochen.",
-    "Baden-Württemberg": "46 staatliche Hochschulen, davon 2 mit Zivilklauseln.",
-    "Schleswig-Holstein": "8 staatliche Hochschulen, davon zwei mit Zivilklauseln.",
-    "Mecklenburg-Vorpommern": "6 staatliche Hochschulen, davon eine mit Zivilklausel.",
-    "Brandenburg": "6 staatliche Hochschulen, davon eine mit Zivilklausel.",
-    "Sachsen-Anhalt": "8 staatliche Hochschulen, davon zwei mit Zivilklauseln.",
-    "Sachsen": "14 staatliche Hochschulen, davon eine mit Zivilklausel.",
-    "Thüringen": "10 staatliche Hochschulen, davon 9 mit Zivilklauseln.",
+    "Hamburg": "6 staatliche Hochschulen, davon 1 mit Zivilklauseln.",
+    "Berlin": "11 staatliche Hochschulen, davon 1 mit Zivilklauseln.",
+    "Nordrhein-Westfalen": "36 staatliche Hochschulen. In Nordrhein-Westfalen ist die Situation rund um die Zivilklauseln durch eine dynamische politische Vergangenheit geprägt. Über 30 Hochschulen haben eine Zivilklausel.",
+    "Hessen": "14 staatliche Hochschulen, davon 5 mit Zivilklauseln.",
+    "Bayern": "33 staatliche Hochschulen. In Bayern wurde 2024 ein Verbot für Zivilklauseln an Hochschulen ausgesprochen.",
+    "Baden-Württemberg": "48 staatliche Hochschulen, davon 4 mit Zivilklauseln.",
+    "Schleswig-Holstein": "9 staatliche Hochschulen, davon keine mit Zivilklauseln.",
+    "Mecklenburg-Vorpommern": "6 staatliche Hochschulen, davon keine mit Zivilklausel.",
+    "Brandenburg": "8 staatliche Hochschulen, davon keine mit Zivilklausel.",
+    "Sachsen-Anhalt": "7 staatliche Hochschulen, davon eine mit Zivilklausel.",
+    "Sachsen": "15 staatliche Hochschulen, davon eine mit Zivilklausel.",
+    "Thüringen": "9 staatliche Hochschulen. In Thüringen gilt eine Pflicht für Zivilklauseln.",
     "Rheinland-Pfalz": "12 staatliche Hochschulen, davon keine mit Zivilklausel.",
-    "Saarland": "3 staatliche Hochschulen, davon keine mit Zivilklausel.",
-    "Bremen": "6 staatliche Hochschulen, davon 3 mit Zivilklauseln.",
-    "Niedersachsen": "15 staatliche Hochschulen, davon 5 mit Zivilklauseln."
+    "Saarland": "6 staatliche Hochschulen, davon keine mit Zivilklausel.",
+    "Bremen": "4 staatliche Hochschulen. In Bremen gilt eine Pflicht für Zivilklauseln.",
+    "Niedersachsen": "20 staatliche Hochschulen, davon ca. 2-3 mit Zivilklauseln."
   };
 
 function positionTooltip(e) {
