@@ -174,6 +174,33 @@
     </div>
     <p class="source">Quelle: Bunde und Daur, "Ein aktuelles Meinungsbild zur Zeitenwende: Bitte wenden!" · 2025</p>
 
+    <!-- Nutzen vs. Risiko: Verknüpfung ziviler und militärischer Forschung (Butterfly) -->
+    <div class="chart-block fade-in" id="nutzenrisiko-chart">
+        <div class="chart-header">
+            <h4>Nutzen vs. Risiko: Verknüpfung ziviler und militärischer Forschung und Anwendung</h4>
+            <div class="umfrage-tabs">
+                <button class="tab-btn active" onclick="nutzenRisikoFilter('all', this)">Alle Gruppen</button>
+                <button class="tab-btn" onclick="nutzenRisikoFilter('geschlecht', this)">Geschlecht</button>
+                <button class="tab-btn" onclick="nutzenRisikoFilter('alter', this)">Alter</button>
+            </div>
+        </div>
+        <div class="chart-body">
+            <div style="display:flex;align-items:center;margin-bottom:16px;">
+                <div style="flex:1;display:flex;justify-content:flex-end;align-items:center;gap:6px;">
+                    <span style="width:10px;height:10px;border-radius:50%;background:#BDB4FA;display:inline-block;"></span>
+                    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-faint);">sehr nützlich</span>
+                </div>
+                <div style="width:150px;flex-shrink:0;"></div>
+                <div style="flex:1;display:flex;justify-content:flex-start;align-items:center;gap:6px;">
+                    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-faint);">sehr riskant</span>
+                    <span style="width:10px;height:10px;border-radius:50%;background:#2F1B69;display:inline-block;"></span>
+                </div>
+            </div>
+            <div id="nutzenrisiko-rows" class="umfrage-rows"></div>
+            <p class="source">Quelle: acatech/TechnikRadar 2025 · N = 2.003 · Angaben in Prozent</p>
+        </div>
+    </div>
+
     <div class="fade-in">
         <div class="sub-heading">
             <h3>Zivilklauseln an staatlichen Hochschulen</h3>

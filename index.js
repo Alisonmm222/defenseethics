@@ -626,6 +626,63 @@ function umfrageView(view, btn) {
 
 umfrageRender();
 
+   // ── NUTZEN VS. RISIKO: BUTTERFLY-DIAGRAMM ──
+   // Quelle: acatech/TechnikRadar 2025, N = 2.003 — Anteil "sehr nützlich" vs. "sehr riskant"
+
+const nutzenRisikoData = [
+  { label: 'Männer',             group: 'geschlecht', nuetzlich: 22, riskant: 4 },
+  { label: 'Frauen',             group: 'geschlecht', nuetzlich: 14, riskant: 4 },
+  { label: '16–34 Jahre',        group: 'alter',       nuetzlich: 13, riskant: 4 },
+  { label: '35–64 Jahre',        group: 'alter',       nuetzlich: 18, riskant: 3 },
+  { label: '65 Jahre und älter', group: 'alter',       nuetzlich: 25, riskant: 5 },
+];
+
+let nutzenRisikoCurrentGroup = 'all';
+
+function nutzenRisikoGetFiltered() {
+  if (nutzenRisikoCurrentGroup === 'all') return nutzenRisikoData;
+  return nutzenRisikoData.filter(d => d.group === nutzenRisikoCurrentGroup);
+}
+
+function nutzenRisikoRender() {
+  const data = nutzenRisikoGetFiltered();
+  const container = document.getElementById('nutzenrisiko-rows');
+  container.innerHTML = '';
+
+  // größter Wert füllt 90% der Halbspur, Rest ist Luft für die Prozent-Beschriftung
+  const maxVal = Math.max(...data.flatMap(d => [d.nuetzlich, d.riskant]), 1);
+  const scale = 90 / maxVal;
+
+  data.forEach(d => {
+    const wLeft  = (d.nuetzlich * scale).toFixed(1);
+    const wRight = (d.riskant   * scale).toFixed(1);
+
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.style.cssText = 'display:flex;align-items:center;gap:0;margin-bottom:6px;';
+    row.innerHTML = `
+      <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.nuetzlich}%</span>
+        <div style="width:${wLeft}%;height:28px;border-radius:4px 0 0 4px;background:#BDB4FA;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+      </div>
+      <div class="bar-label-text" style="width:150px;text-align:center;flex-shrink:0;">${d.label}</div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:flex-start;gap:8px;">
+        <div style="width:${wRight}%;height:28px;border-radius:0 4px 4px 0;background:#2F1B69;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.riskant}%</span>
+      </div>`;
+    container.appendChild(row);
+  });
+}
+
+function nutzenRisikoFilter(group, btn) {
+  nutzenRisikoCurrentGroup = group;
+  document.querySelectorAll('#nutzenrisiko-chart .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  nutzenRisikoRender();
+}
+
+nutzenRisikoRender();
+
    // ── RADAR CHART ──
 
 
