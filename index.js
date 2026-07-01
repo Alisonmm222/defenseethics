@@ -677,11 +677,11 @@ function nutzenRisikoRender() {
     row.innerHTML = `
       <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
         <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.nuetzlich}%</span>
-        <div style="width:${wLeft}%;height:28px;border-radius:4px 0 0 4px;background:#BDB4FA;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+        <div style="width:${wLeft}%;height:28px;border-radius:4px 0 0 4px;background:#F2AC97;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
       </div>
       <div class="bar-label-text" style="width:150px;text-align:center;flex-shrink:0;">${d.label}</div>
       <div style="flex:1;display:flex;align-items:center;justify-content:flex-start;gap:8px;">
-        <div style="width:${wRight}%;height:28px;border-radius:0 4px 4px 0;background:#2F1B69;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+        <div style="width:${wRight}%;height:28px;border-radius:0 4px 4px 0;background:#c8441a;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
         <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.riskant}%</span>
       </div>`;
     container.appendChild(row);
