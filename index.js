@@ -17,7 +17,7 @@ const gruendeNein = [
     { label: "Fehlende Informationen",            pct: 38 },
 ];
 
-const colorJa   = "#f5d4c4";
+const colorJa   = "#e8a172";
 const colorNein = "#c8441a";
 
 function buildReasonBars(containerId, data, color) {
@@ -717,7 +717,7 @@ nutzenRisikoRender();
       const total = keys.reduce((s, k) => s + (v[k] || 0), 0);
       return Math.round(keys.reduce((s, k) => s + (v[k] || 0) * weights[k], 0) / total);
     }
-
+    
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const fillColor   = isDark ? 'rgba(127,119,221,0.35)' : 'rgba(83,74,183,0.25)';
     const strokeColor = isDark ? '#AFA9EC' : '#534AB7';
