@@ -88,11 +88,14 @@ let activeOpinion = null;
 // INIT
 // ══════════════════════════════════════
 window.addEventListener("DOMContentLoaded", () => {
-  renderOpinionExplorer();
-  setActiveOpinion(null);
+    setActiveOpinion(null);
   // Beim initialisieren — Ergebnis-Block verstecken
-  document.getElementById('tensionResult').style.opacity = '0';
-  document.getElementById('tensionResult').style.transition = 'opacity 0.6s ease';
+  const tensionResultelement = document.getElementById('tensionResult');
+  if (tensionResultelement){
+      tensionResultelement.style.opacity = '0';
+      tensionResultelement.style.transition = 'opacity 0.6s ease';
+  }
+
 
   let tensionTouched = false;
 
@@ -786,90 +789,5 @@ function nutzenRisikoFilter(group, btn) {
   btn.classList.add('active');
   nutzenRisikoRender();
 }
-
 nutzenRisikoRender();
 
-   // ── RADAR CHART ──
-
-
-  (function () {
-    const weights = { no: 0, rather_no: 20, somewhat_no: 40, somewhat_yes: 60, rather_yes: 80, yes: 100 };
-
-    const rows = [
-      { label: ['"Ethik bietet für mich"', 'eine Orientierung für mein Handeln.'],              values: { no: 6,  rather_no: 6,  somewhat_no: 12, somewhat_yes: 29, rather_yes: 34, yes: 12 } },
-      { label: ['"Ein Ingenieur sollte immer', 'das Allgemeinwohlberücksichtigen."'],        values: { no: 1,  rather_no: 7,  somewhat_no: 8,  somewhat_yes: 22, rather_yes: 41, yes: 20 } },
-      { label: ['"Ein Ingenieur soll immer', 'nach ethischen Grundsätzen handeln."'],  values: { no: 3,  rather_no: 9,  somewhat_no: 13, somewhat_yes: 19, rather_yes: 39, yes: 15 } },
-      { label: ['"Ingenieure und Ingenieurinnen urteilen', 'bei ethischen Fragen gleich."'],     values: { no: 15, rather_no: 29, somewhat_no: 13, somewhat_yes: 13, rather_yes: 20, yes: 6  } },
-      { label: ['"Ein Ingenieur ist nur' , 'seinem Arbeitgeber gegenüber verplichtet."'],   values: { no: 22, rather_no: 33, somewhat_no: 19, somewhat_yes: 14, rather_yes: 9,  yes: 2  } },
-      { label: ['"Ein Ingenieur ist für den', 'ethisch vertretbaren Gebrauch seiner Erfindung verantwortlich."'],     values: { no: 9,  rather_no: 8,  somewhat_no: 13, somewhat_yes: 20, rather_yes: 29, yes: 21 } },
-    ];
-
-    function score(v) {
-      const keys = ['no', 'rather_no', 'somewhat_no', 'somewhat_yes', 'rather_yes', 'yes'];
-      const total = keys.reduce((s, k) => s + (v[k] || 0), 0);
-      return Math.round(keys.reduce((s, k) => s + (v[k] || 0) * weights[k], 0) / total);
-    }
-    
-    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const fillColor   = isDark ? 'rgba(127,119,221,0.35)' : 'rgba(83,74,183,0.25)';
-    const strokeColor = isDark ? '#AFA9EC' : '#534AB7';
-    const gridColor   = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
-    const tickColor   = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
-    const labelColor  = isDark ? '#cccccc' : '#333333';
-
-    new Chart(document.getElementById('ethikRadar'), {
-      type: 'radar',
-      data: {
-        labels: rows.map(r => r.label),
-        datasets: [{
-          data: rows.map(r => score(r.values)),
-          backgroundColor: fillColor,
-          borderColor: strokeColor,
-          borderWidth: 2.5,
-          pointBackgroundColor: '#c8441a',
-          pointBorderColor: '#ffffff',
-          pointBorderWidth: 2,
-          pointRadius: 5,
-          pointHoverRadius: 7,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              title: ctx => ctx[0].label.join(' '),
-              label: ctx => 'Zustimmung: ' + ctx.raw + ' %'
-            },
-            backgroundColor: isDark ? '#2c2c2a' : '#1a1814',
-            titleColor: '#ffffff',
-            bodyColor: 'rgba(255,255,255,0.75)',
-            padding: 10,
-            cornerRadius: 6,
-          }
-        },
-        scales: {
-          r: {
-            min: 0,
-            max: 100,
-            ticks: {
-              stepSize: 25,
-              color: tickColor,
-              font: { size: 11 },
-              backdropColor: 'transparent',
-              callback: v => v + '%'
-            },
-            grid:        { color: gridColor },
-            angleLines:  { color: gridColor },
-            pointLabels: {
-              color: labelColor,
-              font: { size: 12.5 },
-              padding: 8,
-            }
-          }
-        }
-      }
-    });
-  })();
