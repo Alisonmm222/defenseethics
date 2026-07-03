@@ -54,6 +54,20 @@ function showGruende(which) {
 // Ja standardmäßig aktiv
 showGruende('ja');
 
+// zeigt beim ersten Erscheinen, dass die Buttons klickbar sind
+if ('IntersectionObserver' in window) {
+    const toggleDemoObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setTimeout(() => showGruende('nein'), 700);
+                setTimeout(() => showGruende('ja'), 1600);
+                toggleDemoObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.6 });
+    toggleDemoObserver.observe(document.querySelector('.toggle-question'));
+}
+
 // ══════════════════════════════════════════════
 // OPINION EXPLORER
 // ══════════════════════════════════════════════

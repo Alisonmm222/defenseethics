@@ -604,6 +604,7 @@ h3.sub-heading {
   font-weight: 700;
   color: var(--ink-faint);
   line-height: 1;
+  transition: color 0.4s ease;
 }
 .toggle-btn.active.ja  .toggle-pct { color: var(--accent-light); }
 .toggle-btn.active.nein .toggle-pct { color: #c8441a; }
@@ -614,6 +615,7 @@ h3.sub-heading {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #1a1814;
+  transition: color 0.4s ease;
 }
 .toggle-btn.active .toggle-label { color: #e0dff5; }
 .toggle-divider {
@@ -626,6 +628,15 @@ h3.sub-heading {
   position: relative;
 }
 .toggle-divider::before { content: 'vs'; }
+
+.toggle-hint {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: center;
+    margin-top: 10px;
+    letter-spacing: 0.02em;
+}
 
 /* Panels */
 .gruende-panel {
