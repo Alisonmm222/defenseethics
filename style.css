@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 @font-face {
   font-family: 'DM Sans';
   font-style: normal;
@@ -435,7 +434,7 @@ main.article {
 
 .prose p { margin-bottom: 1.4em; }
 
-.prose p + p { }
+.prose p + p 
 
 /* ── SECTION HEADS ── */
 .section-divider {
@@ -1405,7 +1404,7 @@ input[type=range].tension-slider::-ms-track {
   line-height: 1.2;
 }
 
-.rq-body {}
+.rq-body 
 
 .rq-q {
   font-size: 16px;
@@ -1588,7 +1587,7 @@ input[type=range].tension-slider::-ms-track {
   .section-illo { flex-direction: column; text-align: center; }
   .bar-label-text { width: 130px; font-size: 12px; }
 }
-<<<<<<< HEAD
+ HEAD
 
 /* ──  ── */
 .ethik-radar-section {
@@ -1703,7 +1702,7 @@ input[type=range].tension-slider::-ms-track {
     grid-template-columns: 1fr;
   }
 }
-=======
+
 /* ──  ── */
 
 .ethik-counters-section {
@@ -1789,10 +1788,8 @@ input[type=range].tension-slider::-ms-track {
 @media (max-width: 600px) {
   .ethik-counter-grid { grid-template-columns: 1fr; }
 }
->>>>>>> b8df1df27fbe13ec5658656d5a8548f4fc3bc706
-=======
-=======
->>>>>>> e74f331b36e0ccb66b7826166c72ebd66d738dd5
+
+
 @font-face {
   font-family: 'DM Sans';
   font-style: normal;
@@ -2139,7 +2136,7 @@ input[type=range].tension-slider::-ms-track {
 
         .prose p { margin-bottom: 1.4em; }
 
-        .prose p + p { }
+        .prose p + p 
 
         /* ── SECTION HEADS ── */
         .section-divider {
@@ -3130,7 +3127,7 @@ input[type=range].tension-slider::-ms-track {
           line-height: 1.2;
         }
 
-        .rq-body {}
+        .rq-body 
 
         .rq-q {
           font-size: 16px;
@@ -3314,7 +3311,7 @@ input[type=range].tension-slider::-ms-track {
           .section-illo { flex-direction: column; text-align: center; }
           .bar-label-text { width: 130px; font-size: 12px; }
         }
-<<<<<<< HEAD
+HEAD
    
         /* ──  ── */
         .ethik-radar-section {
@@ -3429,7 +3426,7 @@ input[type=range].tension-slider::-ms-track {
             grid-template-columns: 1fr;
           }
         }
-=======
+
    /* ──  ── */
 
 
@@ -3518,4 +3515,4 @@ input[type=range].tension-slider::-ms-track {
     @media (max-width: 600px) {
       .ethik-counter-grid { grid-template-columns: 1fr; }
     }
->>>>>>> b8df1df27fbe13ec5658656d5a8548f4fc3bc706
+
