@@ -1,3 +1,34 @@
+  (function () {
+    function animateCounter(el, target, duration) {
+      const start = performance.now();
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    const cards = document.querySelectorAll('.ethik-counter-card');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          card.classList.add('visible');
+          const target = parseInt(card.dataset.target);
+          const countEl = card.querySelector('.ethik-count');
+          animateCounter(countEl, target, 1800);
+          observer.unobserve(card);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    cards.forEach(c => observer.observe(c));
+  })();
+
 // ══════════════════════════════════════════════
 // DATEN FÜR GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
 // ══════════════════════════════════════════════
@@ -209,15 +240,15 @@ const messagesZustimmung = [
   'Stimme eher zu',
   'Stimme voll und ganz zu',
 ];
-const studyDataZustimmung = [28.8, 21.8, 16, 16, 17];
+const studyDataZustimmung = [29, 22, 16, 16, 17];
 
 // Szenario
 const messagesSzenario = [
-  'Ich würde Angebot A nehmen',
-  'Ich würde Angebot A nehmen, aber der Gehaltsunterschied lässt mich zögern',
+  'Ich würde Angebot A (Ziviles Unternehmen) nehmen',
+  'Ich würde Angebot A (Ziviles Unternehmen) nehmen, aber der Gehaltsunterschied lässt mich zögern',
   'Ich würde intensiv abwägen und beide Angebote in Betracht ziehen',
-  'Ich würde Angebot B nehmen, weil das Gehalt ein legitimer Grund ist',
-  'Ich würde Angebot B aus anderen Gründen wählen',
+  'Ich würde Angebot B (Rüstungsunternehmen) nehmen, weil das Gehalt ein legitimer Grund ist',
+  'Ich würde Angebot B (Rüstungsunternehmen) aus anderen Gründen wählen',
 ];
 const studyDataSzenario = [10,16, 5, 41, 28];
 
@@ -248,7 +279,10 @@ const sliderConfigs = {
       resultBlock: 'tensionResultBlockScenario'
     }
   }
+
 };
+
+
 
 function buildComparisonBarsFor(containerId, data, prefix) {
   const wrap = document.getElementById(containerId);
@@ -332,7 +366,7 @@ function updateTensionFor(key, v) {
   if (numEl) numEl.textContent = v;
 
   const textEl = document.getElementById(ids.text);
-  if (textEl) textEl.textContent = `von ${scaleMax} — ${messages[idx] || ''}`;
+  if (textEl) textEl.textContent = `${messages[idx] || ''}`;
 
   // Balken aktualisieren; ids for bars are namespaced
   studyData.forEach((_, i) => {

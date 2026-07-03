@@ -96,8 +96,7 @@
                     </div>
 
                     <div class="tension-result-row">
-                        <div class="tension-result-num" id="tensionNumScenario">3</div>
-                        <div class="tension-result-text" id="tensionTextScenario">von 5 — Bewegen Sie den Schieberegler.</div>
+                        <div class="tension-result-text" id="tensionTextScenario">Bewegen Sie den Schieberegler.</div>
                     </div>
                 </div>
                <div class="tension-result-block" id="tensionResultBlockScenario">
@@ -308,44 +307,8 @@
       </p>
       <div class="ethik-counter-source">Breuer et al., 2019 · n = 117</div>
     </div>
- 
   </div>
- 
-  <script>
-  (function () {
-    function animateCounter(el, target, duration) {
-      const start = performance.now();
-      function step(now) {
-        const progress = Math.min((now - start) / duration, 1);
-        // ease-out cubic
-        const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.round(eased * target);
-        if (progress < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }
- 
-    const cards = document.querySelectorAll('.ethik-counter-card');
- 
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const card = entry.target;
-          card.classList.add('visible');
-          const target = parseInt(card.dataset.target);
-          const countEl = card.querySelector('.ethik-count');
-          animateCounter(countEl, target, 1800);
-          observer.unobserve(card);
-        }
-      });
-    }, { threshold: 0.3 });
- 
-    cards.forEach(c => observer.observe(c));
-  })();
-  </script>
- 
     </section>
-<!-- ── Ende students_ethics counter cards ── -->
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -426,27 +389,6 @@
     </div>
 
     <div class="fade-in">
-
-        <div class="section-illo fade-in">
-            <svg class="illo-svg" viewBox="0 0 120 120" fill="none">
-                <line x1="60" y1="20" x2="60" y2="60" stroke="#3d2d6e" stroke-width="2"/>
-                <line x1="20" y1="60" x2="100" y2="60" stroke="#3d2d6e" stroke-width="2"/>
-                <line x1="30" y1="60" x2="25" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
-                <line x1="30" y1="60" x2="35" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
-                <rect x="15" y="80" width="30" height="6" rx="3" fill="#3d2d6e" opacity="0.2" stroke="#3d2d6e" stroke-width="1"/>
-                <text x="30" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#3d2d6e" font-weight="500">ETHIK</text>
-                <line x1="90" y1="60" x2="85" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
-                <line x1="90" y1="60" x2="95" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
-                <rect x="75" y="80" width="30" height="6" rx="3" fill="#0d6b5e" opacity="0.2" stroke="#0d6b5e" stroke-width="1"/>
-                <text x="90" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b5e" font-weight="500">PFLICHT</text>
-                <circle cx="60" cy="18" r="4" fill="white" stroke="#3d2d6e" stroke-width="1.5"/>
-                <circle cx="60" cy="18" r="2" fill="#3d2d6e"/>
-            </svg>
-            <p class="illo-text">
-                Zwischen individuellem Kompass<br>und gesellschaftlicher Pflicht:<br><strong>Wo stehen die Studierenden?</strong>
-            </p>
-        </div>
-
         <div class="quote-grid fade-in">
             <div class="quote-card">
                 <blockquote>„Wenn ich es nicht mache, dann macht es jemand anderes."</blockquote>
@@ -468,7 +410,6 @@
 
 
     <div class="fade-in">
-        <h3 class="sub-heading">Unsere Befunde</h3>
         <div class="chart-block fade-in">
             <div class="chart-header">
                 <h4>Kannst du dir vorstellen, im Verteidigungsbereich zu arbeiten?</h4>
@@ -517,22 +458,11 @@
                 <p class="rq-note">→ Heatmap nach Fachrichtung (Maschinenbau, Elektrotechnik, Informatik, Bauingenieurwesen, Luft- und Raumfahrt).</p>
             </div>
         </div>
-        <div class="rq-item" onclick="this.classList.toggle('open')">
-            <div class="rq-body">
-                <p class="rq-q">Wie ausgeprägt ist das berufsethische Bewusstsein bei Studierenden im Vergleich zu Berufstätigen?</p>
-                <p class="rq-note">→ Split-View-Vergleich: Zwei Gruppen, gleiche Fragen, unterschiedliche Antworten.</p>
-            </div>
-        </div>
+
         <div class="rq-item" onclick="this.classList.toggle('open')">
             <div class="rq-body">
                 <p class="rq-q">Gibt es geschlechtsspezifische Unterschiede in der ethischen Bewertung des Verteidigungsbereichs?</p>
                 <p class="rq-note">→ Dumbbell-Chart auf zentralen Einstellungsdimensionen.</p>
-            </div>
-        </div>
-        <div class="rq-item" onclick="this.classList.toggle('open')">
-            <div class="rq-body">
-                <p class="rq-q">Wie stark ist die Spannung zwischen individueller Überzeugung und gesellschaftlich-politischer Verantwortung?</p>
-                <p class="rq-note">→ Interaktiver Spannungsindex: Nutzer:innen ordnen sich selbst ein und vergleichen ihre Position mit dem Umfragedurchschnitt.</p>
             </div>
         </div>
     </div>
@@ -562,10 +492,13 @@
                     </div>
 
                 <div class="tension-result-row">
-                    <div class="tension-result-num" id="tensionNum">5</div>
-                    <div class="tension-result-text" id="tensionText">von 5 — Bewegen Sie den Schieberegler.</div>
+                    <div class="tension-result-text hidden" id="tensionText">
+                        Bewegen Sie den Schieberegler.
+                    </div>
                 </div>
+
         </div>
+
             <div class="tension-result-block" id="tensionResultBlock">
             <div class="tension-comparison">
                 <div class="comparison-bar-wrap">
