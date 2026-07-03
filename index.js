@@ -390,7 +390,7 @@ function updateTensionFor(key, v) {
 
   const pct = studyData[idx] || 0;
   const comp = document.getElementById(ids.compText);
-  if (comp) comp.innerHTML = `<strong>${pct}% der Befragten</strong> haben ebenfalls <strong>${v} von ${scaleMax}</strong> angegeben.`;
+  if (comp) comp.innerHTML = `<strong>${pct}% der Befragten</strong> haben das ebenfalls angegeben.`;
 }
 
 window.addEventListener('load', () => {

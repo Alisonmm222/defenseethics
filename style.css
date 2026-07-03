@@ -2908,7 +2908,7 @@ input[type=range].tension-slider::-ms-track {
 
           .comparison-text {
             font-family: 'DM Sans', sans-serif;
-            font-size: 12px;
+            font-size: 24px;
             color: rgba(255,255,255,0.35);
             line-height: 1.6;
           }
