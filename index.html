@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>So ethisch wie ein Kompass — Berufsethik für Ingenieur:innen</title>
+    <meta name="description" content="Ein Forschungsprojekt der TH Nürnberg über Berufsethik von Ingenieur:innen zwischen Rüstungsboom, Fachkräftemangel und der Ethikdebatte an Hochschulen.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icons/favicon.ico" sizes="any">  
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
 <body>
 
@@ -15,9 +18,8 @@
 <nav class="site-nav">
     <div class="nav-brand">Ingenieur&shy;ethik</div>
     <div class="nav-links">
-        <a href="#zeitenwende">Lagebild</a>
-        <a href="#berufsethik">Berufsethik</a>
-        <a href="#umfrage">Unsere Daten</a>
+        <a href="#lagebild">Lagebild und Berufsethik</a>
+        <a href="#umfrage">Unsere Studie</a>
     </div>
 </nav>
 
@@ -65,7 +67,7 @@
     <div class="prose fade-in">
         <p>
             Diese Frage ist in Deutschland seit der sogenannten <strong>Zeitenwende</strong>, Olaf Scholz' historischer Rede im Februar 2022, präsenter seit Jahrzehnten.
-            Wir haben <span class="stat-inline"><span class="num">??</span><span class="unit">Personen</span></span> befragt: Studierende udn Berufstätige verschiedene Fachrichtungen, unterschiedliche Hintergründe.
+            Wir haben <span class="stat-inline"><span class="num">??</span><span class="unit">Personen</span></span> befragt: Studierende und Berufstätige verschiedene Fachrichtungen, unterschiedliche Hintergründe.
         </p>
     </div>
 
@@ -73,7 +75,7 @@
             <div class="fullscreen-inner" id="tensionInnerScenario">
                 <div class="tension-block">
 
-                    <div class="tension-eyebrow">Ihre Einschätzung</div>
+                    <div class="tension-eyebrow">Deine Einschätzung</div>
                     <h4>Stell dir vor auf deinem Tisch liegen zwei Angebote...</h4>
                     <p class = "pq-body">
                         Eines von einem zivilen Unternehmen (Angebot A), eines von einem Rüstungskonzern (Angebot B).
@@ -101,6 +103,7 @@
                         <div class="tension-result-text" id="tensionTextScenario">von 5 — Bewegen Sie den Schieberegler.</div>
                     </div>
                 </div>
+               <div class="tension-result-block">
                 <div class="tension-comparison">
                     <div class="comparison-bar-wrap">
                         <div class="comparison-bars" id="comparisonBarsScenario">
@@ -108,34 +111,49 @@
                     </div>
                     <div class="comparison-text" id="comparisonTextScenario"></div>
                     <p class="source">
-                       Quelle: Eigene Umfrage · ??? Teilnehmende · 2026
+                       Quelle: Eigene Umfrage · 243 Teilnehmende · 2026
                     </p>
                 </div>
+               </div>
             </div>
 
     </section>
-    <hr class="section-divider section-divider--light" id="zeitenwende">
+    <hr class="section-divider section-divider--light" id="lagebild">
 
     <div class="fade-in">
         <div class="section-number">Teil Eins</div>
         <h2 class="section-title">Der Angriffskrieg verändert die Spielregeln</h2>
     </div>
 
-    <div class="timeline fade-in">
-        <div class="tl-item">
-            <div class="tl-dot"></div>
-            <div class="tl-year">Februar 2022</div>
-            <div class="tl-head">Krieg in der Ukraine</div>
-        </div>
-        <div class="tl-item">
-            <div class="tl-dot"></div>
-            <div class="tl-year">2022 – heute</div>
-            <div class="tl-head">Rüstungsboom trifft Fachkräftemangel</div>
-        </div>
-        <div class="tl-item">
-            <div class="tl-dot"></div>
-            <div class="tl-year">2024 – heute</div>
-            <div class="tl-head">Ethikdebatte in den Hochschulen</div>
+    <div class="lagebild-breakout">
+        <div class="lagebild-split">
+            <div class="prose fade-in">
+                <p>
+                    Mit dem russischen Angriffskrieg gegen die Ukraine begann am 24. Februar 2022 eine
+                    sicherheitspolitische <em>Zeitenwende</em>. Milliardeninvestitionen in Bundeswehr und
+                    Rüstungsindustrie folgten und stoßen zunehmend an eine Grenze: den Fachkräftemangel
+                    in technischen Berufen. Seit 2024 wächst zudem an Hochschulen eine Debatte darüber, wie
+                    weit Forschung sich an militärischen Anwendungen beteiligen sollte.
+                </p>
+            </div>
+
+            <div class="timeline fade-in">
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-year">Februar 2022</div>
+                    <div class="tl-head">Krieg in der Ukraine</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-year">2022 – heute</div>
+                    <div class="tl-head">Rüstungsboom trifft Fachkräftemangel</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-year">2024 – heute</div>
+                    <div class="tl-head">Ethikdebatte in den Hochschulen</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -165,6 +183,33 @@
     </div>
     <p class="source">Quelle: Bunde und Daur, "Ein aktuelles Meinungsbild zur Zeitenwende: Bitte wenden!" · 2025</p>
 
+    <!-- Nutzen vs. Risiko: Verknüpfung ziviler und militärischer Forschung (Butterfly) -->
+    <div class="chart-block fade-in" id="nutzenrisiko-chart">
+        <div class="chart-header">
+            <h4>Nutzen vs. Risiko: Verknüpfung ziviler und militärischer Forschung und Anwendung</h4>
+            <div class="umfrage-tabs">
+                <button class="tab-btn active" onclick="nutzenRisikoFilter('all', this)">Alle Gruppen</button>
+                <button class="tab-btn" onclick="nutzenRisikoFilter('geschlecht', this)">Geschlecht</button>
+                <button class="tab-btn" onclick="nutzenRisikoFilter('alter', this)">Alter</button>
+            </div>
+        </div>
+        <div class="chart-body">
+            <div style="display:flex;align-items:center;margin-bottom:16px;">
+                <div style="flex:1;display:flex;justify-content:flex-end;align-items:center;gap:6px;">
+                    <span style="width:10px;height:10px;border-radius:50%;background:#F2AC97;display:inline-block;"></span>
+                    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-faint);">sehr nützlich</span>
+                </div>
+                <div style="width:150px;flex-shrink:0;"></div>
+                <div style="flex:1;display:flex;justify-content:flex-start;align-items:center;gap:6px;">
+                    <span style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-faint);">sehr riskant</span>
+                    <span style="width:10px;height:10px;border-radius:50%;background:#c8441a;display:inline-block;"></span>
+                </div>
+            </div>
+            <div id="nutzenrisiko-rows" class="umfrage-rows"></div>
+            <p class="source">Quelle: acatech/TechnikRadar 2025 · N = 2.003 · Angaben in Prozent</p>
+        </div>
+    </div>
+
     <div class="fade-in">
         <div class="sub-heading">
             <h3>Zivilklauseln an staatlichen Hochschulen</h3>
@@ -180,16 +225,16 @@
         </div>
     </div>
 
+   <div class="map-insight">
     <div class="map-insight-stat">
         &lt; ⅓
     </div>
-
     <div class="map-insight-text">
         Die Zivilklausel ist in Deutschland weit verbreitet, aber ungleich verteilt: Weniger als ein Drittel aller staatlichen Hochschulen hat eine entsprechende Regelung, und ihre Verteilung folgt eher landespolitischen Traditionen als einem bundesweiten Konsens.
-    </div>
-    <p class="source">Quelle: http://zivilklausel.de/index.php/bestehende-zivilklauseln ;
+        <p class="source">Quelle: http://zivilklausel.de/index.php/bestehende-zivilklauseln ;
         https://hochschuldaten.che.de/</p>
     </div>
+</div>
 
     <!-- Umfrage: Militärische Forschung an Hochschulen -->
     <div class="chart-block fade-in" id="umfrage-chart">
@@ -216,30 +261,9 @@
         </div>
     </div>
 
-    <div class="section-illo fade-in">
-        <svg class="illo-svg" viewBox="0 0 120 120" fill="none">
-            <line x1="60" y1="20" x2="60" y2="60" stroke="#3d2d6e" stroke-width="2"/>
-            <line x1="20" y1="60" x2="100" y2="60" stroke="#3d2d6e" stroke-width="2"/>
-            <line x1="30" y1="60" x2="25" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
-            <line x1="30" y1="60" x2="35" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
-            <rect x="15" y="80" width="30" height="6" rx="3" fill="#3d2d6e" opacity="0.2" stroke="#3d2d6e" stroke-width="1"/>
-            <text x="30" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#3d2d6e" font-weight="500">ETHIK</text>
-            <line x1="90" y1="60" x2="85" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
-            <line x1="90" y1="60" x2="95" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
-            <rect x="75" y="80" width="30" height="6" rx="3" fill="#0d6b5e" opacity="0.2" stroke="#0d6b5e" stroke-width="1"/>
-            <text x="90" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b5e" font-weight="500">PFLICHT</text>
-            <circle cx="60" cy="18" r="4" fill="white" stroke="#3d2d6e" stroke-width="1.5"/>
-            <circle cx="60" cy="18" r="2" fill="#3d2d6e"/>
-        </svg>
-        <p class="illo-text">
-            Zwischen individuellem Kompass<br>und gesellschaftlicher Pflicht:<br><strong>wo stehen Ingenieur:innen?</strong>
-        </p>
-    </div>
-
     <hr class="section-divider" id="berufsethik">
 
     <div class="fade-in">
-        <div class="section-number">Teil Zwei</div>
         <h2 class="section-title">Was wissen wir schon über Berufsethik?</h2>
     </div>
     <div class="chart-block fade-in">
@@ -252,45 +276,177 @@
         </div>
     </div>
 
-<!-- ── Ethik Radar Chart ── -->
 
-    <div class="fade-in">
-        <div class="chart-header h4 ">
-            <h4>Was denken deutsche Studierende über Berufsethik?</h4>
-        </div>
-        <section class="ethik-radar-section" aria-label="Ethisches Selbstverständnis von Ingenieur:innen"> </section>
-        <div class="radar-grid">
 
-    <div class="radar-panel">
-      <div class="radar-legend">
-        <span class="radar-legend-dot"></span>
-        Durchschnittliche Zustimmung
-      </div>
-      <div class="radar-wrapper">
-        <canvas id="ethikRadar"
-          role="img"
-          aria-label="Radar-Diagramm: Ethisches Selbstverständnis von Ingenieurstudierenden. Höchste Zustimmung für Allgemeinwohl (76%) und Verantwortung für Erfindung (73%). Geringste Zustimmung bei Arbeitgeberpflicht (32%) und Gleichheit bei Ethikurteilen (48%)."
-        >Ethik-Radar: 117 Ingenieurstudierende. Höchste Werte: Allgemeinwohl 76%, Verantwortung Erfindung 73%. Niedrigste: Arbeitgeberpflicht 32%, Gleichheit 48%.</canvas>
-      </div>
-      <p class="source">
-        Quelle: Breuer et al., "Studierende definieren eine Ethik in den Ingenieurwissenschaften" · 117 Studierende · 2019 · Likert-Skala, umgerechnet in Zustimmungsprozente (0–100).
-      </p>
+<!-- ── Ethik Text ── -->
+<!-- ── students_ethics COUNTER CARDS – direkt in index.html einfügen ── -->
+
+    <div class="prose fade-in">
+        <p>
+            Doch wie sieht es diesseits des Atlantiks aus? Eine Befragung von 117 Ingenieurstudierenden an deutschen Hochschulen zeigt: Auch hier ist das Bewusstsein für ethische Verantwortung ausgeprägt. Zwei Aussagen stechen dabei besonders hervor.
+        </p>
     </div>
+    
+    <section class="ethik-counters-section" aria-label="Ethische Haltung von Ingenieuren">
+ 
+  <div class="ethik-counter-grid">
+ 
+    <div class="ethik-counter-card" data-target="73">
+      <div class="ethik-counter-label">Zustimmung</div>
+      <div class="ethik-counter-number">
+        <span class="ethik-count">0</span><span class="ethik-pct"> %</span>
+      </div>
+      <p class="ethik-counter-quote">
+        „Ein Ingenieur soll immer nach ethischen Grundzügen handeln."
+      </p>
+      <div class="ethik-counter-source">Breuer et al., 2019 · n = 117</div>
+    </div>
+ 
+    <div class="ethik-counter-card" data-target="70">
+      <div class="ethik-counter-label">Zustimmung</div>
+      <div class="ethik-counter-number">
+        <span class="ethik-count">0</span><span class="ethik-pct"> %</span>
+      </div>
+      <p class="ethik-counter-quote">
+        „Ein Ingenieur ist für den ethisch vertretbaren Gebrauch seiner Erfindung verantwortlich."
+      </p>
+      <div class="ethik-counter-source">Breuer et al., 2019 · n = 117</div>
+    </div>
+ 
   </div>
-  </div>
+ 
+  <script>
+  (function () {
+    function animateCounter(el, target, duration) {
+      const start = performance.now();
+      function step(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+ 
+    const cards = document.querySelectorAll('.ethik-counter-card');
+ 
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          card.classList.add('visible');
+          const target = parseInt(card.dataset.target);
+          const countEl = card.querySelector('.ethik-count');
+          animateCounter(countEl, target, 1800);
+          observer.unobserve(card);
+        }
+      });
+    }, { threshold: 0.3 });
+ 
+    cards.forEach(c => observer.observe(c));
+  })();
+  </script>
+ 
+    </section>
+<!-- ── Ende students_ethics counter cards ── -->
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
     <hr class="section-divider" id="umfrage">
+    <div class="fade-in">
+        <header class="hero">
+            <div class="hero-eyebrow">Berufsethik · Verteidigung · Gesellschaft · 2026</div>
+            <h1 class="hero-title">
+                Befragung unter Studierenden der<em>Technischen Hochschule Nürnberg</em>
+            </h1>
+            <p class="hero-deck">
+                In unserer eigenen Befragung haben wir <span class="stat-inline"><span class="num">243</span><span class="unit">Teilnehmende</span></span> erreicht. Studierendere aller Fachrichtungen.
+            </p>
+            <div class="hero-byline">
+                <span>Ein Forschungsprojekt der Technischen Hochschule Nürnberg</span>
+            </div>
+        </header>
+    </div>
 
     <div class="fade-in">
-        <div class="section-number">Teil Drei</div>
-        <h2 class="section-title">Fünf Fragen, die wir gestellt haben...</h2>
+        <div class="section-number">Teil Zwei</div>
+
+        <div class="section-illo fade-in">
+            <svg class="illo-svg" viewBox="0 0 120 120" fill="none">
+                <line x1="60" y1="20" x2="60" y2="60" stroke="#3d2d6e" stroke-width="2"/>
+                <line x1="20" y1="60" x2="100" y2="60" stroke="#3d2d6e" stroke-width="2"/>
+                <line x1="30" y1="60" x2="25" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
+                <line x1="30" y1="60" x2="35" y2="80" stroke="#3d2d6e" stroke-width="1.5"/>
+                <rect x="15" y="80" width="30" height="6" rx="3" fill="#3d2d6e" opacity="0.2" stroke="#3d2d6e" stroke-width="1"/>
+                <text x="30" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#3d2d6e" font-weight="500">ETHIK</text>
+                <line x1="90" y1="60" x2="85" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
+                <line x1="90" y1="60" x2="95" y2="80" stroke="#0d6b5e" stroke-width="1.5"/>
+                <rect x="75" y="80" width="30" height="6" rx="3" fill="#0d6b5e" opacity="0.2" stroke="#0d6b5e" stroke-width="1"/>
+                <text x="90" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#0d6b5e" font-weight="500">PFLICHT</text>
+                <circle cx="60" cy="18" r="4" fill="white" stroke="#3d2d6e" stroke-width="1.5"/>
+                <circle cx="60" cy="18" r="2" fill="#3d2d6e"/>
+            </svg>
+            <p class="illo-text">
+                Zwischen individuellem Kompass<br>und gesellschaftlicher Pflicht:<br><strong>Wo stehen die Studierenden?</strong>
+            </p>
+        </div>
+
+        <div class="quote-grid fade-in">
+            <div class="quote-card">
+                <blockquote>„Wenn ich es nicht mache, dann macht es jemand anderes."</blockquote>
+                <p class="source">Studiengang: Maschienenbau, Eigene Umfrage · 243 Teilnehmende · 2026 </p>
+            </div>
+            <div class="quote-card">
+                <blockquote>„Krieg ist keine Option! Daher keine Aufrüstung!"</blockquote>
+                <p class="source">Studiengang: Maschienenbau, Eigene Umfrage · 243 Teilnehmende · 2026 </p>
+            </div>
+            <div class="quote-card">
+                <blockquote>„Ich will nur nicht, dass Systeme gegen die eigene Bevölkerung eingesetzt werden. Da sehe ich die Gefahr bei Spionagesystemen oder allem was irgendwie mit Big Data zu tun hat."</blockquote>
+                <p class="source">Studiengang: Elektrotechnik, Eigene Umfrage · 243 Teilnehmende · 2026 </p>
+            </div>
+            <div class="quote-card">
+                <blockquote>„Mir ist die deutsche Demokratie und Europas Sicherheit wichtig. Wenn dies durch Mächte außerhalb in Gefahr ist, dann finde ich ein Militär wichtig und angebracht."</blockquote>
+                <p class="source">Studiengang: International Business, Eigene Umfrage· 243 Teilnehmende · 2026</p>        </div>
+        </div>
+    </div>
+
+
+    <div class="fade-in">
+        <h3 class="sub-heading">Unsere Befunde</h3>
+        <div class="chart-block fade-in">
+            <div class="chart-header">
+                <h4>Kannst du dir vorstellen, im Verteidigungsbereich zu arbeiten?</h4>
+            </div>
+            <div class="chart-body">
+                <div class="toggle-question">
+                    <button class="toggle-btn ja" id="btn-ja" onclick="showGruende('ja')">
+                        <span class="toggle-pct">38%</span>
+                        <span class="toggle-label">Ja</span>
+                    </button>
+                    <div class="toggle-divider"></div>
+                    <button class="toggle-btn nein" id="btn-nein" onclick="showGruende('nein')">
+                        <span class="toggle-pct">62%</span>
+                        <span class="toggle-label">Nein</span>
+                    </button>
+                </div>
+
+                <div class="gruende-panel" id="panel-ja">
+                    <div class="gruende-title" style="color:var(--accent-light)">Gründe dafür</div>
+                    <div class="gruende-bars" id="bars-ja"></div>
+                </div>
+                <div class="gruende-panel" id="panel-nein">
+                    <div class="gruende-title" style="color:#c8441a">Gründe dagegen</div>
+                    <div class="gruende-bars" id="bars-nein"></div>
+                </div>
+                <p class="source">Quelle: Eigene Umfrage· 243 Teilnehmende · 2026 </p>
+            </div>
+        </div>
     </div>
 
     <div class="prose fade-in">
-        <p>
-            In unserer eigenen Befragung haben wir <span class="stat-inline"><span class="num">???</span><span class="unit">Teilnehmende</span></span> erreicht — Ingenieursstudierende aller Fachrichtungen sowie bereits berufstätige Ingenieur:innen in Deutschland.
+        <p>   <h2 class="section-title">Fünf Fragen, die wir gestellt haben...</h2>
         </p>
     </div>
 
@@ -332,7 +488,7 @@
         <div class="fullscreen-inner" id="tensionInnerZustimmung">
             <div class="tension-block">
 
-                <div class="tension-eyebrow">Ihre Einschätzung</div>
+                <div class="tension-eyebrow">Deine Einschätzung</div>
                 <h4>Wie stark empfindest du<br>die ethische Spannung?</h4>
                 <p>Hättest du Gewissenskonflikte, wenn du im Defense Bereich arbeiten würdest?</p>
 
@@ -362,71 +518,22 @@
                     </div>
                 </div>
                 <div class="comparison-text" id="comparisonText"></div>
-                <p class="source">Quelle: Eigene Umfrage· ??? Teilnehmende · 2026 </p>
+                <p class="source">Quelle: Eigene Umfrage· 243 Teilnehmende · 2026 </p>
             </div>
         </div>
     </section>
 
-
-    <div class="fade-in">
-        <h3 class="sub-heading">Unsere Befunde</h3>
-        <div class="chart-block fade-in">
-            <div class="chart-header">
-                <h4>Kannst du dir vorstellen, im Verteidigungsbereich zu arbeiten?</h4>
-            </div>
-            <div class="chart-body">
-                <div class="toggle-question">
-                    <button class="toggle-btn ja" id="btn-ja" onclick="showGruende('ja')">
-                        <span class="toggle-pct">38%</span>
-                        <span class="toggle-label">Ja</span>
-                    </button>
-                    <div class="toggle-divider"></div>
-                    <button class="toggle-btn nein" id="btn-nein" onclick="showGruende('nein')">
-                        <span class="toggle-pct">62%</span>
-                        <span class="toggle-label">Nein</span>
-                    </button>
-                </div>
-
-                <div class="gruende-panel" id="panel-ja">
-                    <div class="gruende-title" style="color:#7F77DD">Gründe dafür</div>
-                    <div class="gruende-bars" id="bars-ja"></div>
-                </div>
-                <div class="gruende-panel" id="panel-nein">
-                    <div class="gruende-title" style="color:#c8441a">Gründe dagegen</div>
-                    <div class="gruende-bars" id="bars-nein"></div>
-                </div>
-                <p class="source">Quelle: Eigene Umfrage· ??? Teilnehmende · 2026 </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="quote-grid fade-in">
-        <div class="quote-card">
-            <blockquote>„Ich würde niemals für ein Unternehmen arbeiten, das Waffen herstellt. Das ist eine rote Linie für mich."</blockquote>
-            <p class="source"> Eigene Umfrage· ??? Teilnehmende · 2026 </p>
-        </div>
-        <div class="quote-card">
-            <blockquote>„Sicherheitstechnik schützt Menschen. Ich sehe das nicht als ethisches Problem, sondern als Verantwortung."</blockquote>
-            <p class="source"> Eigene Umfrage· ??? Teilnehmende · 2026 </p>
-        </div>
-        <div class="quote-card">
-            <blockquote>„Die Grenze zwischen ziviler und militärischer Anwendung ist in meiner Branche längst verschwommen."</blockquote>
-            <p class="source"> Eigene Umfrage· ??? Teilnehmende · 2026 </p>
-        </div>
-        <div class="quote-card">
-            <blockquote>„Das Studium hat mich nicht vorbereitet, solche Entscheidungen zu treffen."</blockquote>
-            <p class="source">Quelel: Eigene Umfrage· ??? Teilnehmende · 2026</p>        </div>
-    </div>
 </main>
 
 <!-- FOOTER -->
+<div class="footer-wrap">
 <footer class="site-footer">
     <div class="footer-note">
-        Forschungsprojekt Ingenieurethik · 2026<br>
+        Forschungsprojekt zur Ingenieurethik · 2026<br>
     </div>
     <div class="footer-brand">Berufsethik<br><em style="font-weight:400">Defense</em></div>
 </footer>
-
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="index.js"></script>
 </body>

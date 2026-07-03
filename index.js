@@ -17,7 +17,7 @@ const gruendeNein = [
     { label: "Fehlende Informationen",            pct: 38 },
 ];
 
-const colorJa   = "#7F77DD";
+const colorJa   = "#e8a172";
 const colorNein = "#c8441a";
 
 function buildReasonBars(containerId, data, color) {
@@ -55,7 +55,7 @@ function showGruende(which) {
 showGruende('ja');
 
 // ══════════════════════════════════════════════
-// OPINION EXPLORER (REPLACEMENT für STACKED CHART)
+// OPINION EXPLORER
 // ══════════════════════════════════════════════
 
 const opinionData = [
@@ -90,6 +90,18 @@ let activeOpinion = null;
 window.addEventListener("DOMContentLoaded", () => {
   renderOpinionExplorer();
   setActiveOpinion(null);
+  // Beim initialisieren — Ergebnis-Block verstecken
+  document.getElementById('tensionResult').style.opacity = '0';
+  document.getElementById('tensionResult').style.transition = 'opacity 0.6s ease';
+
+  let tensionTouched = false;
+
+  function updateTension(val) {
+    if (!tensionTouched) {
+      tensionTouched = true;
+      document.getElementById('tensionResult').style.opacity = '1';
+    }
+  }
 
   // allow keyboard users to reset selection with Escape
   document.addEventListener('keydown', (e) => {
@@ -169,6 +181,7 @@ function updateInsight(id) {
 
 // ── Tension sliders (zwei separate Skalen) ──
 // Zustimmung
+
 const messagesZustimmung = [
   'Stimme überhaupt nicht zu',
   'Stimme eher nicht zu',
@@ -227,6 +240,7 @@ function buildComparisonBarsFor(containerId, data, prefix) {
 }
 
 function updateTensionFor(key, v) {
+
   const cfg = sliderConfigs[key];
   if (!cfg) return;
   const messages = cfg.messages;
@@ -355,7 +369,7 @@ window.addEventListener('load', () => {
     }, 300);
   }
 
-  // ── Nav ausblenden beim Reinscrolle UND beim Scroll-Down (wie auf der anderen Seite)
+  // ── Navigation ausblenden beim Reinscrolle UND beim Scroll-Down (wie auf der anderen Seite)
   const nav = document.querySelector('nav');
   const block = document.querySelector('.fullscreen-block');
   if (nav) {
@@ -408,7 +422,7 @@ const priorityData = [
     { label: "Gesellschaftlicher\nBeitrag", usa: 30 },
 ];
 
-const colorUSA = "#3d2d6e";
+const colorUSA = "#c8441a";
 
 const chart = document.getElementById('priority-chart');
 if (chart) {
@@ -417,7 +431,7 @@ if (chart) {
   header.className = 'priority-header-row';
   header.innerHTML = `
     <div></div>
-    <div class="priority-header-label" style="color:#AFA9EC"> USA</div>
+    <div class="priority-header-label" style="color:#1a1814"> USA</div>
   `;
   chart.appendChild(header);
 
@@ -539,7 +553,7 @@ const umfrageData = [
   { label: '35–64 Jahre',                group: 'alter',      garNicht: 10, eherNicht: 7,  ambivalent: 33, eherZu: 27, sehrStark: 23 },
   { label: '65 Jahre und älter',         group: 'alter',      garNicht: 8,  eherNicht: 9,  ambivalent: 27, eherZu: 29, sehrStark: 27 },
 ];
-const COLORS = ['#2F1B69','#5D3BAD','#6D5BD0','#978AE6','#BDB4FA'];
+const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
 let umfrageCurrentGroup = 'all';
 let umfrageCurrentView  = 'stacked';
 
@@ -553,7 +567,7 @@ function umfrageRender() {
   const container = document.getElementById('umfrage-rows');
   const nettoNote = document.getElementById('umfrage-netto-note');
   container.innerHTML = '';
-
+const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
   if (umfrageCurrentView === 'netto') {
     nettoNote.style.display = 'block';
     const max = 60;
@@ -572,7 +586,7 @@ function umfrageRender() {
               ${pos ? 'left' : 'right'}:0;
               width:${pct}%;
               height:100%;
-              background:${pos ? '#0d6b5e' : '#b03a2e'};
+              background:${pos ? '#f5d4c4' : '#c8441a'};
               border-radius:4px;
               display:flex;align-items:center;
               ${pos ? 'justify-content:flex-end;padding-right:8px;' : 'justify-content:flex-start;padding-left:8px;'}
@@ -626,6 +640,63 @@ function umfrageView(view, btn) {
 
 umfrageRender();
 
+   // ── NUTZEN VS. RISIKO: BUTTERFLY-DIAGRAMM ──
+   // Quelle: acatech/TechnikRadar 2025, N = 2.003 — Anteil "sehr nützlich" vs. "sehr riskant"
+
+const nutzenRisikoData = [
+  { label: 'Männer',             group: 'geschlecht', nuetzlich: 22, riskant: 4 },
+  { label: 'Frauen',             group: 'geschlecht', nuetzlich: 14, riskant: 4 },
+  { label: '16–34 Jahre',        group: 'alter',       nuetzlich: 13, riskant: 4 },
+  { label: '35–64 Jahre',        group: 'alter',       nuetzlich: 18, riskant: 3 },
+  { label: '65 Jahre und älter', group: 'alter',       nuetzlich: 25, riskant: 5 },
+];
+
+let nutzenRisikoCurrentGroup = 'all';
+
+function nutzenRisikoGetFiltered() {
+  if (nutzenRisikoCurrentGroup === 'all') return nutzenRisikoData;
+  return nutzenRisikoData.filter(d => d.group === nutzenRisikoCurrentGroup);
+}
+
+function nutzenRisikoRender() {
+  const data = nutzenRisikoGetFiltered();
+  const container = document.getElementById('nutzenrisiko-rows');
+  container.innerHTML = '';
+
+  // größter Wert füllt 90% der Halbspur, Rest ist Luft für die Prozent-Beschriftung
+  const maxVal = Math.max(...data.flatMap(d => [d.nuetzlich, d.riskant]), 1);
+  const scale = 90 / maxVal;
+
+  data.forEach(d => {
+    const wLeft  = (d.nuetzlich * scale).toFixed(1);
+    const wRight = (d.riskant   * scale).toFixed(1);
+
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.style.cssText = 'display:flex;align-items:center;gap:0;margin-bottom:6px;';
+    row.innerHTML = `
+      <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.nuetzlich}%</span>
+        <div style="width:${wLeft}%;height:28px;border-radius:4px 0 0 4px;background:#F2AC97;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+      </div>
+      <div class="bar-label-text" style="width:150px;text-align:center;flex-shrink:0;">${d.label}</div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:flex-start;gap:8px;">
+        <div style="width:${wRight}%;height:28px;border-radius:0 4px 4px 0;background:#c8441a;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+        <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.riskant}%</span>
+      </div>`;
+    container.appendChild(row);
+  });
+}
+
+function nutzenRisikoFilter(group, btn) {
+  nutzenRisikoCurrentGroup = group;
+  document.querySelectorAll('#nutzenrisiko-chart .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  nutzenRisikoRender();
+}
+
+nutzenRisikoRender();
+
    // ── RADAR CHART ──
 
 
@@ -646,7 +717,7 @@ umfrageRender();
       const total = keys.reduce((s, k) => s + (v[k] || 0), 0);
       return Math.round(keys.reduce((s, k) => s + (v[k] || 0) * weights[k], 0) / total);
     }
-
+    
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const fillColor   = isDark ? 'rgba(127,119,221,0.35)' : 'rgba(83,74,183,0.25)';
     const strokeColor = isDark ? '#AFA9EC' : '#534AB7';
