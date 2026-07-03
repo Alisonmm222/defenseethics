@@ -189,7 +189,7 @@ const messagesZustimmung = [
   'Stimme eher zu',
   'Stimme voll und ganz zu',
 ];
-const studyDataZustimmung = [10, 20, 30, 30, 20];
+const studyDataZustimmung = [28.8, 21.8, 16, 16, 17];
 
 // Szenario
 const messagesSzenario = [
@@ -199,7 +199,7 @@ const messagesSzenario = [
   'Ich würde Angebot B nehmen, weil das Gehalt ein legitimer Grund ist',
   'Ich würde Angebot B aus anderen Gründen wählen',
 ];
-const studyDataSzenario = [5, 15, 30, 35, 15];
+const studyDataSzenario = [10,16, 5, 41, 28];
 
 const sliderConfigs = {
   zustimmung: {
