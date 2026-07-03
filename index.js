@@ -639,7 +639,6 @@ function umfrageView(view, btn) {
 }
 
 umfrageRender();
-
    // ── NUTZEN VS. RISIKO: BUTTERFLY-DIAGRAMM ──
    // Quelle: acatech/TechnikRadar 2025, N = 2.003 — Anteil "sehr nützlich" vs. "sehr riskant"
 
