@@ -2,19 +2,19 @@
 // DATEN FÜR GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
 // ══════════════════════════════════════════════
 const gruendeJa = [
-    { label: "Gesellschaftliche Verantwortung",   pct: 71 },
-    { label: "Interessante technische Aufgaben",  pct: 64 },
-    { label: "Gute Vergütung",                    pct: 58 },
-    { label: "Jobsicherheit",                     pct: 47 },
-    { label: "Beitrag zur nationalen Sicherheit", pct: 43 },
+    { label: "Technische Innovation und interessante Projekte",   pct: 52 },
+    { label: "Finanzielle Günde",  pct: 47 },
+    { label: "Schutz demokratischer Werte und Sicherheit",  pct: 37 },
+    { label: "Berufliche Perspektiven (Karrierechancen)",                     pct: 36 },
+    { label: "Geopolitische Verantwortung Deutschlands/Europas",  pct: 26 },
 ];
 
 const gruendeNein = [
-    { label: "Moralische Bedenken",               pct: 76 },
-    { label: "Angst vor Dual-Use-Verantwortung",  pct: 61 },
-    { label: "Gesellschaftliche Stigmatisierung", pct: 54 },
-    { label: "Persönliche Überzeugungen",         pct: 49 },
-    { label: "Fehlende Informationen",            pct: 38 },
+    { label: "Moralische/Ethische Bedenken",               pct: 41 },
+    { label: "Politische Überzeugung",  pct: 16 },
+    { label: "Sicherheitsbedenken (Geheimhaltung, eingeschränkte Mobilität)", pct: 16 },
+    { label: "Unklare rechtliche Verantwortung",         pct: 14 },
+    { label: "Soziales Umfeld / Stigmatisierung / Erwartungen anderer",            pct: 11 },
 ];
 
 const colorJa   = "#e8a172";
