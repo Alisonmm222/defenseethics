@@ -1335,11 +1335,23 @@ input[type=range].tension-slider::-ms-track {
 .opinion-insight-floating .opinion-insight strong { color: var(--ink); }
 
 /* ── QUOTE CARDS ── */
+
 .quote-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin: 40px 0;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 0 40px;  /* damit die Karten nicht am Rand kleben */
+}
+
+@media (max-width: 600px) {
+  .quote-grid {
+    grid-template-columns: 1fr;
+    padding: 0 24px;
+  }
 }
 
 .quote-card {
@@ -3058,12 +3070,6 @@ input[type=range].tension-slider::-ms-track {
           .opinion-insight-floating .opinion-insight strong { color: var(--ink); }
 
         /* ── QUOTE CARDS ── */
-        .quote-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 12px;
-          margin: 40px 0;
-        }
 
         .quote-card {
           padding: 22px;
