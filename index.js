@@ -151,6 +151,21 @@ function setActiveOpinion(id) {
   }
 }
 
+// Zum bestehenden IntersectionObserver hinzufügen
+// oder als eigenen Block einfügen:
+const chapterBreak = document.querySelector('.chapter-break');
+if (chapterBreak) {
+  const cbObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        cbObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  cbObs.observe(chapterBreak);
+}
+
 // ══════════════════════════════════════
 // INSIGHT TEXT (Story Layer)
 // ══════════════════════════════════════
@@ -379,7 +394,18 @@ window.addEventListener('load', () => {
       });
     }, 300);
   }
-
+const compassBreak = document.querySelector('.chapter-break');
+if (compassBreak) {
+    const needleObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                document.getElementById('compass-needle').classList.add('swing');
+                needleObs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.3 });
+    needleObs.observe(compassBreak);
+}
   // ── Navigation ausblenden beim Reinscrolle UND beim Scroll-Down (wie auf der anderen Seite)
   const nav = document.querySelector('nav');
   const block = document.querySelector('.fullscreen-block');
