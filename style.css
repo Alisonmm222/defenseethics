@@ -2771,10 +2771,10 @@ input[type=range].tension-slider::-ms-track {
 
           /* Result */
           .tension-result-block {
-            opacity: 1;
-            transform: translateY(0);
+            opacity: 0;
+            transform: translateY(12px);
             transition: opacity 0.6s ease, transform 0.6s ease;
-            pointer-events: auto;
+            pointer-events: none;
           }
           .tension-result-block.touched {
             opacity: 1;
