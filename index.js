@@ -99,7 +99,9 @@ window.addEventListener("DOMContentLoaded", () => {
   function updateTension(val) {
     if (!tensionTouched) {
       tensionTouched = true;
-      document.getElementById('tensionResult').style.opacity = '1';
+      const resultBlock = document.getElementById('tensionResult');
+      resultBlock.classList.add('touched');
+      resultBlock.style.opacity = '1';
     }
   }
 
@@ -211,7 +213,8 @@ const sliderConfigs = {
       num: 'tensionNum',
       text: 'tensionText',
       bars: 'comparisonBars',
-      compText: 'comparisonText'
+      compText: 'comparisonText',
+      resultBlock: 'tensionResultBlock'
     }
   },
   szenario: {
@@ -223,7 +226,8 @@ const sliderConfigs = {
       num: 'tensionNumScenario',
       text: 'tensionTextScenario',
       bars: 'comparisonBarsScenario',
-      compText: 'comparisonTextScenario'
+      compText: 'comparisonTextScenario',
+      resultBlock: 'tensionResultBlockScenario'
     }
   }
 };
@@ -255,6 +259,13 @@ function updateTensionFor(key, v) {
     v = s ? parseInt(s.value) : Math.round((scaleMin + scaleMax) / 2);
   } else {
     v = parseInt(v);
+    // Wenn der Slider bewegt wird, füge .touched Klasse hinzu
+    if (ids.resultBlock) {
+      const resultBlock = document.getElementById(ids.resultBlock);
+      if (resultBlock && !resultBlock.classList.contains('touched')) {
+        resultBlock.classList.add('touched');
+      }
+    }
   }
 
   // clamp index to valid range to avoid undefined messages or studyData
