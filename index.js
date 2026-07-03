@@ -320,16 +320,16 @@ window.addEventListener('load', () => {
   // ── Fade-in observer for general elements with class .fade-in (make content appear while scrolling)
   const fadeEls = document.querySelectorAll('.fade-in');
   if (fadeEls.length) {
-    const fadeObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.08 });
-    fadeEls.forEach(el => fadeObs.observe(el));
-    // fallback: ensure they become visible after a short delay if observer doesn't fire
-    setTimeout(() => {
-      fadeEls.forEach(el => { if (!el.classList.contains('visible')) el.classList.add('visible'); });
-    }, 350);
+    if ('IntersectionObserver' in window) {
+      const fadeObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); }
+        });
+      }, { threshold: 0.08 });
+      fadeEls.forEach(el => fadeObs.observe(el));
+    } else {
+      fadeEls.forEach(el => el.classList.add('visible'));
+    }
   }
   // Setup für beide Slider-Konfigurationen
   Object.keys(sliderConfigs).forEach(key => {
@@ -639,7 +639,6 @@ function umfrageView(view, btn) {
 }
 
 umfrageRender();
-
    // ── NUTZEN VS. RISIKO: BUTTERFLY-DIAGRAMM ──
    // Quelle: acatech/TechnikRadar 2025, N = 2.003 — Anteil "sehr nützlich" vs. "sehr riskant"
 
