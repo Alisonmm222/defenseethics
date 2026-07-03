@@ -1049,8 +1049,10 @@ input[type=range].tension-slider::-ms-track {
   pointer-events: auto;
 }
 .tension-result-num {
-  display: none;
-
+  font-size: 3.5rem;
+  color: #fff;
+  font-weight: bold;
+  line-height: 1;
 }
 
 .tension-result-text {
