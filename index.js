@@ -502,12 +502,48 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
     ].join(" "));
 
     const svg = d3.select("#deutschland-svg");
+    
+    // SVG Pattern für gestrichelte Fläche (Verbot)
+    svg.append("defs")
+      .append("pattern")
+      .attr("id", "verbot-pattern")
+      .attr("patternUnits", "userSpaceOnUse")
+      .attr("width", 6)
+      .attr("height", 6)
+      .attr("patternTransform", "rotate(-45)")
+      .append("line")
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", 0)
+      .attr("y2", 6)
+      .attr("stroke", "#c8441a")
+      .attr("stroke-width", 2);
+    
+    // Farbskala für Zivilklausel-Abdeckung: hell (0%) → dunkel (50%+)
+    const colorScale = d3.scaleLinear()
+      .domain([0, 0.5])
+      .range(["#faf7f2", "#c8441a"])
+      .clamp(true);
+    
     svg.selectAll("path")
       .data(geojson.features)
       .enter()
       .append("path")
-      .attr("class", "bundesland")
-      .attr("d", path);
+      .attr("class", (d) => {
+        const props = d && d.properties ? d.properties : {};
+        const name = props.NAME || props.name || props.NAME_1 || props.GEN || props.name_de;
+        return name === "Bayern" ? "bundesland verbot" : "bundesland";
+      })
+      .attr("d", path)
+      .attr("fill", (d) => {
+        const props = d && d.properties ? d.properties : {};
+        const name = props.NAME || props.name || props.NAME_1 || props.GEN || props.name_de;
+        if (name === "Bayern") {
+          return "url(#verbot-pattern)";
+        }
+        const coverage = zivilklauselDaten[name] || 0;
+        return colorScale(coverage);
+      });
 
     svg.selectAll('path.bundesland')
       .on('mouseenter', (event, d) => {
@@ -544,6 +580,26 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
     "Saarland": "7 Hochschulen, davon keine mit Zivilklausel.",
     "Bremen": "9 Hochschulen, davon 3 mit Zivilklausel. Staatliche Hochschulen sind zu einer Zivilklausel verpflichtet.",
     "Niedersachsen": "32 Hochschulen, davon 4 mit Zivilklauseln."
+  };
+
+  // Zivilklausel-Abdeckung pro Bundesland (Prozentsatz)
+  const zivilklauselDaten = {
+    "Hamburg": 3/29,
+    "Berlin": 2/49,
+    "Nordrhein-Westfalen": 33/79,
+    "Hessen": 5/43,
+    "Bayern": 0/59,
+    "Baden-Württemberg": 4/74,
+    "Schleswig-Holstein": 2/15,
+    "Mecklenburg-Vorpommern": 1/10,
+    "Brandenburg": 2/20,
+    "Sachsen-Anhalt": 2/11,
+    "Sachsen": 1/25,
+    "Thüringen": 9/14,
+    "Rheinland-Pfalz": 0/23,
+    "Saarland": 0/7,
+    "Bremen": 3/9,
+    "Niedersachsen": 4/32
   };
 
 function positionTooltip(e) {
