@@ -296,8 +296,6 @@ const sliderConfigs = {
 
 };
 
-
-
 function buildComparisonBarsFor(containerId, data, prefix) {
   const wrap = document.getElementById(containerId);
   if (!wrap) return;
@@ -308,6 +306,8 @@ function buildComparisonBarsFor(containerId, data, prefix) {
     return `<div class="comp-bar" id="${containerId}-bar-${i}" style="height:${h}%"></div>`;
   }).join('');
 }
+
+
 
 function updateTensionFor(key, v) {
 
@@ -379,8 +379,13 @@ function updateTensionFor(key, v) {
   const numEl = document.getElementById(ids.num);
   if (numEl) numEl.textContent = v;
 
-  const textEl = document.getElementById(ids.text);
-  if (textEl) textEl.textContent = `${messages[idx] || ''}`;
+const textEl = document.getElementById(ids.text);
+if (textEl) {
+  // Nur überschreiben wenn User selbst gescrollt hat
+  if (textEl.dataset.touched === 'true') {
+    textEl.textContent = `${messages[idx] || ''}`;
+  }
+}
 
   // Balken aktualisieren; ids for bars are namespaced
   studyData.forEach((_, i) => {
@@ -428,7 +433,6 @@ window.addEventListener('load', () => {
     buildComparisonBarsFor(ids.bars, cfg.data, key);
     updateTensionFor(key);
   });
-
   // ── Fade-in für alle fullscreen-inner Elemente (sichtbar machen, wenn sie in den Viewport kommen)
   const fullscreenInners = document.querySelectorAll('.fullscreen-inner');
   if (fullscreenInners.length) {
@@ -513,38 +517,43 @@ const priorityData = [
 const colorUSA = "#c8441a";
 
 const chart = document.getElementById('priority-chart');
+
 if (chart) {
-  // Header
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        chart.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(chart);
+
   const header = document.createElement('div');
   header.className = 'priority-header-row';
   header.innerHTML = `
     <div></div>
-    <div class="priority-header-label" style="color:#1a1814"> USA</div>
+    <div class="priority-header-label" style="color:#1a1814">USA</div>
   `;
   chart.appendChild(header);
 
-  // Rows
-
   priorityData.forEach(item => {
-      const row = document.createElement('div');
-      row.className = 'priority-row';
+    const row = document.createElement('div');
+    row.className = 'priority-row';
 
-      row.innerHTML = `
-          <div class="priority-label">${item.label.replace('\n','<br>')}</div>
+    row.innerHTML = `
+      <div class="priority-label">${item.label.replace('\n','<br>')}</div>
+      <div class="priority-bar-wrap">
+        <div class="priority-bar-track">
+          <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA};"></div>
+          <span class="priority-bar-value">${item.usa}%</span>
+        </div>
+      </div>
+    `;
 
-          <div class="priority-bar-wrap">
-              <div class="priority-bar-track">
-                  <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA}">
-                      <span>${item.usa}%</span>
-                  </div>
-              </div>
-          </div>
-      `;
-
-      chart.appendChild(row);
+    chart.appendChild(row);
   });
-} else {
-  console.warn('priority-chart element not found; skipping priority chart render');
 }
 
  // ══════════════════════════════════════════════════════
