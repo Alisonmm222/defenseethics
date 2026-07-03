@@ -30,6 +30,25 @@
   })();
 
 // ══════════════════════════════════════════════
+// BAR-CHART-AUFBAU-ANIMATION BEIM SCROLLEN
+// Balken werden mit width/height:0 gerendert und
+// tragen ihren Zielwert in data-target-width/-height.
+// Diese Funktion füllt sie (leicht versetzt) auf,
+// sobald ihr Container in den Viewport scrollt.
+// ══════════════════════════════════════════════
+function animateBarFills(root) {
+    if (!root) return;
+    root.querySelectorAll('[data-target-width]').forEach((bar, i) => {
+        const target = bar.getAttribute('data-target-width');
+        setTimeout(() => { bar.style.width = target + '%'; }, i * 45);
+    });
+    root.querySelectorAll('[data-target-height]').forEach((bar, i) => {
+        const target = bar.getAttribute('data-target-height');
+        setTimeout(() => { bar.style.height = target + '%'; }, i * 30);
+    });
+}
+
+// ══════════════════════════════════════════════
 // DATEN FÜR GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
 // ══════════════════════════════════════════════
 const gruendeJa = [
@@ -63,7 +82,7 @@ function buildReasonBars(containerId, data, color) {
         row.innerHTML = `
             <div class="gruende-label">${item.label}</div>
             <div class="gruende-track">
-                <div class="gruende-fill" style="width:${item.pct}%; background:${color}">
+                <div class="gruende-fill" style="width:0%; background:${color}" data-target-width="${item.pct}">
                     <span>${item.pct}%</span>
                 </div>
             </div>
@@ -305,7 +324,7 @@ function buildComparisonBarsFor(containerId, data, prefix) {
   wrap.innerHTML = data.map((val, i) => {
     const h = Math.round((val / max) * 100);
     // id namespaced by prefix to avoid collision
-    return `<div class="comp-bar" id="${containerId}-bar-${i}" style="height:${h}%"></div>`;
+    return `<div class="comp-bar" id="${containerId}-bar-${i}" style="height:0%" data-target-height="${h}"></div>`;
   }).join('');
 }
 
@@ -400,12 +419,16 @@ window.addEventListener('load', () => {
     if ('IntersectionObserver' in window) {
       const fadeObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
-          if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); }
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            animateBarFills(e.target);
+            fadeObs.unobserve(e.target);
+          }
         });
       }, { threshold: 0.08 });
       fadeEls.forEach(el => fadeObs.observe(el));
     } else {
-      fadeEls.forEach(el => el.classList.add('visible'));
+      fadeEls.forEach(el => { el.classList.add('visible'); animateBarFills(el); });
     }
   }
   // Setup für beide Slider-Konfigurationen
@@ -434,14 +457,17 @@ window.addEventListener('load', () => {
   if (fullscreenInners.length) {
     const innerObserver = new IntersectionObserver(entries => {
       entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('visible');
+        if (e.isIntersecting && !e.target.classList.contains('visible')) {
+          e.target.classList.add('visible');
+          animateBarFills(e.target);
+        }
       });
     }, { threshold: 0.15 });
     fullscreenInners.forEach(el => innerObserver.observe(el));
     // Fallback: falls IntersectionObserver nicht feuert (z. B. in älteren Browsern), machen wir die Elemente sichtbar
     setTimeout(() => {
       fullscreenInners.forEach(el => {
-        if (!el.classList.contains('visible')) el.classList.add('visible');
+        if (!el.classList.contains('visible')) { el.classList.add('visible'); animateBarFills(el); }
       });
     }, 300);
   }
@@ -534,7 +560,7 @@ if (chart) {
 
           <div class="priority-bar-wrap">
               <div class="priority-bar-track">
-                  <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA}">
+                  <div class="priority-bar-fill" style="width:0%; background:${colorUSA}" data-target-width="${item.usa}">
                       <span>${item.usa}%</span>
                   </div>
               </div>
@@ -728,13 +754,14 @@ const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
             <div style="
               position:absolute;
               ${pos ? 'left' : 'right'}:0;
-              width:${pct}%;
+              width:0%;
               height:100%;
               background:${pos ? '#f5d4c4' : '#c8441a'};
               border-radius:4px;
               display:flex;align-items:center;
+              transition:width 0.7s cubic-bezier(0.16,1,0.3,1);
               ${pos ? 'justify-content:flex-end;padding-right:8px;' : 'justify-content:flex-start;padding-left:8px;'}
-            ">
+            " data-target-width="${pct}">
               <span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${netto > 0 ? '+' : ''}${netto}%</span>
             </div>
           </div>
@@ -752,7 +779,7 @@ const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
     fields.forEach((f, i) => {
       const pct = d[f];
       if (pct === 0) return;
-      segments += `<div style="width:${pct}%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);">
+      segments += `<div style="width:0%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);" data-target-width="${pct}">
         ${pct >= 7 ? `<span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${pct}%</span>` : ''}
       </div>`;
     });
@@ -771,6 +798,7 @@ function umfrageFilter(group, btn) {
   });
   btn.classList.add('active');
   umfrageRender();
+  animateBarFills(document.getElementById('umfrage-chart'));
 }
 
 function umfrageView(view, btn) {
@@ -780,6 +808,7 @@ function umfrageView(view, btn) {
   });
   btn.classList.add('active');
   umfrageRender();
+  animateBarFills(document.getElementById('umfrage-chart'));
 }
 
 umfrageRender();
@@ -820,11 +849,11 @@ function nutzenRisikoRender() {
     row.innerHTML = `
       <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
         <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.nuetzlich}%</span>
-        <div style="width:${wLeft}%;height:28px;border-radius:4px 0 0 4px;background:#F2AC97;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+        <div style="width:0%;height:28px;border-radius:4px 0 0 4px;background:#F2AC97;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);" data-target-width="${wLeft}"></div>
       </div>
       <div class="bar-label-text" style="width:150px;text-align:center;flex-shrink:0;">${d.label}</div>
       <div style="flex:1;display:flex;align-items:center;justify-content:flex-start;gap:8px;">
-        <div style="width:${wRight}%;height:28px;border-radius:0 4px 4px 0;background:#c8441a;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+        <div style="width:0%;height:28px;border-radius:0 4px 4px 0;background:#c8441a;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);" data-target-width="${wRight}"></div>
         <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.riskant}%</span>
       </div>`;
     container.appendChild(row);
@@ -836,6 +865,7 @@ function nutzenRisikoFilter(group, btn) {
   document.querySelectorAll('#nutzenrisiko-chart .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   nutzenRisikoRender();
+  animateBarFills(document.getElementById('nutzenrisiko-chart'));
 }
 nutzenRisikoRender();
 
