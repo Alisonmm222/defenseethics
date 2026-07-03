@@ -46,6 +46,28 @@ function animateBarFills(root) {
         const target = bar.getAttribute('data-target-height');
         setTimeout(() => { bar.style.height = target + '%'; }, i * 30);
     });
+    root.querySelectorAll('.dumbbell-row').forEach((row, i) => {
+        setTimeout(() => animateDumbbellRow(row), i * 170);
+    });
+}
+
+// Lässt eine einzelne Dumbbell-Zeile von der Mitte aus "aufklappen":
+// beide Punkte starten übereinander in der Zeilenmitte und wandern
+// zu ihrer echten Position, die Verbindungslinie wächst synchron mit.
+function animateDumbbellRow(row) {
+    if (!row || row.classList.contains('visible')) return;
+    row.classList.add('visible');
+    const line = row.querySelector('.dumbbell-line');
+    const dots = row.querySelectorAll('.dumbbell-dot');
+    requestAnimationFrame(() => {
+        if (line) {
+            line.style.left  = line.getAttribute('data-final-left')  + '%';
+            line.style.width = line.getAttribute('data-final-width') + '%';
+        }
+        dots.forEach(dot => {
+            dot.style.left = dot.getAttribute('data-final-left') + '%';
+        });
+    });
 }
 
 // ══════════════════════════════════════════════
@@ -869,3 +891,82 @@ function nutzenRisikoFilter(group, btn) {
 }
 nutzenRisikoRender();
 
+
+// ══════════════════════════════════════════════════════
+// DUMBBELL-CHART: GEWISSENSKONFLIKTE NACH GESCHLECHT
+// Frage 19: "Ich hätte Gewissenskonflikte, wenn ich im
+// Defense-Bereich arbeiten würde." — gleiche Frage wie beim
+// Spannungs-Slider oben, hier aufgeschlüsselt nach Geschlecht.
+// Quelle: Eigene Umfrage, n = 242 (162 männlich / 80 weiblich).
+// 1 Person "Divers" wird aus Anonymitätsgründen bei dieser
+// Zwei-Gruppen-Aufschlüsselung nicht separat ausgewiesen.
+// ══════════════════════════════════════════════════════
+const gewissenLabels = [
+    'Stimme überhaupt nicht zu',
+    'Stimme eher nicht zu',
+    'Teils-teils',
+    'Stimme eher zu',
+    'Stimme voll und ganz zu',
+];
+const gewissenMaenner = [36.4, 24.7, 16.7, 9.9, 12.3];
+const gewissenFrauen  = [12.5, 16.3, 15.0, 27.5, 28.8];
+const DUMBBELL_SCALE_MAX = 45; // Achsen-Obergrenze in %
+
+// Erzeugt Delta-Betrag + erklärenden Satz für den Tap-Callout einer Zeile
+function gewissenCalloutText(m, f) {
+    const diff = m - f; // positiv = mehr Männer, negativ = mehr Frauen
+    const abs = Math.round(Math.abs(diff));
+    if (abs < 2) {
+        return { abs, text: 'Männer und Frauen antworten hier fast identisch.', dominant: 'neutral' };
+    }
+    if (diff > 0) {
+        return { abs, text: `${abs} Prozentpunkte mehr Männer als Frauen wählen diese Antwort.`, dominant: 'm' };
+    }
+    return { abs, text: `${abs} Prozentpunkte mehr Frauen als Männer wählen diese Antwort.`, dominant: 'f' };
+}
+
+function buildGewissenDumbbell() {
+    const container = document.getElementById('gewissen-dumbbell-rows');
+    if (!container) return;
+
+    gewissenLabels.forEach((label, i) => {
+        const m = gewissenMaenner[i];
+        const f = gewissenFrauen[i];
+        const leftM = (m / DUMBBELL_SCALE_MAX * 100);
+        const leftF = (f / DUMBBELL_SCALE_MAX * 100);
+        const lineLeft  = Math.min(leftM, leftF).toFixed(1);
+        const lineWidth = Math.abs(leftF - leftM).toFixed(1);
+        const mid = ((leftM + leftF) / 2).toFixed(1);
+        const callout = gewissenCalloutText(m, f);
+        const calloutColor = callout.dominant === 'm' ? 'var(--accent)'
+                            : callout.dominant === 'f' ? 'var(--accent-light)'
+                            : 'var(--rule)';
+
+        const row = document.createElement('div');
+        row.className = 'dumbbell-row';
+        row.innerHTML = `
+            <div class="dumbbell-row-label">
+                <span>${label}</span>
+                <span class="dumbbell-chevron">›</span>
+            </div>
+            <div class="dumbbell-track">
+                <div class="dumbbell-line" style="left:${mid}%; width:0%"
+                     data-final-left="${lineLeft}" data-final-width="${lineWidth}"></div>
+                <div class="dumbbell-dot dumbbell-dot--m" style="left:${mid}%" data-final-left="${leftM.toFixed(1)}">
+                    <span class="dumbbell-value dumbbell-value--m">${Math.round(m)}%</span>
+                </div>
+                <div class="dumbbell-dot dumbbell-dot--f" style="left:${mid}%" data-final-left="${leftF.toFixed(1)}">
+                    <span class="dumbbell-value dumbbell-value--f">${Math.round(f)}%</span>
+                </div>
+            </div>
+            <div class="dumbbell-callout" style="border-left-color:${calloutColor}">
+                <span class="dumbbell-callout-delta">Δ ${callout.abs} pp</span>
+                <span class="dumbbell-callout-text">${callout.text}</span>
+            </div>
+        `;
+        row.addEventListener('click', () => row.classList.toggle('open'));
+        container.appendChild(row);
+    });
+}
+
+buildGewissenDumbbell();
