@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 @font-face {
   font-family: 'DM Sans';
   font-style: normal;
@@ -1700,6 +1701,8 @@ input[type=range].tension-slider::-ms-track {
 }
 >>>>>>> b8df1df27fbe13ec5658656d5a8548f4fc3bc706
 =======
+=======
+>>>>>>> e74f331b36e0ccb66b7826166c72ebd66d738dd5
 @font-face {
   font-family: 'DM Sans';
   font-style: normal;
@@ -2160,13 +2163,21 @@ input[type=range].tension-slider::-ms-track {
     }
 
         h2.section-title {
+          text-align: center;
+          white-space: nowrap;
           font-family: 'Playfair Display', serif;
-          font-size: 34px;
+          font-size: clamp(24px, 3vw, 48px);
           font-weight: 700;
-          line-height: 1.15;
-          letter-spacing: -0.01em;
+          line-height: 1.1;
+          letter-spacing: -0.02em;
           margin-bottom: 28px;
           color: var(--ink);
+
+          /* Über main hinaus zentrieren */
+          width: 100vw;
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
         }
 
         h3.sub-heading {
@@ -2175,6 +2186,8 @@ input[type=range].tension-slider::-ms-track {
           font-weight: 700;
           margin: 44px 0 16px;
           color: var(--ink);
+          text-align: center;
+
         }    .pq-eyebrow {
                  font-family: 'DM Sans', sans-serif;
                  font-size: 10px;
@@ -2183,6 +2196,7 @@ input[type=range].tension-slider::-ms-track {
                  letter-spacing: 0.12em;
                  color: rgba(255,255,255,0.25);
                  margin-bottom: 14px;
+                 text-align: center;
              }
             /* Toggle buttons */
             .toggle-question {
@@ -2757,10 +2771,10 @@ input[type=range].tension-slider::-ms-track {
 
           /* Result */
           .tension-result-block {
-            opacity: 0;
-            transform: translateY(12px);
+            opacity: 1;
+            transform: translateY(0);
             transition: opacity 0.6s ease, transform 0.6s ease;
-            pointer-events: none;
+            pointer-events: auto;
           }
           .tension-result-block.touched {
             opacity: 1;
@@ -3415,4 +3429,3 @@ input[type=range].tension-slider::-ms-track {
       .ethik-counter-grid { grid-template-columns: 1fr; }
     }
 >>>>>>> b8df1df27fbe13ec5658656d5a8548f4fc3bc706
->>>>>>> 68e5307c57bc0e3c26ba3ad79e53e4b25a56d243
