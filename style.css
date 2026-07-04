@@ -599,8 +599,8 @@ h3.sub-heading {
   outline: none;
 }
 .toggle-btn:hover { background: rgba(255,255,255,0.07); }
-.toggle-btn.active.ja  { border-color: var(--accent); background: rgba(200,68,26,0.12); }
-.toggle-btn.active.nein { border-color: #c8441a; background: rgba(200,68,26,0.12); }
+.toggle-btn.active.ja  { border-color: #5E3F35; background: rgba(200,68,26,0.12); }
+.toggle-btn.active.nein { border-color: var(--accent); background: rgba(200,68,26,0.12); }
 .toggle-pct {
   font-family: 'Playfair Display', serif;
   font-size: 36px;
@@ -609,8 +609,8 @@ h3.sub-heading {
   line-height: 1;
   transition: color 0.4s ease;
 }
-.toggle-btn.active.ja  .toggle-pct { color: var(--accent-light); }
-.toggle-btn.active.nein .toggle-pct { color: #c8441a; }
+.toggle-btn.active.ja  .toggle-pct { color: #5E3F35; }
+.toggle-btn.active.nein .toggle-pct { color: #30170F; }
 .toggle-label {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
@@ -620,7 +620,6 @@ h3.sub-heading {
   color: #1a1814;
   transition: color 0.4s ease;
 }
-.toggle-btn.active .toggle-label { color: #e0dff5; }
 .toggle-divider {
   width: 40px;
   text-align: center;
@@ -668,13 +667,13 @@ h3.sub-heading {
   flex-shrink: 0;
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
-  color: var(--ink-light);
+  color: #5E3F35;
   line-height: 1.3;
 }
 .gruende-track {
   flex: 1;
   height: 26px;
-  background: rgba(200,68,26,0.08);
+  background: rgba(71,44,36,0.08);
   border-radius: 3px;
   overflow: hidden;
 }

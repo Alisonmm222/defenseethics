@@ -89,7 +89,7 @@ const gruendeNein = [
     { label: "Soziales Umfeld / Stigmatisierung / Erwartungen anderer",            pct: 11 },
 ];
 
-const colorJa   = "#e8a172";
+const colorJa   = "#5E3F35";
 const colorNein = "#c8441a";
 
 function buildReasonBars(containerId, data, color) {
