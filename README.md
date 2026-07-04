@@ -68,7 +68,7 @@ https://alisonmm222.github.io/defenseethics/
 ## Datengrundlage
 
 - **Eigene Umfrage (2026):** Basis für die eigenen Visualisierungen zu Verteidigungsjobs, Meinungen und Spannungswerten.
-- **acatech/TechnikRadar 2025:** Grundlage für das Nutzen-vs-Risiko-Butterfly-Diagramm.
+- **acatech/TechnikRadar (2025):** Grundlage für das Nutzen-vs-Risiko-Butterfly-Diagramm.
 - **Zivilklausel-Recherchen:** Quellen zur Verbreitung von Zivilklauseln an staatlichen Hochschulen.
 - **Literatur und Meinungsumfragen:** Weitere Hintergrunddaten zur Berufsethik und gesellschaftlichen Wahrnehmung.
 
