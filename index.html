@@ -9,6 +9,8 @@
     <link rel="icon" href="icons/favicon.ico" sizes="any">  
     <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
 </head>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <body>
 
 <!-- NAV -->
@@ -438,9 +440,41 @@
     <div class="fade-in">
         <h3 class="sub-heading">Wer ist Verantwortlich?</h3>
 
+        <div class="chart-body">
+            <div class="race-block">
+
+                <!-- Filter -->
+                <div class="race-filters">
+                    <div class="race-filter-group">
+                        <div class="race-filter-label">Alle</div>
+                        <div class="race-filter-btns">
+                            <button class="race-btn active" data-filter="all" data-value="all" onclick="setFilter('all','all',this)">Gesamt</button>
+                        </div>
+                    </div>
+                    <div class="race-filter-group">
+                        <div class="race-filter-label">Geschlecht</div>
+                        <div class="race-filter-btns" id="filter-geschlecht"></div>
+                    </div>
+                    <div class="race-filter-group">
+                        <div class="race-filter-label">Studiengang</div>
+                        <div class="race-filter-btns" id="filter-studiengang"></div>
+                    </div>
+                    <div class="race-filter-group">
+                        <div class="race-filter-label">Alter</div>
+                        <div class="race-filter-btns" id="filter-alter"></div>
+                    </div>
+                </div>
+
+                <div class="race-n" id="race-n">n = –</div>
+                <div class="race-bars" id="race-bars"></div>
+                <div class="race-absolute" id="race-absolute"></div>
+
+            </div>
+        </div>
+    </div>
 
 
-        <p class="source">Quelle: Eigene Umfrage (2026), 243 Teilnehmende</p>
+    <p class="source">Quelle: Eigene Umfrage (2026), 243 Teilnehmende</p>
     </div>
 
 

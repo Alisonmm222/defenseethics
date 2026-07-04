@@ -970,3 +970,155 @@ function buildGewissenDumbbell() {
 }
 
 buildGewissenDumbbell(); 
+
+// ══════════════════════════════════════════════
+// DATEN UND VISUALISIERUNG FÜR VERANTWORUNG
+// ══════════════════════════════════════════════
+
+const CSV_PATH = 'data/rohdaten.csv'; // ← Pfad zur CSV-Datei
+
+const VERANTWORTUNG_COLS = [
+  { key: 'ingenieur',   label: 'Ingenieur*in selbst' },
+  { key: 'arbeitgeber', label: 'Arbeitgeber' },
+  { key: 'gesetzgeber', label: 'Gesetzgeber / Politik' },
+  { key: 'auftraggeber',label: 'Auftraggeber' },
+  { key: 'gesellschaft',label: 'Gesellschaft als Ganzes' },
+];
+
+let allRows = [];
+let activeFilter = { type: 'all', value: 'all' };
+
+// Spaltenindizes (0-basiert)
+const COL_GESCHLECHT  = 2;
+const COL_ALTER       = 3;
+const COL_STUDIENGANG = 13;
+const COL_V_START     = 35; // Ingenieur*in selbst
+
+Papa.parse(CSV_PATH, {
+  download: true,
+  header: false,
+  skipEmptyLines: true,
+  complete: (results) => {
+    const rows = results.data;
+    const header = rows[0];
+    allRows = rows.slice(1);
+
+    buildFilterButtons();
+    renderChart(allRows);
+  },
+  error: (err) => console.error('CSV Fehler:', err)
+});
+
+function buildFilterButtons() {
+  const geschlechter = [...new Set(allRows.map(r => r[COL_GESCHLECHT]).filter(Boolean))].sort();
+  const studiengaenge = [...new Set(allRows.map(r => r[COL_STUDIENGANG]).filter(Boolean))].sort();
+
+  // Alter in Gruppen
+  const alterGruppen = ['18–22', '23–26', '27–30', '31+'];
+
+  renderFilterBtns('filter-geschlecht', geschlechter, 'geschlecht');
+  renderFilterBtns('filter-studiengang', studiengaenge, 'studiengang');
+  renderFilterBtns('filter-alter', alterGruppen, 'alter');
+}
+
+function renderFilterBtns(containerId, values, type) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = values.map(v => `
+    <button class="race-btn" data-filter="${type}" data-value="${v}"
+      onclick="setFilter('${type}','${v}',this)">${v}</button>
+  `).join('');
+}
+
+function setFilter(type, value, btn) {
+  document.querySelectorAll('.race-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = { type, value };
+
+  const filtered = filterRows(allRows, type, value);
+  renderChart(filtered);
+}
+
+function filterRows(rows, type, value) {
+  if (type === 'all') return rows;
+  return rows.filter(r => {
+    if (type === 'geschlecht')  return r[COL_GESCHLECHT] === value;
+    if (type === 'studiengang') return r[COL_STUDIENGANG] === value;
+    if (type === 'alter') {
+      const age = parseInt(r[COL_ALTER]);
+      if (isNaN(age)) return false;
+      if (value === '18–22') return age >= 18 && age <= 22;
+      if (value === '23–26') return age >= 23 && age <= 26;
+      if (value === '27–30') return age >= 27 && age <= 30;
+      if (value === '31+')   return age >= 31;
+    }
+    return true;
+  });
+}
+
+function renderChart(rows) {
+  const n = rows.length;
+  document.getElementById('race-n').textContent = `n = ${n}`;
+
+  // Zählen
+  const counts = VERANTWORTUNG_COLS.map((col, i) => {
+    const count = rows.filter(r => {
+      const val = r[COL_V_START + i];
+      return val && val.trim() !== '' && val.trim() !== '0';
+    }).length;
+    return { ...col, count, pct: n > 0 ? Math.round((count / n) * 100) : 0 };
+  });
+
+  // Sortieren nach Prozent absteigend
+  counts.sort((a, b) => b.pct - a.pct);
+  const maxPct = counts[0]?.pct || 1;
+
+  // Balken rendern
+  const barsEl = document.getElementById('race-bars');
+
+  // Bestehende Rows merken für Animation
+  const existing = {};
+  barsEl.querySelectorAll('.race-row').forEach(el => {
+    existing[el.dataset.key] = el;
+  });
+
+  // Neue Reihenfolge aufbauen
+  counts.forEach((item, rank) => {
+    let row = existing[item.key];
+    if (!row) {
+      row = document.createElement('div');
+      row.className = 'race-row';
+      row.dataset.key = item.key;
+      row.innerHTML = `
+        <div class="race-rank">${rank + 1}</div>
+        <div class="race-label">${item.label}</div>
+        <div class="race-track">
+          <div class="race-fill" style="width:0%">
+            <span>${item.pct}%</span>
+          </div>
+        </div>
+      `;
+      barsEl.appendChild(row);
+    } else {
+      row.querySelector('.race-rank').textContent = rank + 1;
+      barsEl.appendChild(row); // neu sortieren im DOM
+    }
+
+    // Balkenbreite animieren
+    requestAnimationFrame(() => {
+      const fill = row.querySelector('.race-fill');
+      fill.style.width = maxPct > 0 ? (item.pct / maxPct * 100) + '%' : '0%';
+      fill.querySelector('span').textContent = item.pct + '%';
+      // Erste Zeile in Accent-Farbe
+      row.querySelector('.race-rank').style.color = rank === 0 ? 'var(--accent)' : 'var(--ink-faint)';
+    });
+  });
+
+  // Absolute Nennungen
+  const absEl = document.getElementById('race-absolute');
+  absEl.innerHTML = counts.map(item =>
+    `<div class="race-absolute-item">
+      <strong>${item.count}</strong> ${item.label}
+    </div>`
+  ).join('');
+}
