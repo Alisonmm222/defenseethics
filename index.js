@@ -30,6 +30,47 @@
   })();
 
 // ══════════════════════════════════════════════
+// BAR-CHART-AUFBAU-ANIMATION BEIM SCROLLEN
+// Balken werden mit width/height:0 gerendert und
+// tragen ihren Zielwert in data-target-width/-height.
+// Diese Funktion füllt sie (leicht versetzt) auf,
+// sobald ihr Container in den Viewport scrollt.
+// ══════════════════════════════════════════════
+function animateBarFills(root) {
+    if (!root) return;
+    root.querySelectorAll('[data-target-width]').forEach((bar, i) => {
+        const target = bar.getAttribute('data-target-width');
+        setTimeout(() => { bar.style.width = target + '%'; }, i * 45);
+    });
+    root.querySelectorAll('[data-target-height]').forEach((bar, i) => {
+        const target = bar.getAttribute('data-target-height');
+        setTimeout(() => { bar.style.height = target + '%'; }, i * 30);
+    });
+    root.querySelectorAll('.dumbbell-row').forEach((row, i) => {
+        setTimeout(() => animateDumbbellRow(row), i * 170);
+    });
+}
+
+// Lässt eine einzelne Dumbbell-Zeile von der Mitte aus "aufklappen":
+// beide Punkte starten übereinander in der Zeilenmitte und wandern
+// zu ihrer echten Position, die Verbindungslinie wächst synchron mit.
+function animateDumbbellRow(row) {
+    if (!row || row.classList.contains('visible')) return;
+    row.classList.add('visible');
+    const line = row.querySelector('.dumbbell-line');
+    const dots = row.querySelectorAll('.dumbbell-dot');
+    requestAnimationFrame(() => {
+        if (line) {
+            line.style.left  = line.getAttribute('data-final-left')  + '%';
+            line.style.width = line.getAttribute('data-final-width') + '%';
+        }
+        dots.forEach(dot => {
+            dot.style.left = dot.getAttribute('data-final-left') + '%';
+        });
+    });
+}
+
+// ══════════════════════════════════════════════
 // DATEN FÜR GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
 // ══════════════════════════════════════════════
 const gruendeJa = [
@@ -63,7 +104,7 @@ function buildReasonBars(containerId, data, color) {
         row.innerHTML = `
             <div class="gruende-label">${item.label}</div>
             <div class="gruende-track">
-                <div class="gruende-fill" style="width:${item.pct}%; background:${color}">
+                <div class="gruende-fill" style="width:0%; background:${color}" data-target-width="${item.pct}">
                     <span>${item.pct}%</span>
                 </div>
             </div>
@@ -296,6 +337,8 @@ const sliderConfigs = {
 
 };
 
+
+
 function buildComparisonBarsFor(containerId, data, prefix) {
   const wrap = document.getElementById(containerId);
   if (!wrap) return;
@@ -303,11 +346,9 @@ function buildComparisonBarsFor(containerId, data, prefix) {
   wrap.innerHTML = data.map((val, i) => {
     const h = Math.round((val / max) * 100);
     // id namespaced by prefix to avoid collision
-    return `<div class="comp-bar" id="${containerId}-bar-${i}" style="height:${h}%"></div>`;
+    return `<div class="comp-bar" id="${containerId}-bar-${i}" style="height:0%" data-target-height="${h}"></div>`;
   }).join('');
 }
-
-
 
 function updateTensionFor(key, v) {
 
@@ -379,13 +420,8 @@ function updateTensionFor(key, v) {
   const numEl = document.getElementById(ids.num);
   if (numEl) numEl.textContent = v;
 
-const textEl = document.getElementById(ids.text);
-if (textEl) {
-  // Nur überschreiben wenn User selbst gescrollt hat
-  if (textEl.dataset.touched === 'true') {
-    textEl.textContent = `${messages[idx] || ''}`;
-  }
-}
+  const textEl = document.getElementById(ids.text);
+  if (textEl) textEl.textContent = `${messages[idx] || ''}`;
 
   // Balken aktualisieren; ids for bars are namespaced
   studyData.forEach((_, i) => {
@@ -405,12 +441,16 @@ window.addEventListener('load', () => {
     if ('IntersectionObserver' in window) {
       const fadeObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
-          if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); }
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            animateBarFills(e.target);
+            fadeObs.unobserve(e.target);
+          }
         });
       }, { threshold: 0.08 });
       fadeEls.forEach(el => fadeObs.observe(el));
     } else {
-      fadeEls.forEach(el => el.classList.add('visible'));
+      fadeEls.forEach(el => { el.classList.add('visible'); animateBarFills(el); });
     }
   }
   // Setup für beide Slider-Konfigurationen
@@ -433,19 +473,23 @@ window.addEventListener('load', () => {
     buildComparisonBarsFor(ids.bars, cfg.data, key);
     updateTensionFor(key);
   });
+
   // ── Fade-in für alle fullscreen-inner Elemente (sichtbar machen, wenn sie in den Viewport kommen)
   const fullscreenInners = document.querySelectorAll('.fullscreen-inner');
   if (fullscreenInners.length) {
     const innerObserver = new IntersectionObserver(entries => {
       entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('visible');
+        if (e.isIntersecting && !e.target.classList.contains('visible')) {
+          e.target.classList.add('visible');
+          animateBarFills(e.target);
+        }
       });
     }, { threshold: 0.15 });
     fullscreenInners.forEach(el => innerObserver.observe(el));
     // Fallback: falls IntersectionObserver nicht feuert (z. B. in älteren Browsern), machen wir die Elemente sichtbar
     setTimeout(() => {
       fullscreenInners.forEach(el => {
-        if (!el.classList.contains('visible')) el.classList.add('visible');
+        if (!el.classList.contains('visible')) { el.classList.add('visible'); animateBarFills(el); }
       });
     }, 300);
   }
@@ -517,43 +561,38 @@ const priorityData = [
 const colorUSA = "#c8441a";
 
 const chart = document.getElementById('priority-chart');
-
 if (chart) {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        chart.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2 });
-
-  observer.observe(chart);
-
+  // Header
   const header = document.createElement('div');
   header.className = 'priority-header-row';
   header.innerHTML = `
     <div></div>
-    <div class="priority-header-label" style="color:#1a1814">USA</div>
+    <div class="priority-header-label" style="color:#1a1814"> USA</div>
   `;
   chart.appendChild(header);
 
+  // Rows
+
   priorityData.forEach(item => {
-    const row = document.createElement('div');
-    row.className = 'priority-row';
+      const row = document.createElement('div');
+      row.className = 'priority-row';
 
-    row.innerHTML = `
-      <div class="priority-label">${item.label.replace('\n','<br>')}</div>
-      <div class="priority-bar-wrap">
-        <div class="priority-bar-track">
-          <div class="priority-bar-fill" style="width:${item.usa}%; background:${colorUSA};"></div>
-          <span class="priority-bar-value">${item.usa}%</span>
-        </div>
-      </div>
-    `;
+      row.innerHTML = `
+          <div class="priority-label">${item.label.replace('\n','<br>')}</div>
 
-    chart.appendChild(row);
+          <div class="priority-bar-wrap">
+              <div class="priority-bar-track">
+                  <div class="priority-bar-fill" style="width:0%; background:${colorUSA}" data-target-width="${item.usa}">
+                      <span>${item.usa}%</span>
+                  </div>
+              </div>
+          </div>
+      `;
+
+      chart.appendChild(row);
   });
+} else {
+  console.warn('priority-chart element not found; skipping priority chart render');
 }
 
  // ══════════════════════════════════════════════════════
@@ -737,13 +776,14 @@ const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
             <div style="
               position:absolute;
               ${pos ? 'left' : 'right'}:0;
-              width:${pct}%;
+              width:0%;
               height:100%;
               background:${pos ? '#f5d4c4' : '#c8441a'};
               border-radius:4px;
               display:flex;align-items:center;
+              transition:width 0.7s cubic-bezier(0.16,1,0.3,1);
               ${pos ? 'justify-content:flex-end;padding-right:8px;' : 'justify-content:flex-start;padding-left:8px;'}
-            ">
+            " data-target-width="${pct}">
               <span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${netto > 0 ? '+' : ''}${netto}%</span>
             </div>
           </div>
@@ -761,7 +801,7 @@ const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
     fields.forEach((f, i) => {
       const pct = d[f];
       if (pct === 0) return;
-      segments += `<div style="width:${pct}%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);">
+      segments += `<div style="width:0%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);" data-target-width="${pct}">
         ${pct >= 7 ? `<span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${pct}%</span>` : ''}
       </div>`;
     });
@@ -780,6 +820,7 @@ function umfrageFilter(group, btn) {
   });
   btn.classList.add('active');
   umfrageRender();
+  animateBarFills(document.getElementById('umfrage-chart'));
 }
 
 function umfrageView(view, btn) {
@@ -789,6 +830,7 @@ function umfrageView(view, btn) {
   });
   btn.classList.add('active');
   umfrageRender();
+  animateBarFills(document.getElementById('umfrage-chart'));
 }
 
 umfrageRender();
@@ -829,11 +871,11 @@ function nutzenRisikoRender() {
     row.innerHTML = `
       <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
         <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.nuetzlich}%</span>
-        <div style="width:${wLeft}%;height:28px;border-radius:4px 0 0 4px;background:#F2AC97;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+        <div style="width:0%;height:28px;border-radius:4px 0 0 4px;background:#F2AC97;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);" data-target-width="${wLeft}"></div>
       </div>
       <div class="bar-label-text" style="width:150px;text-align:center;flex-shrink:0;">${d.label}</div>
       <div style="flex:1;display:flex;align-items:center;justify-content:flex-start;gap:8px;">
-        <div style="width:${wRight}%;height:28px;border-radius:0 4px 4px 0;background:#c8441a;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);"></div>
+        <div style="width:0%;height:28px;border-radius:0 4px 4px 0;background:#c8441a;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);" data-target-width="${wRight}"></div>
         <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink-light);white-space:nowrap;">${d.riskant}%</span>
       </div>`;
     container.appendChild(row);
@@ -845,6 +887,86 @@ function nutzenRisikoFilter(group, btn) {
   document.querySelectorAll('#nutzenrisiko-chart .tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   nutzenRisikoRender();
+  animateBarFills(document.getElementById('nutzenrisiko-chart'));
 }
 nutzenRisikoRender();
 
+
+// ══════════════════════════════════════════════════════
+// DUMBBELL-CHART: GEWISSENSKONFLIKTE NACH GESCHLECHT
+// Frage 19: "Ich hätte Gewissenskonflikte, wenn ich im
+// Defense-Bereich arbeiten würde." — gleiche Frage wie beim
+// Spannungs-Slider oben, hier aufgeschlüsselt nach Geschlecht.
+// Quelle: Eigene Umfrage, n = 242 (162 männlich / 80 weiblich).
+// 1 Person "Divers" wird aus Anonymitätsgründen bei dieser
+// Zwei-Gruppen-Aufschlüsselung nicht separat ausgewiesen.
+// ══════════════════════════════════════════════════════
+const gewissenLabels = [
+    'Stimme überhaupt nicht zu',
+    'Stimme eher nicht zu',
+    'Teils-teils',
+    'Stimme eher zu',
+    'Stimme voll und ganz zu',
+];
+const gewissenMaenner = [36.4, 24.7, 16.7, 9.9, 12.3];
+const gewissenFrauen  = [12.5, 16.3, 15.0, 27.5, 28.8];
+const DUMBBELL_SCALE_MAX = 45; // Achsen-Obergrenze in %
+
+// Erzeugt Delta-Betrag + erklärenden Satz für den Tap-Callout einer Zeile
+function gewissenCalloutText(m, f) {
+    const diff = m - f; // positiv = mehr Männer, negativ = mehr Frauen
+    const abs = Math.round(Math.abs(diff));
+    if (abs < 2) {
+        return { abs, text: 'Männer und Frauen antworten hier fast identisch.', dominant: 'neutral' };
+    }
+    if (diff > 0) {
+        return { abs, text: `${abs} Prozentpunkte mehr Männer als Frauen wählen diese Antwort.`, dominant: 'm' };
+    }
+    return { abs, text: `${abs} Prozentpunkte mehr Frauen als Männer wählen diese Antwort.`, dominant: 'f' };
+}
+
+function buildGewissenDumbbell() {
+    const container = document.getElementById('gewissen-dumbbell-rows');
+    if (!container) return;
+
+    gewissenLabels.forEach((label, i) => {
+        const m = gewissenMaenner[i];
+        const f = gewissenFrauen[i];
+        const leftM = (m / DUMBBELL_SCALE_MAX * 100);
+        const leftF = (f / DUMBBELL_SCALE_MAX * 100);
+        const lineLeft  = Math.min(leftM, leftF).toFixed(1);
+        const lineWidth = Math.abs(leftF - leftM).toFixed(1);
+        const mid = ((leftM + leftF) / 2).toFixed(1);
+        const callout = gewissenCalloutText(m, f);
+        const calloutColor = callout.dominant === 'm' ? 'var(--accent)'
+                            : callout.dominant === 'f' ? 'var(--accent-light)'
+                            : 'var(--rule)';
+
+        const row = document.createElement('div');
+        row.className = 'dumbbell-row';
+        row.innerHTML = `
+            <div class="dumbbell-row-label">
+                <span>${label}</span>
+                <span class="dumbbell-chevron">›</span>
+            </div>
+            <div class="dumbbell-track">
+                <div class="dumbbell-line" style="left:${mid}%; width:0%"
+                     data-final-left="${lineLeft}" data-final-width="${lineWidth}"></div>
+                <div class="dumbbell-dot dumbbell-dot--m" style="left:${mid}%" data-final-left="${leftM.toFixed(1)}">
+                    <span class="dumbbell-value dumbbell-value--m">${Math.round(m)}%</span>
+                </div>
+                <div class="dumbbell-dot dumbbell-dot--f" style="left:${mid}%" data-final-left="${leftF.toFixed(1)}">
+                    <span class="dumbbell-value dumbbell-value--f">${Math.round(f)}%</span>
+                </div>
+            </div>
+            <div class="dumbbell-callout" style="border-left-color:${calloutColor}">
+                <span class="dumbbell-callout-delta">Δ ${callout.abs} pp</span>
+                <span class="dumbbell-callout-text">${callout.text}</span>
+            </div>
+        `;
+        row.addEventListener('click', () => row.classList.toggle('open'));
+        container.appendChild(row);
+    });
+}
+
+buildGewissenDumbbell();
