@@ -40,11 +40,11 @@ function animateBarFills(root) {
     if (!root) return;
     root.querySelectorAll('[data-target-width]').forEach((bar, i) => {
         const target = bar.getAttribute('data-target-width');
-        setTimeout(() => { bar.style.width = target + '%'; }, i * 45);
+        setTimeout(() => { bar.style.width = target + '%'; }, i * 100);
     });
     root.querySelectorAll('[data-target-height]').forEach((bar, i) => {
         const target = bar.getAttribute('data-target-height');
-        setTimeout(() => { bar.style.height = target + '%'; }, i * 30);
+        setTimeout(() => { bar.style.height = target + '%'; }, i * 80);
     });
     root.querySelectorAll('.dumbbell-row').forEach((row, i) => {
         setTimeout(() => animateDumbbellRow(row), i * 170);
