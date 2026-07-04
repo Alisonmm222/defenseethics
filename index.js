@@ -969,4 +969,4 @@ function buildGewissenDumbbell() {
     });
 }
 
-buildGewissenDumbbell();
+buildGewissenDumbbell(); 
