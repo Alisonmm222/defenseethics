@@ -546,7 +546,8 @@ if (compassBreak) {
   }
 });
 
-  // PRIORITÄTEN
+
+// PRIORITÄTEN
 const priorityData = [
     { label: "Jobsicherheit", usa: 68 },
     { label: "Gehalt", usa: 66 },
@@ -593,6 +594,52 @@ if (chart) {
   });
 } else {
   console.warn('priority-chart element not found; skipping priority chart render');
+}
+
+// PRIORITÄTEN – DEUTSCHLAND (eigene Umfrage)
+// Top-3-Wert = Anteil Personen die diese Kategorie auf Platz 1, 2 oder 3 oder 4 gesetzt haben
+const priorityDataDE = [
+  { label: "Interesse & Spaß\nan der Tätigkeit",          de: 82 },
+  { label: "Gehalt",                                        de: 76 },
+  { label: "Work-Life-Balance",                         de: 56 },
+  { label: "Gutes Arbeitsklima",                           de: 55 },
+  { label: "Jobsicherheit",                               de: 54 },
+  { label: "Karriere &\nAufstiegsmöglichkeiten",          de: 43 },
+  { label: "Übereinstimmungmit \nmoralischen Werten",       de: 26 },
+  { label: "Gesellschaftlicher\nBeitrag",                 de: 10 },
+];
+
+const colorDE = "#c8441a";
+
+const chartDE = document.getElementById('priority-chart-de');
+if (chartDE) {
+  // Header
+  const headerDE = document.createElement('div');
+  headerDE.className = 'priority-header-row';
+  headerDE.innerHTML = `
+    <div></div>
+    <div class="priority-header-label" style="color:${colorDE}">Deutschland</div>
+  `;
+  chartDE.appendChild(headerDE);
+
+  // Rows
+  priorityDataDE.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'priority-row';
+    row.innerHTML = `
+      <div class="priority-label">${item.label.replace('\n', '<br>')}</div>
+      <div class="priority-bar-wrap">
+        <div class="priority-bar-track" style="background: rgba(61,45,110,0.08)">
+          <div class="priority-bar-fill" style="width:0%; background:${colorDE}" data-target-width="${item.de}">
+            <span>${item.de}%</span>
+          </div>
+        </div>
+      </div>
+    `;
+    chartDE.appendChild(row);
+  });
+} else {
+  console.warn('priority-chart-de element not found; skipping DE priority chart render');
 }
 
  // ══════════════════════════════════════════════════════
