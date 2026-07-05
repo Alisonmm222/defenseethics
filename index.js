@@ -547,15 +547,15 @@ if (compassBreak) {
 });
 
 
-// PRIORITÄTEN
+// PRIORITÄTEN US Tech workers
 const priorityData = [
     { label: "Jobsicherheit", usa: 68 },
     { label: "Gehalt", usa: 66 },
     { label: "Work-Life-Balance", usa: 63 },
-    { label: "Im Einklang\nmit meinen Interessen", usa: 54 },
+    { label: "Interesse & Spaß\nan der Tätigkeit", usa: 54 },
     { label: "Gutes Arbeitsklima", usa: 52 },
-    { label: "Im Einklang\nmit meinen Werten", usa: 47 },
-    { label: "Karriere\nAufstieg", usa: 30 },
+    { label: "Übereinstimmungmit \nmoralischen Werten", usa: 47 },
+    { label: "Karriere &\nAufstiegsmöglichkeiten", usa: 30 },
     { label: "Gesellschaftlicher\nBeitrag", usa: 30 },
 ];
 
@@ -596,50 +596,185 @@ if (chart) {
   console.warn('priority-chart element not found; skipping priority chart render');
 }
 
-// PRIORITÄTEN – DEUTSCHLAND (eigene Umfrage)
-// Top-3-Wert = Anteil Personen die diese Kategorie auf Platz 1, 2 oder 3 oder 4 gesetzt haben
-const priorityDataDE = [
-  { label: "Interesse & Spaß\nan der Tätigkeit",          de: 82 },
-  { label: "Gehalt",                                        de: 76 },
-  { label: "Work-Life-Balance",                         de: 56 },
-  { label: "Gutes Arbeitsklima",                           de: 55 },
-  { label: "Jobsicherheit",                               de: 54 },
-  { label: "Karriere &\nAufstiegsmöglichkeiten",          de: 43 },
-  { label: "Übereinstimmungmit \nmoralischen Werten",       de: 26 },
-  { label: "Gesellschaftlicher\nBeitrag",                 de: 10 },
+// PRIORITÄTEN – VERGLEICH DE vs USA (FLIP-Animation)
+const combinedPriorityData = [
+  { label: "Interesse & Spaß\nan der Tätigkeit", de: 82, usa: 54 },
+  { label: "Gehalt",                              de: 76, usa: 66 },
+  { label: "Work-Life-Balance",                   de: 56, usa: 63 },
+  { label: "Gutes Arbeitsklima",                  de: 55, usa: 52 },
+  { label: "Jobsicherheit",                       de: 54, usa: 68 },
+  { label: "Karriere &\nAufstiegsmöglichkeiten",  de: 43, usa: 30 },
+  { label: "Übereinstimmung mit\nmoralischen Werten", de: 26, usa: 47 },
+  { label: "Gesellschaftlicher\nBeitrag",         de: 10, usa: 30 },
 ];
 
-const colorDE = "#c8441a";
+let colorPrimary   = "#c8441a";
+let colorSecondary = "#e0815f";
+let currentViewDE  = 'de';
 
 const chartDE = document.getElementById('priority-chart-de');
 if (chartDE) {
-  // Header
-  const headerDE = document.createElement('div');
-  headerDE.className = 'priority-header-row';
-  headerDE.innerHTML = `
-    <div></div>
-    <div class="priority-header-label" style="color:${colorDE}">Deutschland</div>
-  `;
-  chartDE.appendChild(headerDE);
 
-  // Rows
-  priorityDataDE.forEach(item => {
-    const row = document.createElement('div');
-    row.className = 'priority-row';
-    row.innerHTML = `
-      <div class="priority-label">${item.label.replace('\n', '<br>')}</div>
-      <div class="priority-bar-wrap">
-        <div class="priority-bar-track" style="background: rgba(61,45,110,0.08)">
-          <div class="priority-bar-fill" style="width:0%; background:${colorDE}" data-target-width="${item.de}">
-            <span>${item.de}%</span>
+  const chartBlock  = chartDE.closest('.chart-block');
+  const chartHeader = chartBlock?.querySelector('.chart-header');
+  if (chartHeader) {
+    const tabRow = document.createElement('div');
+    tabRow.className = 'tab-row';
+    tabRow.style.marginTop = '12px';
+    tabRow.innerHTML = `
+      <button class="tab-btn active" id="tab-de2">Deutsche Studierende</button>
+      <button class="tab-btn"        id="tab-usa2">US Tech Workers</button>
+    `;
+    chartHeader.appendChild(tabRow);
+
+    tabRow.querySelector('#tab-de2').addEventListener('click', function () {
+      if (currentViewDE === 'de') return;
+      currentViewDE  = 'de';
+      colorPrimary   = "#c8441a";
+      colorSecondary = "#e0815f";
+      this.classList.add('active');
+      tabRow.querySelector('#tab-usa2').classList.remove('active');
+      flipSort('de');
+    });
+    tabRow.querySelector('#tab-usa2').addEventListener('click', function () {
+      if (currentViewDE === 'usa') return;
+      currentViewDE  = 'usa';
+      colorPrimary   = "#e0815f";
+      colorSecondary = "#c8441a";
+      this.classList.add('active');
+      tabRow.querySelector('#tab-de2').classList.remove('active');
+      flipSort('usa');
+    });
+  }
+
+  // Wrapper für animierbare Rows
+  const rowWrapper = document.createElement('div');
+  rowWrapper.id = 'priority-de-rows';
+  rowWrapper.style.position = 'relative';
+  chartDE.appendChild(rowWrapper);
+
+  // Initial rendern
+  buildRows('de');
+}
+
+function buildRows(view, instant = false) {
+  const chartDE2   = document.getElementById('priority-chart-de');
+  const rowWrapper = document.getElementById('priority-de-rows');
+  if (!rowWrapper || !chartDE2) return;
+
+  // Alle alten Header entfernen
+  chartDE2.querySelectorAll('.priority-de-header').forEach(el => el.remove());
+
+  rowWrapper.innerHTML = '';
+
+  const deColor  = colorPrimary;
+  const usaColor = colorSecondary;
+
+  // Header neu einfügen
+  const headerEl = document.createElement('div');
+  headerEl.className = 'priority-de-header';
+  headerEl.style.cssText = 'display:grid; grid-template-columns:160px 1fr 1fr; gap:8px; margin-bottom:8px;';
+  headerEl.innerHTML = `
+    <div></div>
+    <div class="priority-header-label" style="color:${deColor}; text-align:left;">DE</div>
+    <div class="priority-header-label" style="color:${usaColor}; text-align:left;">USA</div>
+  `;
+  chartDE2.insertBefore(headerEl, rowWrapper);
+
+  // Rows sortieren und rendern
+  const sorted = [...combinedPriorityData].sort((a, b) =>
+    view === 'de' ? b.de - a.de : b.usa - a.usa
+  );
+
+  sorted.forEach((item) => {
+    const block = document.createElement('div');
+    block.dataset.key = item.label;
+    block.style.marginBottom = '20px';
+    block.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1)';
+
+    block.innerHTML = `
+      <div class="priority-row" style="margin-bottom:2px;">
+        <div class="priority-label">${item.label.replace('\n','<br>')}</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
+            <div class="priority-bar-fill"
+              style="width:${instant ? item.de : 0}%;background:${deColor};"
+              data-target-width="${item.de}"><span>${item.de}%</span></div>
+          </div>
+          <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
+            <div class="priority-bar-fill"
+              style="width:${instant ? item.usa : 0}%;background:${usaColor};"
+              data-target-width="${item.usa}"><span>${item.usa}%</span></div>
           </div>
         </div>
       </div>
     `;
-    chartDE.appendChild(row);
+    rowWrapper.appendChild(block);
   });
-} else {
-  console.warn('priority-chart-de element not found; skipping DE priority chart render');
+
+  if (instant) return;
+
+  // Scroll-triggered Balken-Animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        rowWrapper.querySelectorAll('[data-target-width]').forEach((bar, i) => {
+          setTimeout(() => {
+            bar.style.width = bar.getAttribute('data-target-width') + '%';
+          }, i * 40);
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(rowWrapper);
+}
+
+function flipSort(view) {
+  const rowWrapper = document.getElementById('priority-de-rows');
+  if (!rowWrapper) return;
+
+  const blocks = [...rowWrapper.querySelectorAll('[data-key]')];
+
+  // FLIP Schritt 1: Positionen vorher messen
+  const before = {};
+  blocks.forEach(b => { before[b.dataset.key] = b.getBoundingClientRect().top; });
+
+  // Schritt 2: DOM neu sortieren
+  const sorted = [...combinedPriorityData].sort((a, b) =>
+    view === 'de' ? b.de - a.de : b.usa - a.usa
+  );
+  sorted.forEach(item => {
+    const block = blocks.find(b => b.dataset.key === item.label);
+    if (block) rowWrapper.appendChild(block);
+  });
+
+  // Schritt 3: Positionen nachher messen
+  const after = {};
+  blocks.forEach(b => { after[b.dataset.key] = b.getBoundingClientRect().top; });
+
+  // Schritt 4: Zurücksetzen ohne Animation
+  blocks.forEach(b => {
+    const delta = before[b.dataset.key] - after[b.dataset.key];
+    b.style.transition = 'none';
+    b.style.transform  = `translateY(${delta}px)`;
+  });
+
+  // Schritt 5: Fliegen lassen
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      blocks.forEach(b => {
+        b.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1)';
+        b.style.transform  = 'translateY(0)';
+      });
+    });
+  });
+
+  // Schritt 6: Nach Animation Farben neu rendern
+  setTimeout(() => {
+    buildRows(view, true);
+  }, 600);
 }
 
  // ══════════════════════════════════════════════════════
