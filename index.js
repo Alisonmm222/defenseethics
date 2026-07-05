@@ -754,6 +754,28 @@ function umfrageGetFiltered() {
   return umfrageData.filter(d => d.group === umfrageCurrentGroup || d.group === 'all');
 }
 
+function animateUmfrageChart(root) {
+  if (!root) return;
+
+  const rows = root.querySelectorAll('.bar-row');
+  rows.forEach((row, rowIndex) => {
+    const segments = row.querySelectorAll('[data-target-width]');
+    segments.forEach((segment, segIndex) => {
+      const target = segment.getAttribute('data-target-width');
+      const delay = rowIndex * 160 + segIndex * 80;
+      segment.style.width = '0%';
+      segment.style.transition = 'width 1800ms cubic-bezier(0.22, 1, 0.36, 1)';
+      segment.style.transitionDelay = `${delay}ms`;
+      segment.style.willChange = 'width';
+      requestAnimationFrame(() => {
+        window.setTimeout(() => {
+          segment.style.width = `${target}%`;
+        }, delay);
+      });
+    });
+  });
+}
+
 function umfrageRender() {
   const data = umfrageGetFiltered();
   const container = document.getElementById('umfrage-rows');
@@ -781,7 +803,7 @@ const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
               background:${pos ? '#f5d4c4' : '#c8441a'};
               border-radius:4px;
               display:flex;align-items:center;
-              transition:width 0.7s cubic-bezier(0.16,1,0.3,1);
+              transition:width 1800ms cubic-bezier(0.22, 1, 0.36, 1);
               ${pos ? 'justify-content:flex-end;padding-right:8px;' : 'justify-content:flex-start;padding-left:8px;'}
             " data-target-width="${pct}">
               <span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${netto > 0 ? '+' : ''}${netto}%</span>
@@ -801,7 +823,7 @@ const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
     fields.forEach((f, i) => {
       const pct = d[f];
       if (pct === 0) return;
-      segments += `<div style="width:0%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 0.7s cubic-bezier(0.16,1,0.3,1);" data-target-width="${pct}">
+      segments += `<div style="width:0%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 900ms cubic-bezier(0.22, 1, 0.36, 1);" data-target-width="${pct}">
         ${pct >= 7 ? `<span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${pct}%</span>` : ''}
       </div>`;
     });
@@ -820,7 +842,7 @@ function umfrageFilter(group, btn) {
   });
   btn.classList.add('active');
   umfrageRender();
-  animateBarFills(document.getElementById('umfrage-chart'));
+  animateUmfrageChart(document.getElementById('umfrage-chart'));
 }
 
 function umfrageView(view, btn) {
@@ -830,10 +852,11 @@ function umfrageView(view, btn) {
   });
   btn.classList.add('active');
   umfrageRender();
-  animateBarFills(document.getElementById('umfrage-chart'));
+  animateUmfrageChart(document.getElementById('umfrage-chart'));
 }
 
 umfrageRender();
+animateUmfrageChart(document.getElementById('umfrage-chart'));
    // ── NUTZEN VS. RISIKO: BUTTERFLY-DIAGRAMM ──
    // Quelle: acatech/TechnikRadar 2025, N = 2.003 — Anteil "sehr nützlich" vs. "sehr riskant"
 

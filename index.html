@@ -84,6 +84,7 @@
                         20&nbsp;% mehr Gehalt.
                     </p>
 
+                    <div class ="fade-in">
                     <div class="slider-labels">
                         <span>Ziviles Unternehmen</span>
                         <span>Rüstungskonzern</span>
@@ -98,9 +99,12 @@
                                class="tension-slider" id="tensionSliderScenario"
                                oninput="updateTensionFor('szenario', this.value)">
                     </div>
+                    </div>
 
                     <div class="tension-result-row">
-                        <div class="tension-result-text fade-in" id="tensionTextScenario">Bewege den Schieberegler.</div>
+                        <div class="tension-result-text fade-in" id="tensionTextScenario">
+                            Bewege den Schieberegler.
+                        </div>
                     </div>
                 </div>
 
@@ -512,15 +516,16 @@
 
     <section class="fullscreen-block">
         <div class="fullscreen-inner" id="tensionInnerZustimmung">
-            <div class="fade-in">
             <div class="tension-block">
+
                 <div class="tension-eyebrow fade-in">Deine Einschätzung</div>
-                <h4 class = "fade-in">Ich hätte Gewissenskonflikte<br>wenn ich im Defense-Bereich arbeiten würde.</h4>
+                <h4 class="fade-in">Ich hätte Gewissenskonflikte<br>wenn ich im Defense-Bereich arbeiten würde.</h4>
                 
-                <div class="slider-labels">
-                    <span>Keine Gewissenskonflikte</span>
-                    <span>Gewissenskonflikte</span>
-                </div>
+                <div class="fade-in">  
+                    <div class="slider-labels">
+                        <span>Keine Gewissenskonflikte</span>
+                        <span>Gewissenskonflikte</span>
+                    </div>
 
                     <div class="slider-track-wrap">
                         <div class="slider-track">
@@ -531,6 +536,7 @@
                                class="tension-slider" id="tensionSlider"
                                oninput="updateTensionFor('zustimmung', this.value)">
                     </div>
+                </div>
 
                 <div class="tension-result-row">
                     <div class="tension-result-text fade-in" id="tensionText">
@@ -538,16 +544,13 @@
                     </div>
                 </div>
             </div>
-        </div>
 
             <div class="tension-result-block" id="tensionResultBlock">
-            <div class="tension-comparison">
-                    <div class="comparison-bars" id="comparisonBars">
-                    </div>
+                <div class="tension-comparison">
+                    <div class="comparison-bars" id="comparisonBars"></div>
                 </div>
                 <div class="comparison-text" id="comparisonText"></div>
                 <p class="source">Quelle: Eigene Umfrage (2026), 243 Teilnehmende</p>
-            </div>
             </div>
         </div>
     </section>
