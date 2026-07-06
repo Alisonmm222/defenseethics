@@ -350,10 +350,10 @@ main.article {
 
 .priority-label {
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
+  font-size: 11px;
   color: #1a1814;
   text-align: right;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .priority-side {
@@ -370,7 +370,7 @@ main.article {
 .priority-bar-track {
   position: relative;
   flex: 1;
-  height: 22px;
+  height: 26px;
   background: rgba(200, 68, 26, 0.08);
   border-radius: 3px;
   overflow: hidden;
@@ -1020,6 +1020,39 @@ h3.sub-heading {
   color: #fff;
 }
 
+#tensionInnerZustimmung {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+#tensionInnerZustimmung .tension-block,
+#tensionInnerZustimmung .tension-result-block {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+#tensionInnerZustimmung .tension-block {
+  text-align: left;
+}
+
+#tensionInnerZustimmung .tension-eyebrow,
+#tensionInnerZustimmung .tension-block h4,
+#tensionInnerZustimmung .tension-result-text {
+  text-align: left;
+}
+
+#tensionInnerZustimmung .slider-labels,
+#tensionInnerZustimmung .slider-track-wrap,
+#tensionInnerZustimmung .tension-result-row {
+  width: 100%;
+  max-width: 100%;
+}
+
+#tensionInnerZustimmung .tension-slider {
+  display: block;
+  margin: 0 auto;
+}
+
 .tension-block h4 {
   font-family: 'Playfair Display', serif;
   font-size: clamp(2rem, 5vw, 3rem);
@@ -1570,7 +1603,7 @@ input[type=range].tension-slider::-ms-track {
 .fade-in {
   opacity: 0;
   transform: translateY(22px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transition: opacity 1.2s ease, transform 1.2s ease;
   margin-top: 32px;
 }
 
@@ -2719,6 +2752,33 @@ input[type=range].tension-slider::-ms-track {
             color: #fff;
           }
 
+          #tensionInnerZustimmung {
+            max-width: 620px;
+            margin: 0 auto;
+          }
+
+          #tensionInnerZustimmung .tension-block,
+          #tensionInnerZustimmung .tension-result-block {
+            max-width: 620px;
+            margin: 0 auto;
+          }
+
+          #tensionInnerZustimmung .tension-block {
+            text-align: center;
+          }
+
+          #tensionInnerZustimmung .slider-labels,
+          #tensionInnerZustimmung .slider-track-wrap,
+          #tensionInnerZustimmung .tension-result-row {
+            width: 100%;
+            max-width: 100%;
+          }
+
+          #tensionInnerZustimmung .tension-slider {
+            display: block;
+            margin: 0 auto;
+          }
+
           .tension-block h4 {
             font-family: 'Playfair Display', serif;
             font-size: clamp(2rem, 5vw, 3rem);
@@ -3267,19 +3327,6 @@ input[type=range].tension-slider::-ms-track {
           font-weight: 700;
           color:  #faf7f2;
           text-align: right;
-        }
-
-
-        /* ── SCROLLFADE ── */
-        .fade-in {
-          opacity: 0;
-          transform: translateY(22px);
-          transition: opacity 0.65s ease, transform 0.65s ease;
-        }
-
-        .fade-in.visible {
-          opacity: 1;
-          transform: translateY(0);
         }
 
         /* ── RESPONSIVE ── */

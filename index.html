@@ -37,6 +37,7 @@
     </div>
 
     <div class="hero-illo">
+    <div class="fade-in">
         <svg class="compass-svg" viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="200" cy="280" rx="160" ry="18" fill="#e0dcd6" opacity="0.5"/>
             <circle cx="200" cy="150" r="110" fill="white" stroke="#e0dcd6" stroke-width="1.5"/>
@@ -57,6 +58,7 @@
             <text x="200" y="108" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#c8441a" letter-spacing="1" font-weight="500">ETHIK</text>
             <text x="200" y="200" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#8a857e" letter-spacing="1">PROFIT</text>
         </svg>
+    </div>
     </div>
 </header>
 
@@ -82,6 +84,7 @@
                         20&nbsp;% mehr Gehalt.
                     </p>
 
+                    <div class ="fade-in">
                     <div class="slider-labels">
                         <span>Ziviles Unternehmen</span>
                         <span>Rüstungskonzern</span>
@@ -96,9 +99,12 @@
                                class="tension-slider" id="tensionSliderScenario"
                                oninput="updateTensionFor('szenario', this.value)">
                     </div>
+                    </div>
 
                     <div class="tension-result-row">
-                        <div class="tension-result-text fade-in" id="tensionTextScenario">Bewege den Schieberegler.</div>
+                        <div class="tension-result-text fade-in" id="tensionTextScenario">
+                            Bewege den Schieberegler.
+                        </div>
                     </div>
                 </div>
 
@@ -377,10 +383,12 @@
             </svg>
         </div>
 
+    <div class="fade-in"> 
         <div class="chapter-break-label">
             <div class="chapter-break-title fade-in">Unsere Befragung</div>
             <div class="chapter-break-sub fade-in">243 Studierende · Technische Hochschule Nürnberg</div>
-        </div>
+        </div>  
+    </div>
     </div>
 
     <div class="fade-in">
@@ -403,6 +411,17 @@
         </div>
     </div>
 
+
+
+    <div class="chart-block fade-in">
+    <div class="chart-header">
+        <h4>Was ist Ingenieurstudierenden in Deutschland besonders wichtig bei ihrem Beruf?</h4>
+     </div>
+     <div class="chart-body">
+      <div class="priority-chart" id="priority-chart-de"></div>
+     <p class="source">Eigene Umfrage · 243 Teilnehmende · 2026</p>
+     </div>
+    </div>
 
     <div class="fade-in">
         <div class="chart-block fade-in">
@@ -510,13 +529,14 @@
         <div class="fullscreen-inner" id="tensionInnerZustimmung">
             <div class="tension-block">
 
-                <div class="tension-eyebrow">Deine Einschätzung</div>
-                <h4>Ich hätte Gewissenskonflikte<br>wenn ich im Defense-Bereich arbeiten würde.</h4>
-
-                <div class="slider-labels">
-                    <span>Keine Gewissenskonflikte</span>
-                    <span>Gewissenskonflikte</span>
-                </div>
+                <div class="tension-eyebrow fade-in">Deine Einschätzung</div>
+                <h4 class="fade-in">Ich hätte Gewissenskonflikte<br>wenn ich im Defense-Bereich arbeiten würde.</h4>
+                
+                <div class="fade-in">  
+                    <div class="slider-labels">
+                        <span>Keine Gewissenskonflikte</span>
+                        <span>Gewissenskonflikte</span>
+                    </div>
 
                     <div class="slider-track-wrap">
                         <div class="slider-track">
@@ -527,23 +547,21 @@
                                class="tension-slider" id="tensionSlider"
                                oninput="updateTensionFor('zustimmung', this.value)">
                     </div>
+                </div>
 
                 <div class="tension-result-row">
                     <div class="tension-result-text fade-in" id="tensionText">
                         Bewege den Schieberegler.
                     </div>
                 </div>
-
-        </div>
+            </div>
 
             <div class="tension-result-block" id="tensionResultBlock">
-            <div class="tension-comparison">
-#                    <div class="comparison-bars" id="comparisonBars">
-                    </div>
+                <div class="tension-comparison">
+                    <div class="comparison-bars" id="comparisonBars"></div>
                 </div>
                 <div class="comparison-text" id="comparisonText"></div>
                 <p class="source">Quelle: Eigene Umfrage (2026), 243 Teilnehmende</p>
-            </div>
             </div>
         </div>
     </section>
