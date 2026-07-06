@@ -122,10 +122,10 @@
                </div>
             </div>
     </section>
-    <hr class="section-divider section-divider--light" id="lagebild">
-    
+
+
     <div class="fade-in">
-        <div class="section-number">Teil Eins</div>
+        <div class="section-number" id="lagebild">Teil Eins</div>
         <h2 class="section-title">Der Angriffskrieg verändert die Spielregeln</h2>
     </div>
 
@@ -163,7 +163,7 @@
 
 
     <div class="fade-in">
-        <h3 class="sub-heading">Was denkt die Bevölkerung?</h3>
+        <h3 class="sub-heading">Die Bevölkerung spürt die veränderte Sicherheitslage</h3>
     </div>
     <div class="kpi-verlauf fade-in">
         <div class="kpi-item">
@@ -215,7 +215,7 @@
     </div>
 
     <div class="fade-in">
-        <h3 class="sub-heading">Zivilklauseln an staatlichen Hochschulen </h3>
+        <h3 class="sub-heading">Zivilklauseln an staatlichen Hochschulen</h3>
         </div>
         <div class="chart-body">
             <div class="map-block fade-in" id="map-block">
@@ -266,7 +266,7 @@
     </div>
 
     <div class="fade-in">
-        <h3 class="sub-heading">Was wissen wir schon über Berufsethik?</h3>
+        <h3 class="sub-heading">Wie viel Verantwortung trägt ein Ingenieur? Normative Abfrage</h3>
     </div>
 
     <div class="prose fade-in">
@@ -307,23 +307,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <div class="chapter-break-line"></div>
 
-        <div class="chapter-break-label">
+        <div class="chapter-break-label" id="umfrage">
             <div class="section-number">Teil Zwei</div>
         </div>
     <div class="chapter-break">
         <div class="chapter-break-compass">
             <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-                <!-- Schatten wie beim Original -->
                 <ellipse cx="200" cy="310" rx="160" ry="18" fill="#e0dcd6" opacity="0.5"/>
 
-                <!-- Körper wie beim Original -->
                 <circle cx="200" cy="160" r="130" fill="white" stroke="#e0dcd6" stroke-width="1.5"/>
                 <circle cx="200" cy="160" r="118" fill="#faf7f2" stroke="#e0dcd6" stroke-width="0.5"/>
                 <circle cx="200" cy="160" r="104" fill="none" stroke="#e0dcd6" stroke-width="0.5" stroke-dasharray="4 6"/>
                 <circle cx="200" cy="160" r="80" fill="none" stroke="#e0dcd6" stroke-width="0.5" stroke-dasharray="2 8"/>
 
-                <!-- Alles was STILL bleibt — kein animateTransform -->
                 <g>
                     <!-- Tick marks -->
                     <line x1="200" y1="32" x2="200" y2="48" stroke="#1a1814" stroke-width="1.5"/>
@@ -366,7 +363,6 @@
                             keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"/>
                 </g>
 
-                <!-- Center pivot — dreht sich nicht -->
                 <circle cx="200" cy="160" r="8" fill="white" stroke="#e0dcd6" stroke-width="1.5"/>
                 <circle cx="200" cy="160" r="3" fill="#1a1814"/>
 
@@ -405,7 +401,7 @@
 
     <div class="chart-block fade-in">
     <div class="chart-header">
-        <h4>Was ist Ingenieurstudierenden in Deutschland besonders wichtig bei ihrem Beruf?</h4>
+        <h4>Die Prioritäten bei der Berufswahl der Studierenden im Vergleich zu US Tech Workern.</h4>
      </div>
      <div class="chart-body">
       <div class="priority-chart" id="priority-chart-de"></div>
@@ -417,7 +413,7 @@
     <div class="fade-in">
         <div class="chart-block fade-in">
             <div class="chart-header fade-in">
-                <h4>Kannst du dir vorstellen, im Verteidigungsbereich zu arbeiten?</h4>
+                <h4>Die meisten Studierenden können sich vorstellen im Verteidigungsbereich zu arbeiten.</h4>
             </div>
             <div class="chart-body">
                 <div class="toggle-question">
@@ -447,9 +443,21 @@
         </div>
     </div>
 
-    <div class="fade-in">
-        <h3 class="sub-heading fade-in">Und wer trägt die Verantwortung?</h3>
-
+    <div class="section-fullwidth fade-in">
+        <h3 class="sub-heading">Der Ingenieur trägt die wenigste Verantwortung und die Politik die meiste?</h3>
+        <p>
+            Die Studierenden wurden gebeten, fünf Akteure nach ihrer persönlichen moralischen
+            Mitverantwortung für die Anwendung technischer Arbeit zu sortieren, von 1 (höchste
+            Verantwortung) bis 5 (geringste Verantwortung).
+        </p>
+        <p>
+            Das Ergebnis ist eindeutig:
+            Der <strong>Gesetzgeber und die Politik</strong> werden von den meisten Befragten
+            auf Platz 1 gesetzt. Der <strong>Ingenieur oder die Ingenieurin selbst</strong>
+            landet im Durchschnitt auf dem letzten Platz. Die eigene Berufsgruppe wird also
+            als am wenigsten verantwortlich wahrgenommen.
+        </p>
+    </div>
         <div class="chart-body fade-in">
             <div class="race-block fade-in">
 
@@ -481,11 +489,12 @@
 
             </div>
         </div>
-    </div>
-
-
     <p class="source">Quelle: Eigene Umfrage (2026), 243 Teilnehmende</p>
     </div>
+
+
+
+
 
 
     <div class="prose fade-in">

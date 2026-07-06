@@ -1208,18 +1208,9 @@ Papa.parse(CSV_PATH, {
     const rows = results.data;
     const header = rows[0];
 
-    // Debug — in Konsole schauen welche Indizes rauskommen
-    header.forEach((h, i) => {
-      if (h.includes('Frage 16') || h.includes('Ingenieur') || h.includes('Verantwortung')) {
-        console.log(i, h);
-      }
-    });
-
     allRows = rows.slice(1).filter(r => {
-      const age = parseInt(r[COL_ALTER]);
       const g = r[COL_GESCHLECHT]?.trim().toLowerCase();
-      if (!isNaN(age) && age < 18) return false;
-      if (g === 'divers') return false;
+      if (g === 'divers') return false;  // nur Divers raus
       return true;
     });
 
@@ -1232,7 +1223,7 @@ Papa.parse(CSV_PATH, {
 function buildFilterButtons() {
   const geschlechter = [...new Set(allRows.map(r => r[COL_GESCHLECHT]).filter(Boolean))].sort();
   const studiengaenge = [...new Set(allRows.map(r => r[COL_STUDIENGANG]).filter(Boolean))].sort();
-  const alterGruppen = ['18–22', '23–26', '27–30', '31+'];
+  const alterGruppen = ['< 23', '23–26', '27–30'];
 
   renderFilterBtns('filter-geschlecht', geschlechter, 'geschlecht');
   renderFilterBtns('filter-studiengang', studiengaenge, 'studiengang');
@@ -1249,17 +1240,30 @@ function renderFilterBtns(containerId, values, type) {
 }
 
 function toggleFilter(type, value, btn) {
+  if (type === 'all') {
+    // Alle Filter zurücksetzen
+    activeFilters = { geschlecht: null, studiengang: null, alter: null };
+    document.querySelectorAll('.race-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderChart(getFilteredRows());
+    return;
+  }
+
   if (activeFilters[type] === value) {
-    // Nochmal klicken = deaktivieren
     activeFilters[type] = null;
     btn.classList.remove('active');
   } else {
-    // Anderen Button in der Gruppe deaktivieren
     document.querySelectorAll(`.race-btn[data-filter="${type}"]`)
       .forEach(b => b.classList.remove('active'));
     activeFilters[type] = value;
     btn.classList.add('active');
   }
+
+  // Gesamt-Button deaktivieren wenn irgendein Filter aktiv
+  const anyActive = Object.values(activeFilters).some(v => v !== null);
+  const gesamtBtn = document.querySelector('.race-btn[data-value="all"]');
+  if (gesamtBtn) gesamtBtn.classList.toggle('active', !anyActive);
+
   renderChart(getFilteredRows());
 }
 
@@ -1273,21 +1277,40 @@ function getFilteredRows() {
     if (activeFilters.alter) {
       const age = parseInt(r[COL_ALTER]);
       if (isNaN(age)) return false;
-      if (activeFilters.alter === '18–22' && !(age >= 18 && age <= 22)) return false;
+     if (activeFilters.alter === '18–22') {
+       const raw = r[COL_ALTER]?.trim();
+       const age = parseInt(raw);
+       if (raw === 'Unter 18') return true;
+       if (isNaN(age) || age < 18 || age > 22) return false;
+     }
       if (activeFilters.alter === '23–26' && !(age >= 23 && age <= 26)) return false;
       if (activeFilters.alter === '27–30' && !(age >= 27 && age <= 30)) return false;
-      if (activeFilters.alter === '31+'   && !(age >= 31)) return false;
     }
     return true;
   });
-}function renderChart(rows) {
-   const n = rows.length;
-   const nEl    = document.getElementById('race-n');
-   const barsEl = document.getElementById('race-bars');
-   const absEl  = document.getElementById('race-absolute');
-   if (!nEl || !barsEl || !absEl) return;
+}f
 
-   nEl.textContent = `n = ${n}`;
+function renderChart(rows) {
+  const n = rows.length;
+  const nEl    = document.getElementById('race-n');
+  const barsEl = document.getElementById('race-bars');
+  const absEl  = document.getElementById('race-absolute');
+  if (!nEl || !barsEl || !absEl) return;
+
+  nEl.textContent = `n = ${n}`;
+
+  if (n === 0) {
+    barsEl.innerHTML = `
+      <div style="padding:32px 0;text-align:center;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-faint);line-height:1.6;">
+        Leider sind für deine Auswahl<br>keine Daten vorhanden.
+      </div>
+    `;
+    absEl.innerHTML = '';
+    return;
+  }
+
+  // Immer leeren bevor neu aufgebaut wird
+  barsEl.innerHTML = '';
 
    const counts = VERANTWORTUNG_COLS.map((col, i) => {
      const validRows = rows.filter(r => {
@@ -1311,34 +1334,41 @@ function getFilteredRows() {
    barsEl.querySelectorAll('.race-row[data-key]').forEach(el => {
      existing[el.dataset.key] = el;
    });
+counts.forEach((item, rank) => {
+    let row = existing[item.key];
 
-   counts.forEach((item, rank) => {
-     let row = existing[item.key];
+    if (!row) {
+      row = document.createElement('div');
+      row.className = 'race-row';
+      row.dataset.key = item.key;
+      row.innerHTML = `
+        <div class="race-rank">${rank + 1}</div>
+        <div class="race-label">${item.label}</div>
+        <div class="race-track">
+          <div class="race-fill" style="width:0%"><span></span></div>
+        </div>
+      `;
+    }
 
-     if (!row) {
-       row = document.createElement('div');
-       row.className = 'race-row';
-       row.dataset.key = item.key;
-       row.innerHTML = `
-         <div class="race-rank">${rank + 1}</div>
-         <div class="race-label">${item.label}</div>
-         <div class="race-track">
-           <div class="race-fill" style="width:0%"><span></span></div>
-         </div>
-       `;
-       barsEl.appendChild(row);
-     }
+    // Erst auf 0 zurücksetzen
+    const fill = row.querySelector('.race-fill');
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+    fill.querySelector('span').textContent = '';
 
-     barsEl.appendChild(row);
-     row.querySelector('.race-rank').textContent = rank + 1;
-     row.querySelector('.race-rank').style.color = rank === 0 ? 'var(--accent)' : 'var(--ink-faint)';
+    row.querySelector('.race-rank').textContent = rank + 1;
+    row.querySelector('.race-rank').style.color = rank === 0 ? 'var(--accent)' : 'var(--ink-faint)';
 
-     const fill = row.querySelector('.race-fill');
-     requestAnimationFrame(() => requestAnimationFrame(() => {
-       fill.style.width = `${((maxAvg - item.avg) / (maxAvg - 1)) * 100}%`;
-       fill.querySelector('span').textContent = `Ø ${item.avg}`;
-     }));
-   });
+    barsEl.appendChild(row);
+
+    // Mit Verzögerung pro Zeile einfahren
+    const delay = rank * 80;
+    setTimeout(() => {
+      fill.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+      fill.style.width = `${((maxAvg - item.avg) / (maxAvg - 1)) * 100}%`;
+      fill.querySelector('span').textContent = `Ø ${item.avg}`;
+    }, delay);
+  });
 
    absEl.innerHTML = counts.map(item => `
      <div class="race-absolute-item">
