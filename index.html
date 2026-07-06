@@ -456,6 +456,30 @@
         </div>
     </div>
 
+    <div class="chart-block fade-in">
+  <div class="chart-header">
+    <h4>Wird Berufsethik im Studium thematisiert?</h4>
+    <p>TH Nürnberg · n = 243 · Farbintensität = Anteil der Studierenden</p>
+  </div>
+  <div class="chart-body">
+    <div class="toggle-row">
+      <button class="tab-btn active" onclick="setHeatmapMode('pct',this)">In Prozent</button>
+      <button class="tab-btn" onclick="setHeatmapMode('abs',this)">Absolut</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <div class="heatmap-grid" id="hgrid"></div>
+    </div>
+    <div class="legend-wrap">
+      <span class="legend-label">0 %</span>
+      <div class="legend-bar"></div>
+      <span class="legend-label-right">100 %</span>
+    </div>
+    <p style="font-size:11px;color:var(--ink-faint);margin-top:8px;">Hover über eine Zelle für Details</p>
+  </div>
+</div>
+
+<div class="hm-tooltip" id="hmtt"></div>
+
     <div class="fade-in">
         <h3 class="sub-heading">Wer ist Verantwortlich?</h3>
 
