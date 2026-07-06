@@ -1325,6 +1325,8 @@ input[type=range].tension-slider::-ms-track {
   line-height: 1.6;
   color: var(--ink);
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .quote-card footer {
@@ -3697,54 +3699,57 @@ HEAD
 .race-block {
     margin: 0;
   }
+.race-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-bottom: 28px;
+  align-items: flex-end;
+}
 
-  .race-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 24px;  /* mehr horizontaler Abstand */
-    margin-bottom: 28px;
-    align-items: flex-end;
-  }
+.race-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-  .race-filter-group:first-child {
-    padding-right: 16px;
-    margin-right: 8px;
-  }
+.race-filter-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin-bottom: 2px;
+}
 
-  .race-filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+.race-filter-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
 
-  .race-filter-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-faint);
-  }
+.race-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
 
-  .race-filter-btns {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
+.race-btn:hover {
+  background: #f5d4c4;
+}
 
-  .race-btn {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    padding: 4px 12px;
-    border: 1px solid var(--rule);
-    border-radius: 20px;
-    background: transparent;
-    color: var(--ink-faint);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .race-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .race-btn.active { border-color: var(--accent); color: var(--accent); }
+.race-btn.active {
+  background: #c8441a;
+  color: white;
+}
 
   .race-bars {
     display: flex;
