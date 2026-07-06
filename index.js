@@ -1177,27 +1177,28 @@ function buildGewissenDumbbell() {
 buildGewissenDumbbell(); 
 
 // ══════════════════════════════════════════════
-// DATEN UND VISUALISIERUNG FÜR VERANTWORUNG
+// DATEN UND VISUALISIERUNG FÜR VERANTWORTUNG
 // ══════════════════════════════════════════════
 
 const CSV_PATH = 'data/rohdaten.csv';
 
 const VERANTWORTUNG_COLS = [
-  { key: 'ingenieur',   label: 'Ingenieur*in selbst' },
-  { key: 'arbeitgeber', label: 'Arbeitgeber' },
-  { key: 'gesetzgeber', label: 'Gesetzgeber / Politik' },
-  { key: 'auftraggeber',label: 'Auftraggeber' },
-  { key: 'gesellschaft',label: 'Gesellschaft als Ganzes' },
+  { key: 'ingenieur',    label: 'Ingenieur*in selbst' },
+  { key: 'arbeitgeber',  label: 'Arbeitgeber' },
+  { key: 'gesetzgeber',  label: 'Gesetzgeber / Politik' },
+  { key: 'auftraggeber', label: 'Auftraggeber' },
+  { key: 'gesellschaft', label: 'Gesellschaft als Ganzes' },
 ];
 
 let allRows = [];
-let activeFilter = { type: 'all', value: 'all' };
 
-// Spaltenindizes (0-basiert)
+// Aktive Filter — mehrere gleichzeitig möglich
+let activeFilters = { geschlecht: null, studiengang: null, alter: null };
+
 const COL_GESCHLECHT  = 2;
 const COL_ALTER       = 3;
 const COL_STUDIENGANG = 14;
-const COL_V_START     = 34; // Ingenieur*in selbst
+const COL_V_START     = 34;
 
 Papa.parse(CSV_PATH, {
   download: true,
@@ -1206,10 +1207,24 @@ Papa.parse(CSV_PATH, {
   complete: (results) => {
     const rows = results.data;
     const header = rows[0];
-    allRows = rows.slice(1);
+
+    // Debug — in Konsole schauen welche Indizes rauskommen
+    header.forEach((h, i) => {
+      if (h.includes('Frage 16') || h.includes('Ingenieur') || h.includes('Verantwortung')) {
+        console.log(i, h);
+      }
+    });
+
+    allRows = rows.slice(1).filter(r => {
+      const age = parseInt(r[COL_ALTER]);
+      const g = r[COL_GESCHLECHT]?.trim().toLowerCase();
+      if (!isNaN(age) && age < 18) return false;
+      if (g === 'divers') return false;
+      return true;
+    });
 
     buildFilterButtons();
-    renderChart(allRows);
+    renderChart(getFilteredRows());
   },
   error: (err) => console.error('CSV Fehler:', err)
 });
@@ -1217,9 +1232,7 @@ Papa.parse(CSV_PATH, {
 function buildFilterButtons() {
   const geschlechter = [...new Set(allRows.map(r => r[COL_GESCHLECHT]).filter(Boolean))].sort();
   const studiengaenge = [...new Set(allRows.map(r => r[COL_STUDIENGANG]).filter(Boolean))].sort();
-
-  // Alter in Gruppen
-  const alterGruppen = ['18–22', '23–26', '27–30'];
+  const alterGruppen = ['18–22', '23–26', '27–30', '31+'];
 
   renderFilterBtns('filter-geschlecht', geschlechter, 'geschlecht');
   renderFilterBtns('filter-studiengang', studiengaenge, 'studiengang');
@@ -1231,93 +1244,106 @@ function renderFilterBtns(containerId, values, type) {
   if (!el) return;
   el.innerHTML = values.map(v => `
     <button class="race-btn" data-filter="${type}" data-value="${v}"
-      onclick="setFilter('${type}','${v}',this)">${v}</button>
+      onclick="toggleFilter('${type}','${v}',this)">${v}</button>
   `).join('');
 }
 
-function setFilter(type, value, btn) {
-  document.querySelectorAll('.race-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  activeFilter = { type, value };
-
-  const filtered = filterRows(allRows, type, value);
-  renderChart(filtered);
+function toggleFilter(type, value, btn) {
+  if (activeFilters[type] === value) {
+    // Nochmal klicken = deaktivieren
+    activeFilters[type] = null;
+    btn.classList.remove('active');
+  } else {
+    // Anderen Button in der Gruppe deaktivieren
+    document.querySelectorAll(`.race-btn[data-filter="${type}"]`)
+      .forEach(b => b.classList.remove('active'));
+    activeFilters[type] = value;
+    btn.classList.add('active');
+  }
+  renderChart(getFilteredRows());
 }
 
-function filterRows(rows, type, value) {
-  if (type === 'all') return rows;
-  return rows.filter(r => {
-    if (type === 'geschlecht')  return r[COL_GESCHLECHT] === value;
-    if (type === 'studiengang') return r[COL_STUDIENGANG] === value;
-    if (type === 'alter') {
+function getFilteredRows() {
+  return allRows.filter(r => {
+    // Geschlecht
+    if (activeFilters.geschlecht && r[COL_GESCHLECHT] !== activeFilters.geschlecht) return false;
+    // Studiengang
+    if (activeFilters.studiengang && r[COL_STUDIENGANG] !== activeFilters.studiengang) return false;
+    // Alter
+    if (activeFilters.alter) {
       const age = parseInt(r[COL_ALTER]);
       if (isNaN(age)) return false;
-      if (value === '18–22') return age >= 18 && age <= 22;
-      if (value === '23–26') return age >= 23 && age <= 26;
-      if (value === '27–30') return age >= 27 && age <= 30;
+      if (activeFilters.alter === '18–22' && !(age >= 18 && age <= 22)) return false;
+      if (activeFilters.alter === '23–26' && !(age >= 23 && age <= 26)) return false;
+      if (activeFilters.alter === '27–30' && !(age >= 27 && age <= 30)) return false;
+      if (activeFilters.alter === '31+'   && !(age >= 31)) return false;
     }
     return true;
   });
-}
-function renderChart(rows) {
-  const n = rows.length;
-  const nEl = document.getElementById('race-n');
-  const barsEl = document.getElementById('race-bars');
-  const absEl = document.getElementById('race-absolute');
-  if (!nEl || !barsEl || !absEl) return;
+}function renderChart(rows) {
+   const n = rows.length;
+   const nEl    = document.getElementById('race-n');
+   const barsEl = document.getElementById('race-bars');
+   const absEl  = document.getElementById('race-absolute');
+   if (!nEl || !barsEl || !absEl) return;
 
-  nEl.textContent = `n = ${n}`;
+   nEl.textContent = `n = ${n}`;
 
-  const counts = VERANTWORTUNG_COLS.map((col, i) => {
-    const count = rows.filter(r => {
-      const val = r[COL_V_START + i];
-      return val && val.trim() !== '' && val.trim() !== '0';
-    }).length;
+   const counts = VERANTWORTUNG_COLS.map((col, i) => {
+     const validRows = rows.filter(r => {
+       const val = parseInt(r[COL_V_START + i]);
+       return !isNaN(val) && val >= 1 && val <= 5;
+     });
+     const sum = validRows.reduce((acc, r) => acc + parseInt(r[COL_V_START + i]), 0);
+     const avg = validRows.length > 0 ? (sum / validRows.length) : 5;
+     return {
+       key:   col.key,
+       label: col.label,
+       count: validRows.length,
+       avg:   Math.round(avg * 10) / 10
+     };
+   });
 
-    return {
-      key: col.key,
-      label: col.label,
-      count,
-      pct: n > 0 ? Math.round((count / n) * 100) : 0
-    };
-  });
+   counts.sort((a, b) => a.avg - b.avg);
+   const maxAvg = 5;
 
-  counts.sort((a, b) => b.pct - a.pct);
+   const existing = {};
+   barsEl.querySelectorAll('.race-row[data-key]').forEach(el => {
+     existing[el.dataset.key] = el;
+   });
 
-  console.table(counts.map(x => ({
-    key: x.key,
-    label: x.label,
-    count: x.count,
-    pct: x.pct
-  })));
+   counts.forEach((item, rank) => {
+     let row = existing[item.key];
 
-  barsEl.innerHTML = '';
+     if (!row) {
+       row = document.createElement('div');
+       row.className = 'race-row';
+       row.dataset.key = item.key;
+       row.innerHTML = `
+         <div class="race-rank">${rank + 1}</div>
+         <div class="race-label">${item.label}</div>
+         <div class="race-track">
+           <div class="race-fill" style="width:0%"><span></span></div>
+         </div>
+       `;
+       barsEl.appendChild(row);
+     }
 
-  counts.forEach((item, rank) => {
-    const row = document.createElement('div');
-    row.className = 'race-row';
-    row.innerHTML = `
-      <div class="race-rank">${rank + 1}</div>
-      <div class="race-label">${item.label}</div>
-      <div class="race-track">
-        <div class="race-fill" style="width:0%">
-          <span>${item.pct}%</span>
-        </div>
-      </div>
-    `;
-    barsEl.appendChild(row);
+     barsEl.appendChild(row);
+     row.querySelector('.race-rank').textContent = rank + 1;
+     row.querySelector('.race-rank').style.color = rank === 0 ? 'var(--accent)' : 'var(--ink-faint)';
 
-    const fill = row.querySelector('.race-fill');
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        fill.style.width = `${item.pct}%`;
-      });
-    });
-  });
+     const fill = row.querySelector('.race-fill');
+     requestAnimationFrame(() => requestAnimationFrame(() => {
+       fill.style.width = `${((maxAvg - item.avg) / (maxAvg - 1)) * 100}%`;
+       fill.querySelector('span').textContent = `Ø ${item.avg}`;
+     }));
+   });
 
-  absEl.innerHTML = counts.map(item => `
-    <div class="race-absolute-item">
-      <strong>${item.count}</strong> ${item.label}
-    </div>
-  `).join('');
-}
+   absEl.innerHTML = counts.map(item => `
+     <div class="race-absolute-item">
+       <strong>Ø ${item.avg}</strong> ${item.label}
+       <span style="color:var(--ink-faint);font-size:11px">(n=${item.count})</span>
+     </div>
+   `).join('');
+ }
