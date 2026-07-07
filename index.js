@@ -1288,7 +1288,7 @@ function getFilteredRows() {
     }
     return true;
   });
-}f
+}
 
 function renderChart(rows) {
   const n = rows.length;
@@ -1370,7 +1370,6 @@ counts.forEach((item, rank) => {
     }, delay);
   });
 
-<<<<<<< HEAD
   // Absolute Nennungen
   const absEl = document.getElementById('race-absolute');
   absEl.innerHTML = counts.map(item =>
@@ -1379,16 +1378,17 @@ counts.forEach((item, rank) => {
     </div>`
   ).join('');
 }
-// ── HEATMAP ──
-const HM_COLS = ['Ja','Nur am Rande','Nein','Weiß nicht'];
 
-const HM_RAW = [
-  {sg:'Social Data Science',   n:40, vals:{Ja:19,'Nur am Rande':19,Nein:2, 'Weiß nicht':0}},
-  {sg:'Int. Business / BWL',   n:44, vals:{Ja:17,'Nur am Rande':22,Nein:4, 'Weiß nicht':1}},
-  {sg:'(Wirtschafts-)informatik', n:36, vals:{Ja:1, 'Nur am Rande':7, Nein:22,'Weiß nicht':6}},
-  {sg:'Elektrotechnik',        n:55, vals:{Ja:1, 'Nur am Rande':5, Nein:38,'Weiß nicht':11}},
-  {sg:'Maschinenbau',          n:68, vals:{Ja:1, 'Nur am Rande':8, Nein:55,'Weiß nicht':4}},
-];
+ // ── HEATMAP ──
+ const HM_COLS = ['Ja','Nur am Rande','Nein','Weiß nicht'];
+
+ const HM_RAW = [
+   {sg:'Social Data Science',   n:40, vals:{Ja:19,'Nur am Rande':19,Nein:2, 'Weiß nicht':0}},
+   {sg:'Int. Business',   n:44, vals:{Ja:17,'Nur am Rande':22,Nein:4, 'Weiß nicht':1}},
+   {sg:'Wirtschafts-/informatik', n:36, vals:{Ja:1, 'Nur am Rande':7, Nein:22,'Weiß nicht':6}},
+   {sg:'Elektrotechnik',        n:55, vals:{Ja:1, 'Nur am Rande':5, Nein:38,'Weiß nicht':11}},
+   {sg:'Maschinenbau',          n:68, vals:{Ja:1, 'Nur am Rande':8, Nein:55,'Weiß nicht':4}},
+ ];
 
 function hmPctToColor(pct) {
   const t = Math.max(0, Math.min(1, pct / 100));
@@ -1426,32 +1426,22 @@ function renderHeatmap() {
   });
 
   HM_RAW.forEach(row => {
-    const lbl = document.createElement('div');
-    lbl.className = 'h-row-label';
-    lbl.innerHTML = `${row.sg}<span>n = ${row.n}</span>`;
-    grid.appendChild(lbl);
+      const lbl = document.createElement('div');
+      lbl.className = 'h-row-label';
+      lbl.innerHTML = `${row.sg}<span>n = ${row.n}</span>`;
+      grid.appendChild(lbl);
 
-    HM_COLS.forEach(col => {
-      const count = row.vals[col] || 0;
-      const pct   = (count / row.n) * 100;
-      const cell  = document.createElement('div');
-      cell.className = 'h-cell';
-      cell.style.background = hmPctToColor(pct);
-      cell.addEventListener('mouseenter', e => showHmTT(e, row.sg, col, count, pct));
-      cell.addEventListener('mousemove', moveHmTT);
-      cell.addEventListener('mouseleave', hideHmTT);
-      grid.appendChild(cell);
+      HM_COLS.forEach(col => {
+        const count = row.vals[col] || 0;
+        const pct   = (count / row.n) * 100;
+        const cell  = document.createElement('div');
+        cell.className = 'h-cell';
+        cell.style.background = hmPctToColor(pct);
+        cell.addEventListener('mouseenter', e => showHmTT(e, row.sg, col, count, pct));
+        cell.addEventListener('mousemove', moveHmTT);
+        cell.addEventListener('mouseleave', hideHmTT);
+        grid.appendChild(cell);
+      });
     });
-  });
-}
-
-renderHeatmap();
-=======
-   absEl.innerHTML = counts.map(item => `
-     <div class="race-absolute-item">
-       <strong>Ø ${item.avg}</strong> ${item.label}
-       <span style="color:var(--ink-faint);font-size:11px">(n=${item.count})</span>
-     </div>
-   `).join('');
- }
->>>>>>> a373d60539b9c623447667db06fd60f655205523
+  }
+  renderHeatmap();

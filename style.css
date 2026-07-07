@@ -3909,6 +3909,7 @@ HEAD
   padding-top: 12px;
   border-top: 1px solid var(--rule);
 }
+
 .legend-label, .legend-label-right {
   font-size: 11px;
   color: var(--ink-faint);
@@ -3920,6 +3921,7 @@ HEAD
   border-radius: 4px;
   background: linear-gradient(to right, var(--cream), var(--accent));
 }
+
 .hm-tooltip {
   position: fixed;
   background: var(--ink);
