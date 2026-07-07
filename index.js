@@ -1371,7 +1371,7 @@ counts.forEach((item, rank) => {
   });
 
   // Absolute Nennungen
-  const absEl = document.getElementById('race-absolute');
+
   absEl.innerHTML = counts.map(item =>
     `<div class="race-absolute-item">
       <strong>${item.count}</strong> ${item.label}
