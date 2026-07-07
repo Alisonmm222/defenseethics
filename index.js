@@ -1333,40 +1333,30 @@ const HM_COLS = ['Ja','Nur am Rande','Nein','Weiß nicht'];
 const HM_RAW = [
   {sg:'Social Data Science',   n:40, vals:{Ja:19,'Nur am Rande':19,Nein:2, 'Weiß nicht':0}},
   {sg:'Int. Business / BWL',   n:44, vals:{Ja:17,'Nur am Rande':22,Nein:4, 'Weiß nicht':1}},
-  {sg:'Wirtschaftsinformatik', n:23, vals:{Ja:0, 'Nur am Rande':6, Nein:13,'Weiß nicht':4}},
-  {sg:'Informatik',            n:13, vals:{Ja:1, 'Nur am Rande':1, Nein:9, 'Weiß nicht':2}},
+  {sg:'(Wirtschafts-)informatik', n:36, vals:{Ja:1, 'Nur am Rande':7, Nein:22,'Weiß nicht':6}},
   {sg:'Elektrotechnik',        n:55, vals:{Ja:1, 'Nur am Rande':5, Nein:38,'Weiß nicht':11}},
   {sg:'Maschinenbau',          n:68, vals:{Ja:1, 'Nur am Rande':8, Nein:55,'Weiß nicht':4}},
 ];
 
 function hmPctToColor(pct) {
-  const t = pct / 100;
-  const r = Math.round(240 + (13-240)*t);
-  const g = Math.round(235 + (107-235)*t);
-  const b = Math.round(228 + (94-228)*t);
-  return `rgb(${r},${g},${b})`;
+  const t = Math.max(0, Math.min(1, pct / 100));
+  const start = [250, 247, 242];
+  const end = [200, 68, 26];
+  const mix = start.map((v, i) => Math.round(v + (end[i] - v) * t));
+  return `rgb(${mix[0]},${mix[1]},${mix[2]})`;
 }
 
-let hmMode = 'pct';
 const hmtt = document.getElementById('hmtt');
 
 function showHmTT(e, sg, col, count, pct) {
   hmtt.innerHTML = `<strong>${sg}</strong>${col}<br>
-    Anzahl: <span style="color:#e8e4ff">${count} Studierende</span><br>
-    Anteil: <span style="color:#e8e4ff">${pct.toFixed(1)} %</span>`;
+    Anteil: <span style="color:var(--accent-light)">${pct.toFixed(1)} %</span><br>
+    Anzahl: <span style="color:var(--accent-light)">${count} Studierende</span>`;
   hmtt.classList.add('visible');
   moveHmTT(e);
 }
 function moveHmTT(e) { hmtt.style.left=(e.clientX+14)+'px'; hmtt.style.top=(e.clientY-50)+'px'; }
 function hideHmTT() { hmtt.classList.remove('visible'); }
-
-function setHeatmapMode(m, btn) {
-  hmMode = m;
-  document.querySelectorAll('#hgrid').forEach(() => {});
-  document.querySelectorAll('.toggle-row .tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderHeatmap();
-}
 
 function renderHeatmap() {
   const grid = document.getElementById('hgrid');
@@ -1395,15 +1385,6 @@ function renderHeatmap() {
       const cell  = document.createElement('div');
       cell.className = 'h-cell';
       cell.style.background = hmPctToColor(pct);
-
-      const valEl = document.createElement('div');
-      valEl.className = 'h-cell-val';
-      valEl.style.color = pct > 40 ? 'white' : 'var(--ink)';
-      valEl.textContent = hmMode === 'pct'
-        ? (pct > 0 ? pct.toFixed(0) + ' %' : '—')
-        : (count > 0 ? count : '—');
-
-      cell.appendChild(valEl);
       cell.addEventListener('mouseenter', e => showHmTT(e, row.sg, col, count, pct));
       cell.addEventListener('mousemove', moveHmTT);
       cell.addEventListener('mouseleave', hideHmTT);
