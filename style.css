@@ -769,6 +769,12 @@ h3.sub-heading {
   text-align: center;
 }
 
+.chart-divider {
+  border-top: 1px solid var(--rule);
+  margin: 18px 0;
+  opacity: 0.36;
+}
+
 .tab-row {
   display: flex;
   gap: 6px;
