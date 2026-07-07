@@ -1445,3 +1445,299 @@ function renderHeatmap() {
     });
   }
   renderHeatmap();
+
+
+
+
+// ── DOT PLOT: Dual-Use Frage ──
+const DOTPLOT_GROUPS = [
+  { key: 'gesamt',       label: 'Gesamt',          mean: 3.42, color: '#1a1814',  shape: 'circle', },
+  { key: 'frauen',       label: 'Frauen',           mean: 3.18, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maenner',      label: 'Männer',           mean: 3.67, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maschinenbau', label: 'Maschinenbau',     mean: 3.55, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
+  { key: 'elektro',      label: 'Elektrotechnik',   mean: 3.30, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
+  { key: 'informatik',   label: 'Informatik',       mean: 3.70, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
+  { key: 'bwl',          label: 'BWL / Wirtschaft', mean: 2.90, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
+];
+
+const DOTPLOT_MIN = 1, DOTPLOT_MAX = 5;
+let dotplotActiveGroup = null; // 'geschlecht' | 'studiengang' | null
+
+const dotplotFiltersEl  = document.getElementById('dotplotFilters');
+const dotplotAxisEl     = document.getElementById('dotplotAxis');
+const dotplotGesamtLine = document.getElementById('dotplotGesamtLine');
+const dotplotTooltip    = document.getElementById('dotplotTooltip');
+// Rows-Element nicht mehr nötig – alles auf einer Linie
+
+if (dotplotFiltersEl && dotplotAxisEl) {
+
+  function dotplotPct(val) {
+    return ((val - DOTPLOT_MIN) / (DOTPLOT_MAX - DOTPLOT_MIN)) * 100;
+  }
+
+  function dotplotShapeInner(shape, color) {
+    if (shape === 'circle')   return `<circle cx="7" cy="7" r="6" fill="${color}"/>`;
+  }
+
+  function dotplotShapeSVG(shape, color) {
+    return `<svg width="14" height="14" viewBox="0 0 14 14">${dotplotShapeInner(shape, color)}</svg>`;
+  }
+
+  // Tooltip – position relativ zum Viewport
+document.addEventListener('mousemove', e => {
+  if (!dotplotTooltip) return;
+  dotplotTooltip.style.left = (e.clientX + 2) + 'px';
+  dotplotTooltip.style.top  = (e.clientY + 2) + 'px';
+});
+
+  // Filter-Buttons: Radio-Logik (nur eine Gruppe aktiv)
+  const filterGroups = [
+    { key: 'geschlecht',  label: 'Nach Geschlecht' },
+    { key: 'studiengang', label: 'Nach Studiengang' },
+  ];
+
+  const btnRow = document.createElement('div');
+  btnRow.className = 'dotplot-filter-group';
+
+  filterGroups.forEach(fg => {
+    const btn = document.createElement('button');
+    btn.className = 'dotplot-toggle';
+    btn.dataset.group = fg.key;
+    btn.textContent = fg.label;
+    btn.addEventListener('click', () => {
+      if (dotplotActiveGroup === fg.key) {
+        // nochmal klicken = ausschalten
+        dotplotActiveGroup = null;
+        btn.classList.remove('active');
+      } else {
+        dotplotActiveGroup = fg.key;
+        btnRow.querySelectorAll('.dotplot-toggle').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      dotplotRender();
+    });
+    btnRow.appendChild(btn);
+  });
+  dotplotFiltersEl.appendChild(btnRow);
+
+  // Gesamt-Punkt (immer sichtbar)
+  const gesamtG  = DOTPLOT_GROUPS.find(g => g.key === 'gesamt');
+  const gesamtPt = document.createElement('div');
+  gesamtPt.className = 'dotplot-point';
+  gesamtPt.style.cssText = `left:${dotplotPct(gesamtG.mean)}%; top:1px; opacity:1;`;
+  gesamtPt.innerHTML = dotplotShapeSVG('circle', 'var(--ink)');
+  gesamtPt.addEventListener('mouseenter', () => {
+    dotplotTooltip.textContent = `Gesamt: Ø ${gesamtG.mean.toFixed(2)}`;
+    dotplotTooltip.classList.add('show');
+  });
+  gesamtPt.addEventListener('mouseleave', () => dotplotTooltip.classList.remove('show'));
+  dotplotAxisEl.appendChild(gesamtPt);
+
+  if (dotplotGesamtLine) dotplotGesamtLine.style.left = dotplotPct(gesamtG.mean) + '%';
+
+  // Punkte für alle anderen Gruppen – alle auf der Achse, ein/ausblendbar
+  const dotplotPointEls = {};
+  DOTPLOT_GROUPS.filter(g => g.key !== 'gesamt').forEach(g => {
+    const pt = document.createElement('div');
+    pt.className = 'dotplot-point';
+    pt.style.cssText = `left:${dotplotPct(g.mean)}%; top:1px; opacity:0; pointer-events:none;`;
+    pt.innerHTML = dotplotShapeSVG(g.shape, g.color);
+    pt.addEventListener('mouseenter', () => {
+      dotplotTooltip.textContent = `${g.label}: Ø ${g.mean.toFixed(2)}`;
+      dotplotTooltip.classList.add('show');
+    });
+    pt.addEventListener('mouseleave', () => dotplotTooltip.classList.remove('show'));
+    dotplotAxisEl.appendChild(pt);
+    dotplotPointEls[g.key] = pt;
+  });
+
+  // Legende unter der Achse
+  const legendEl = document.createElement('div');
+  legendEl.id = 'dotplotLegend';
+  legendEl.style.cssText = 'display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; min-height:20px;';
+  dotplotAxisEl.parentElement.insertAdjacentElement('afterend', legendEl);
+
+  function dotplotRender() {
+    legendEl.innerHTML = '';
+
+    // Gesamt immer in Legende
+    legendEl.innerHTML += `<span style="font-size:12px;color:var(--ink-light);display:flex;align-items:center;gap:5px;">
+      ${dotplotShapeSVG('circle','var(--ink)')} Gesamt (Ø ${gesamtG.mean.toFixed(2)})
+    </span>`;
+
+    DOTPLOT_GROUPS.filter(g => g.key !== 'gesamt').forEach(g => {
+      const on = dotplotActiveGroup === g.group;
+      const pt = dotplotPointEls[g.key];
+      pt.style.opacity       = on ? '1' : '0';
+      pt.style.pointerEvents = on ? 'auto' : 'none';
+
+      if (on) {
+        legendEl.innerHTML += `<span style="font-size:12px;color:var(--ink-light);display:flex;align-items:center;gap:5px;">
+          ${dotplotShapeSVG(g.shape, g.color)} ${g.label} (Ø ${g.mean.toFixed(2)})
+        </span>`;
+      }
+    });
+  }
+
+  dotplotRender();
+
+  // Geschlecht vorausgewählt
+dotplotActiveGroup = 'geschlecht';
+btnRow.querySelector('[data-group="geschlecht"]').classList.add('active');
+dotplotRender();
+
+  // Scroll-fade für die Achse
+  const dotplotObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        dotplotAxisEl.style.transition = 'opacity 0.6s ease';
+        dotplotAxisEl.style.opacity = '1';
+        dotplotObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  dotplotAxisEl.style.opacity = '0';
+  dotplotObserver.observe(dotplotAxisEl);
+}
+
+
+// ── DOT PLOT 2: Einstellung hat sich verändert ──
+const DOTPLOT2_GROUPS = [
+  { key: 'gesamt',        label: 'Gesamt',          mean: 3.21, color: '#1a1814',  shape: 'circle' },
+  { key: 'frauen2',       label: 'Frauen',           mean: 3.45, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maenner2',      label: 'Männer',           mean: 3.05, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maschinenbau2', label: 'Maschinenbau',     mean: 3.10, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
+  { key: 'elektro2',      label: 'Elektrotechnik',   mean: 3.30, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
+  { key: 'informatik2',   label: 'Informatik',       mean: 3.55, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
+  { key: 'bwl2',          label: 'BWL / Wirtschaft', mean: 2.80, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
+];
+
+// TODO: echte Mittelwerte oben eintragen
+
+const DOTPLOT2_MIN = 1, DOTPLOT2_MAX = 5;
+let dotplot2ActiveGroup = 'geschlecht';
+
+const dotplot2FiltersEl   = document.getElementById('dotplot2Filters');
+const dotplot2AxisEl      = document.getElementById('dotplot2Axis');
+const dotplot2GesamtLine  = document.getElementById('dotplot2GesamtLine');
+const dotplot2Tooltip     = document.getElementById('dotplot2Tooltip');
+
+if (dotplot2FiltersEl && dotplot2AxisEl) {
+
+  function dotplot2Pct(val) {
+    return ((val - DOTPLOT2_MIN) / (DOTPLOT2_MAX - DOTPLOT2_MIN)) * 100;
+  }
+
+  function dotplot2ShapeSVG(shape, color) {
+    return `<svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="${color}"/></svg>`;
+  }
+
+  // Tooltip
+  document.addEventListener('mousemove', e => {
+    if (!dotplot2Tooltip) return;
+    dotplot2Tooltip.style.left = (e.clientX + 12) + 'px';
+    dotplot2Tooltip.style.top  = (e.clientY + 16) + 'px';
+  });
+
+  // Filter-Buttons
+  const filter2Groups = [
+    { key: 'geschlecht',  label: 'Nach Geschlecht' },
+    { key: 'studiengang', label: 'Nach Studiengang' },
+  ];
+
+  const btn2Row = document.createElement('div');
+  btn2Row.className = 'dotplot-filter-group';
+
+  filter2Groups.forEach(fg => {
+    const btn = document.createElement('button');
+    btn.className = 'dotplot-toggle' + (fg.key === 'geschlecht' ? ' active' : '');
+    btn.dataset.group = fg.key;
+    btn.textContent = fg.label;
+    btn.addEventListener('click', () => {
+      if (dotplot2ActiveGroup === fg.key) {
+        dotplot2ActiveGroup = null;
+        btn.classList.remove('active');
+      } else {
+        dotplot2ActiveGroup = fg.key;
+        btn2Row.querySelectorAll('.dotplot-toggle').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      dotplot2Render();
+    });
+    btn2Row.appendChild(btn);
+  });
+  dotplot2FiltersEl.appendChild(btn2Row);
+
+  // Gesamt-Punkt
+  const gesamt2G  = DOTPLOT2_GROUPS.find(g => g.key === 'gesamt');
+  const gesamt2Pt = document.createElement('div');
+  gesamt2Pt.className = 'dotplot-point';
+  gesamt2Pt.style.cssText = `left:${dotplot2Pct(gesamt2G.mean)}%; top:1px; opacity:1;`;
+  gesamt2Pt.innerHTML = dotplot2ShapeSVG('circle', '#1a1814');
+  gesamt2Pt.addEventListener('mouseenter', () => {
+    dotplot2Tooltip.textContent = `Gesamt: Ø ${gesamt2G.mean.toFixed(2)}`;
+    dotplot2Tooltip.classList.add('show');
+  });
+  gesamt2Pt.addEventListener('mouseleave', () => dotplot2Tooltip.classList.remove('show'));
+  dotplot2AxisEl.appendChild(gesamt2Pt);
+
+  if (dotplot2GesamtLine) dotplot2GesamtLine.style.left = dotplot2Pct(gesamt2G.mean) + '%';
+
+  // Alle anderen Punkte
+  const dotplot2PointEls = {};
+  DOTPLOT2_GROUPS.filter(g => g.key !== 'gesamt').forEach(g => {
+    const pt = document.createElement('div');
+    pt.className = 'dotplot-point';
+    pt.style.cssText = `left:${dotplot2Pct(g.mean)}%; top:1px; opacity:0; pointer-events:none;`;
+    pt.innerHTML = dotplot2ShapeSVG('circle', g.color);
+    pt.addEventListener('mouseenter', () => {
+      dotplot2Tooltip.textContent = `${g.label}: Ø ${g.mean.toFixed(2)}`;
+      dotplot2Tooltip.classList.add('show');
+    });
+    pt.addEventListener('mouseleave', () => dotplot2Tooltip.classList.remove('show'));
+    dotplot2AxisEl.appendChild(pt);
+    dotplot2PointEls[g.key] = pt;
+  });
+
+  // Legende
+  const legend2El = document.createElement('div');
+  legend2El.id = 'dotplot2Legend';
+  legend2El.style.cssText = 'display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; min-height:20px;';
+  dotplot2AxisEl.parentElement.insertAdjacentElement('afterend', legend2El);
+
+  function dotplot2Render() {
+    legend2El.innerHTML = '';
+
+    legend2El.innerHTML += `<span style="font-size:12px;color:var(--ink-light);display:flex;align-items:center;gap:5px;">
+      ${dotplot2ShapeSVG('circle','#1a1814')} Gesamt (Ø ${gesamt2G.mean.toFixed(2)})
+    </span>`;
+
+    DOTPLOT2_GROUPS.filter(g => g.key !== 'gesamt').forEach(g => {
+      const on = dotplot2ActiveGroup === g.group;
+      const pt = dotplot2PointEls[g.key];
+      pt.style.opacity       = on ? '1' : '0';
+      pt.style.pointerEvents = on ? 'auto' : 'none';
+
+      if (on) {
+        legend2El.innerHTML += `<span style="font-size:12px;color:var(--ink-light);display:flex;align-items:center;gap:5px;">
+          ${dotplot2ShapeSVG('circle', g.color)} ${g.label} (Ø ${g.mean.toFixed(2)})
+        </span>`;
+      }
+    });
+  }
+
+  dotplot2Render();
+
+  // Scroll-fade
+  const dotplot2Observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        dotplot2AxisEl.style.transition = 'opacity 0.6s ease';
+        dotplot2AxisEl.style.opacity = '1';
+        dotplot2Observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  dotplot2AxisEl.style.opacity = '0';
+  dotplot2Observer.observe(dotplot2AxisEl);
+}
