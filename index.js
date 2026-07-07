@@ -1288,7 +1288,7 @@ function getFilteredRows() {
     }
     return true;
   });
-}f
+}
 
 function renderChart(rows) {
   const n = rows.length;
@@ -1377,3 +1377,69 @@ counts.forEach((item, rank) => {
      </div>
    `).join('');
  }
+ // ── HEATMAP ──
+ const HM_COLS = ['Ja','Nur am Rande','Nein','Weiß nicht'];
+
+ const HM_RAW = [
+   {sg:'Social Data Science',   n:40, vals:{Ja:19,'Nur am Rande':19,Nein:2, 'Weiß nicht':0}},
+   {sg:'Int. Business',   n:44, vals:{Ja:17,'Nur am Rande':22,Nein:4, 'Weiß nicht':1}},
+   {sg:'Wirtschafts-/informatik', n:36, vals:{Ja:1, 'Nur am Rande':7, Nein:22,'Weiß nicht':6}},
+   {sg:'Elektrotechnik',        n:55, vals:{Ja:1, 'Nur am Rande':5, Nein:38,'Weiß nicht':11}},
+   {sg:'Maschinenbau',          n:68, vals:{Ja:1, 'Nur am Rande':8, Nein:55,'Weiß nicht':4}},
+ ];
+
+function hmPctToColor(pct) {
+  const t = Math.max(0, Math.min(1, pct / 100));
+  const start = [250, 247, 242];
+  const end = [200, 68, 26];
+  const mix = start.map((v, i) => Math.round(v + (end[i] - v) * t));
+  return `rgb(${mix[0]},${mix[1]},${mix[2]})`;
+}
+
+const hmtt = document.getElementById('hmtt');
+
+function showHmTT(e, sg, col, count, pct) {
+  hmtt.innerHTML = `<strong>${sg}</strong>${col}<br>
+    Anteil: <span style="color:var(--accent-light)">${pct.toFixed(1)} %</span><br>
+    Anzahl: <span style="color:var(--accent-light)">${count} Studierende</span>`;
+  hmtt.classList.add('visible');
+  moveHmTT(e);
+}
+function moveHmTT(e) { hmtt.style.left=(e.clientX+14)+'px'; hmtt.style.top=(e.clientY-50)+'px'; }
+function hideHmTT() { hmtt.classList.remove('visible'); }
+
+function renderHeatmap() {
+  const grid = document.getElementById('hgrid');
+  grid.innerHTML = '';
+
+  const empty = document.createElement('div');
+  empty.className = 'h-col-head';
+  grid.appendChild(empty);
+
+  HM_COLS.forEach(col => {
+    const h = document.createElement('div');
+    h.className = 'h-col-head';
+    h.textContent = col;
+    grid.appendChild(h);
+  });
+
+  HM_RAW.forEach(row => {
+      const lbl = document.createElement('div');
+      lbl.className = 'h-row-label';
+      lbl.innerHTML = `${row.sg}<span>n = ${row.n}</span>`;
+      grid.appendChild(lbl);
+
+      HM_COLS.forEach(col => {
+        const count = row.vals[col] || 0;
+        const pct   = (count / row.n) * 100;
+        const cell  = document.createElement('div');
+        cell.className = 'h-cell';
+        cell.style.background = hmPctToColor(pct);
+        cell.addEventListener('mouseenter', e => showHmTT(e, row.sg, col, count, pct));
+        cell.addEventListener('mousemove', moveHmTT);
+        cell.addEventListener('mouseleave', hideHmTT);
+        grid.appendChild(cell);
+      });
+    });
+  }
+  renderHeatmap();

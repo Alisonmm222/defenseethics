@@ -22,6 +22,7 @@
     </div>
 </nav>
 
+
 <!-- HERO -->
 <header class="hero">
     <div class="hero-eyebrow">Berufsethik · Verteidigung · Gesellschaft · 2026</div>
@@ -62,7 +63,7 @@
     </div>
 </header>
 
-<!-- ARTICLE -->
+<!--   ARTICLE -->
 <main class="article">
 
     <div class="prose fade-in">
@@ -458,10 +459,14 @@
             als am wenigsten verantwortlich wahrgenommen.
         </p>
     </div>
+    <div class="chart-block fade-in">
+        <div class="chart-header">
+            <h4>Wer trägt die Verantwortung?</h4>
+            <p class="source">Quelle: Eigene Umfrage (2026), 243 Teilnehmende</p>
+        </div>
 
         <div class="chart-body fade-in">
             <div class="race-block fade-in">
-
                 <!-- Filter -->
                 <div class="race-filters">
                     <div class="race-filter-group">
@@ -494,35 +499,42 @@
 
             </div>
         </div>
-    <p class="source">Quelle: Eigene Umfrage (2026), 243 Teilnehmende</p>
     </div>
-
 
     <div class="prose fade-in">
         <p>   <h2 class="section-title">Drei Fragen, die wir gestellt haben...</h2>
         </p>
     </div>
 
-    <div class="rq-list fade-in">
-        <div class="rq-item" onclick="this.classList.toggle('open')">
-            <div class="rq-body">
-                <p class="rq-q">Wie beeinflusst die Berufsethik die Berufswahl von Ingenieur:innen?</p>
-                <p class="rq-note">→ Visualisiert als interaktive Rangfolge: Welche ethischen Kriterien sind beim Berufseinstieg ausschlaggebend?</p>
-            </div>
-        </div>
-        <div class="rq-item" onclick="this.classList.toggle('open')">
-            <div class="rq-body">
-                <p class="rq-q">Wie stehen Ingenieur:innen verschiedener Fachrichtungen dem Verteidigungsbereich gegenüber?</p>
-                <p class="rq-note">→ Heatmap nach Fachrichtung (Maschinenbau, Elektrotechnik, Informatik, Bauingenieurwesen, Luft- und Raumfahrt).</p>
-            </div>
+                <div class="chart-block fade-in">
+                    <div class="chart-header">
+                        <h4>Wird Berufsethik im Studium thematisiert?</h4>
+                        <p class="source">Quelle: Eigene Umfrage (2026), 243 Teilnehmende. Farbintensität = Anteil der Studierenden</p>
+                    </div>
+
+                    <div class="chart-body">
+                        <div style="overflow-x:auto;">
+                            <div class="heatmap-grid" id="hgrid"></div>
+                        </div>
+                        <div class="legend-wrap">
+                            <span class="legend-label">0 %</span>
+                            <div class="legend-bar"></div>
+                            <span class="legend-label-right">100 %</span>
+                        </div>
+                        <p style="font-size:11px;color:var(--ink-faint);margin-top:8px;">Hover über eine Zelle für Details</p>
+                    </div>
+                </div>
+
+                <div class="hm-tooltip" id="hmtt"></div>
+
+
+    <div class="chart-block fade-in">
+        <div class="chart-header">
+            <h4>Gibt es geschlechtsspezifische Unterschiede?</h4>
+            <p>Eigene Umfrage (2026), N = 243. </p>
         </div>
 
-        <div class="rq-item" onclick="this.classList.toggle('open')">
-            <div class="rq-body">
-                <p class="rq-q">Gibt es geschlechtsspezifische Unterschiede in der ethischen Bewertung des Verteidigungsbereichs?</p>
-                <p class="rq-note">→ Dumbbell-Chart auf zentralen Einstellungsdimensionen.</p>
-            </div>
-        </div>
+        <div class="chart-body"></div>
     </div>
 
 
