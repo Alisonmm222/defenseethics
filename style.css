@@ -3518,7 +3518,7 @@ HEAD
 .dumbbell-rows {
   display: flex;
   flex-direction: column;
-  gap: 34px;
+  gap: 24px;
   padding-top: 6px;
 }
 
@@ -3537,7 +3537,7 @@ HEAD
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
   color: var(--ink-light);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .dumbbell-track {
