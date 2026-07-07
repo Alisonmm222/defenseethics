@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>So ethisch wie ein Kompass — Berufsethik für Ingenieur:innen</title>
     <meta name="description" content="Ein Forschungsprojekt der TH Nürnberg über Berufsethik von Ingenieur:innen zwischen Rüstungsboom, Fachkräftemangel und der Ethikdebatte an Hochschulen.">
@@ -444,21 +444,28 @@
         </div>
     </div>
 
-    <div class="section-fullwidth fade-in">
-        <h3 class="sub-heading">Der Ingenieur trägt die wenigste Verantwortung und die Politik die meiste?</h3>
-        <p>
-            Die Studierenden wurden gebeten, fünf Akteure nach ihrer persönlichen moralischen
-            Mitverantwortung für die Anwendung technischer Arbeit zu sortieren, von 1 (höchste
-            Verantwortung) bis 5 (geringste Verantwortung).
-        </p>
-        <p>
-            Das Ergebnis ist eindeutig:
-            Der <strong>Gesetzgeber und die Politik</strong> werden von den meisten Befragten
-            auf Platz 1 gesetzt. Der <strong>Ingenieur oder die Ingenieurin selbst</strong>
-            landet im Durchschnitt auf dem letzten Platz. Die eigene Berufsgruppe wird also
-            als am wenigsten verantwortlich wahrgenommen.
-        </p>
+    <div class="chart-block fade-in">
+  <div class="chart-header">
+    <h4>Wird Berufsethik im Studium thematisiert?</h4>
+    <p>TH Nürnberg · n = 243 · Farbintensität = Anteil der Studierenden</p>
+  </div>
+  <div class="chart-body">
+    <div style="overflow-x:auto;">
+      <div class="heatmap-grid" id="hgrid"></div>
     </div>
+    <div class="legend-wrap">
+      <span class="legend-label">0 %</span>
+      <div class="legend-bar"></div>
+      <span class="legend-label-right">100 %</span>
+    </div>
+    <p style="font-size:11px;color:var(--ink-faint);margin-top:8px;">Hover über eine Zelle für Details</p>
+  </div>
+</div>
+
+<div class="hm-tooltip" id="hmtt"></div>
+
+    <div class="fade-in">
+        <h3 class="sub-heading">Wer ist Verantwortlich?</h3>
     <div class="chart-block fade-in">
         <div class="chart-header">
             <h4>Wer trägt die Verantwortung?</h4>

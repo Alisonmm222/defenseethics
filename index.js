@@ -1370,13 +1370,15 @@ counts.forEach((item, rank) => {
     }, delay);
   });
 
-   absEl.innerHTML = counts.map(item => `
-     <div class="race-absolute-item">
-       <strong>Ø ${item.avg}</strong> ${item.label}
-       <span style="color:var(--ink-faint);font-size:11px">(n=${item.count})</span>
-     </div>
-   `).join('');
- }
+  // Absolute Nennungen
+  const absEl = document.getElementById('race-absolute');
+  absEl.innerHTML = counts.map(item =>
+    `<div class="race-absolute-item">
+      <strong>${item.count}</strong> ${item.label}
+    </div>`
+  ).join('');
+}
+
  // ── HEATMAP ──
  const HM_COLS = ['Ja','Nur am Rande','Nein','Weiß nicht'];
 
