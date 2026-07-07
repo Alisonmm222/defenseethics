@@ -479,7 +479,18 @@ h3.sub-heading {
   font-weight: 700;
   margin: 44px 0 16px;
   color: var(--ink);
-}    .pq-eyebrow {
+}
+
+.chart-question {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 40px 0 12px;
+  color: var(--ink);
+}    
+
+.pq-eyebrow {
   font-family: 'DM Sans', sans-serif;
   font-size: 10px;
   font-weight: 700;
