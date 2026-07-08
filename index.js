@@ -1,3 +1,18 @@
+  function safeTooltipPos(tooltip, clientX, clientY) {
+  const isMobile = window.innerWidth <= 600;
+  if (isMobile) {
+    tooltip.style.left   = '50%';
+    tooltip.style.transform = 'translateX(-50%)';
+    tooltip.style.top    = 'auto';
+    tooltip.style.bottom = '16px';
+    tooltip.style.position = 'fixed';
+  } else {
+    tooltip.style.transform = '';
+    tooltip.style.bottom = 'auto';
+    tooltip.style.left = (clientX + 14) + 'px';
+    tooltip.style.top  = (clientY - 40) + 'px';
+  }
+}
   (function () {
     function animateCounter(el, target, duration) {
       const start = performance.now();
@@ -101,17 +116,22 @@ function buildReasonBars(containerId, data, color) {
     data.forEach(item => {
         const row = document.createElement('div');
         row.className = 'gruende-row';
-        row.innerHTML = `
-            <div class="gruende-label">${item.label}</div>
-            <div class="gruende-track">
-                <div class="gruende-fill" style="width:0%; background:${color}" data-target-width="${item.pct}">
-                    <span>${item.pct}%</span>
-                </div>
-            </div>
-        `;
+   const isNarrow = item.pct < 50;
+row.innerHTML = `
+    <div class="gruende-label">${item.label}</div>
+    <div class="gruende-track" style="overflow:visible; position:relative;">
+        <div class="gruende-fill" style="width:0%; background:${color}; overflow:visible; position:relative;" data-target-width="${item.pct}">
+            ${!isNarrow
+              ? `<span style="padding-right:8px;color:rgba(255,255,255,0.85);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;">${item.pct}%</span>`
+              : `<span style="position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);color:${color};font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;white-space:nowrap;">${item.pct}%</span>`
+            }
+        </div>
+    </div>
+`; 
         container.appendChild(row);
     });
 }
+
 
 buildReasonBars('bars-ja',   gruendeJa,   colorJa);
 buildReasonBars('bars-nein', gruendeNein, colorNein);
@@ -917,12 +937,27 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
 
 function positionTooltip(e) {
   const rect = mapBlock.getBoundingClientRect();
+  const ttW = 230;
+  const ttH = tooltip.offsetHeight || 80;
+  
   let x = e.clientX - rect.left + 14;
   let y = e.clientY - rect.top - 10;
-  if (x + 230 > rect.width) x -= 240;
+
+  // rechter Rand
+  if (x + ttW > rect.width) x = rect.width - ttW - 8;
+  // linker Rand
+  if (x < 8) x = 8;
+  // unterer Rand
+  if (y + ttH > rect.height) y = rect.height - ttH - 8;
+  // oberer Rand
+  if (y < 8) y = 8;
+
   tooltip.style.left = x + 'px';
   tooltip.style.top  = y + 'px';
 }
+window.addEventListener('scroll', () => {
+  if (tooltip) tooltip.classList.remove('visible');
+}, { passive: true });
    // ── UMFRAGE DIAGRAMM ──
 
 const umfrageData = [
@@ -1008,13 +1043,17 @@ const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
     const row = document.createElement('div');
     row.className = 'bar-row';
     let segments = '';
-    fields.forEach((f, i) => {
-      const pct = d[f];
-      if (pct === 0) return;
-      segments += `<div style="width:0%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 900ms cubic-bezier(0.22, 1, 0.36, 1);" data-target-width="${pct}">
-        ${pct >= 7 ? `<span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;">${pct}%</span>` : ''}
-      </div>`;
-    });
+   fields.forEach((f, i) => {
+  const pct = d[f];
+  if (pct === 0) return;
+  const isMobile = window.innerWidth <= 600;
+  const hideOnMobile = isMobile && pct <= 10;
+  segments += `<div style="width:0%;height:100%;background:${COLORS[i]};display:flex;align-items:center;justify-content:center;transition:width 900ms cubic-bezier(0.22, 1, 0.36, 1);position:relative;overflow:visible;" data-target-width="${pct}">
+    ${!hideOnMobile && pct >= 7
+      ? `<span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:white;position:relative;z-index:1;">${pct}%</span>`
+      : ''}
+  </div>`;
+});
     row.innerHTML = `
       <div class="bar-label-text">${d.label}</div>
       <div style="flex:1;height:30px;background:#eeebe6;border-radius:4px;overflow:hidden;display:flex;">
@@ -1417,7 +1456,29 @@ function showHmTT(e, sg, col, count, pct) {
   hmtt.classList.add('visible');
   moveHmTT(e);
 }
-function moveHmTT(e) { hmtt.style.left=(e.clientX+14)+'px'; hmtt.style.top=(e.clientY-50)+'px'; }
+function moveHmTT(e) {
+  const ttW = hmtt.offsetWidth || 200;
+  const ttH = hmtt.offsetHeight || 70;
+  const margin = 8;
+
+  let x = e.clientX + 14;
+  let y = e.clientY - ttH - 10; // oberhalb des Cursors
+
+  // rechter Rand
+  if (x + ttW > window.innerWidth - margin) x = e.clientX - ttW - 14;
+  // oberer Rand — dann unterhalb
+  if (y < margin) y = e.clientY + 14;
+  // unterer Rand
+  if (y + ttH > window.innerHeight - margin) y = window.innerHeight - ttH - margin;
+
+  hmtt.style.left = x + 'px';
+  hmtt.style.top  = y + 'px';
+}
+
+// Tooltip beim Scrollen ausblenden
+window.addEventListener('scroll', () => {
+  if (hmtt) hmtt.classList.remove('visible');
+}, { passive: true });
 function hideHmTT() { hmtt.classList.remove('visible'); }
 
 function renderHeatmap() {

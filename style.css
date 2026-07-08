@@ -676,6 +676,10 @@ h3.sub-heading {
   margin-top: 10px;
   letter-spacing: 0.02em;
 }
+.gruende-track {
+  overflow: visible;
+  position: relative;
+}
 
 /* Panels */
 .gruende-panel {
