@@ -1447,8 +1447,6 @@ function renderHeatmap() {
   renderHeatmap();
 
 
-
-
 // ── DOT PLOT: Dual-Use Frage ──
 const DOTPLOT_GROUPS = [
   { key: 'gesamt',       label: 'Gesamt',          mean: 3.42, color: '#1a1814',  shape: 'circle', },
@@ -1599,7 +1597,6 @@ dotplotRender();
   dotplotAxisEl.style.opacity = '0';
   dotplotObserver.observe(dotplotAxisEl);
 }
-
 
 // ── DOT PLOT 2: Einstellung hat sich verändert ──
 const DOTPLOT2_GROUPS = [
