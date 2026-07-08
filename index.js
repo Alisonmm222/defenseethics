@@ -1468,7 +1468,14 @@ let dotplotActiveGroup = null; // 'geschlecht' | 'studiengang' | null
 const dotplotFiltersEl  = document.getElementById('dotplotFilters');
 const dotplotAxisEl     = document.getElementById('dotplotAxis');
 const dotplotGesamtLine = document.getElementById('dotplotGesamtLine');
-const dotplotTooltip    = document.getElementById('dotplotTooltip');
+let dotplotTooltip    = document.getElementById('dotplotTooltip');
+
+// Verschiebe Tooltip zu body, um overflow:hidden Problem zu beheben
+if (dotplotTooltip) {
+  dotplotTooltip = dotplotTooltip.cloneNode(true);
+  document.body.appendChild(dotplotTooltip);
+}
+
 // Rows-Element nicht mehr nötig – alles auf einer Linie
 
 if (dotplotFiltersEl && dotplotAxisEl) {
@@ -1621,7 +1628,13 @@ let dotplot2ActiveGroup = 'geschlecht';
 const dotplot2FiltersEl   = document.getElementById('dotplot2Filters');
 const dotplot2AxisEl      = document.getElementById('dotplot2Axis');
 const dotplot2GesamtLine  = document.getElementById('dotplot2GesamtLine');
-const dotplot2Tooltip     = document.getElementById('dotplot2Tooltip');
+let dotplot2Tooltip     = document.getElementById('dotplot2Tooltip');
+
+// Verschiebe Tooltip zu body, um overflow:hidden Problem zu beheben
+if (dotplot2Tooltip) {
+  dotplot2Tooltip = dotplot2Tooltip.cloneNode(true);
+  document.body.appendChild(dotplot2Tooltip);
+}
 
 if (dotplot2FiltersEl && dotplot2AxisEl) {
 
