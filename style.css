@@ -370,6 +370,27 @@ main.article {
   color: var(--ink-faint);
   text-align: center;
 }
+@media (max-width: 768px) {
+
+  .priority-bar-track{
+    overflow: visible;
+  }
+
+  .priority-bar-fill{
+    position: relative;
+  }
+
+  .priority-bar-fill span.outside{
+    position: absolute;
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    color: inherit;
+    white-space: nowrap;
+    font-weight: 700;
+  }
+
+}
 
 /* ── HERO ILLUSTRATION ── */
 .hero-illo {

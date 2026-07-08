@@ -699,12 +699,18 @@ function buildRows(view, instant = false) {
           <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
             <div class="priority-bar-fill"
               style="width:${instant ? item.de : 0}%;background:${deColor};"
-              data-target-width="${item.de}"><span>${item.de}%</span></div>
+              data-target-width="${item.de}"><span class="${window.innerWidth <= 768 && item.de < 50 ? 'outside' : ''}"
+      style="color:${window.innerWidth <= 768 && item.de < 50 ? deColor : 'white'}">
+  ${item.de}%
+</span></div>
           </div>
           <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
             <div class="priority-bar-fill"
               style="width:${instant ? item.usa : 0}%;background:${usaColor};"
-              data-target-width="${item.usa}"><span>${item.usa}%</span></div>
+              data-target-width="${item.usa}"><span class="${window.innerWidth <= 768 && item.usa < 50 ? 'outside' : ''}"
+      style="color:${window.innerWidth <= 768 && item.usa < 50 ? usaColor : 'white'}">
+  ${item.usa}%
+</span></div>
           </div>
         </div>
       </div>
