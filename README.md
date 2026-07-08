@@ -1,8 +1,11 @@
 # Defense Ethik
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 **Authors:** Nico Laubner, Alison Moldovan-Mauer, Lea Nettersheim, Veronika Ni
 =======
+=======
+>>>>>>> d913d7a5868e848260ea3a586bf31fbae6c72c2b
 Eine statische Projektseite zur Berufsethik von Ingenieur:innen in Deutschland. Das Projekt verknüpft visuelles Storytelling, interaktive Datenvisualisierungen und Forschungsergebnisse zum Thema Verteidigung, Hochschule und ethische Verantwortung.
 
 ## Projektbeschreibung
@@ -18,6 +21,9 @@ Dieses Projekt dokumentiert und visualisiert:
 Die Seite ist als responsive, statische HTML/CSS/JavaScript-Anwendung umgesetzt.
 
 ## Projektstruktur
+<<<<<<< HEAD
+>>>>>>> d913d7a5868e848260ea3a586bf31fbae6c72c2b
+=======
 >>>>>>> d913d7a5868e848260ea3a586bf31fbae6c72c2b
 
 ```
