@@ -116,7 +116,9 @@ function buildReasonBars(containerId, data, color) {
     data.forEach(item => {
         const row = document.createElement('div');
         row.className = 'gruende-row';
-   const isNarrow = item.pct < 50;
+   const isMobile = window.innerWidth <= 600;
+const isNarrow = isMobile && item.pct <= 50;
+
 row.innerHTML = `
     <div class="gruende-label">${item.label}</div>
     <div class="gruende-track" style="overflow:visible; position:relative;">
@@ -127,7 +129,7 @@ row.innerHTML = `
             }
         </div>
     </div>
-`; 
+`;
         container.appendChild(row);
     });
 }
