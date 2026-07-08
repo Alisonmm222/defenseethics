@@ -1380,14 +1380,14 @@ counts.forEach((item, rank) => {
 }
 
  // ── HEATMAP ──
- const HM_COLS = ['Ja','Nur am Rande','Nein','Weiß nicht'];
+ const HM_COLS = ['Ja','Nur am Rande','Nein'];
 
  const HM_RAW = [
-   {sg:'Social Data Science',   n:40, vals:{Ja:19,'Nur am Rande':19,Nein:2, 'Weiß nicht':0}},
-   {sg:'Int. Business',   n:44, vals:{Ja:17,'Nur am Rande':22,Nein:4, 'Weiß nicht':1}},
-   {sg:'Wirtschafts-/informatik', n:36, vals:{Ja:1, 'Nur am Rande':7, Nein:22,'Weiß nicht':6}},
-   {sg:'Elektrotechnik',        n:55, vals:{Ja:1, 'Nur am Rande':5, Nein:38,'Weiß nicht':11}},
-   {sg:'Maschinenbau',          n:68, vals:{Ja:1, 'Nur am Rande':8, Nein:55,'Weiß nicht':4}},
+   {sg:'Social Data Science',   n:40, vals:{Ja:19,'Nur am Rande':19,Nein:2}},
+   {sg:'Int. Business',   n:43, vals:{Ja:17,'Nur am Rande':22,Nein:4}},
+   {sg:'Wirtschafts-/informatik', n:30, vals:{Ja:1, 'Nur am Rande':7, Nein:22}},
+   {sg:'Elektrotechnik',        n:44, vals:{Ja:1, 'Nur am Rande':5, Nein:38}},
+   {sg:'Maschinenbau',          n:64, vals:{Ja:1, 'Nur am Rande':8, Nein:55}},
  ];
 
 function hmPctToColor(pct) {
