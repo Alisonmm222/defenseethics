@@ -3819,7 +3819,7 @@ HEAD
     align-items: center;
     justify-content: flex-end;
     transition:transition;
-    width 900ms ease;
+    width: 900ms ease;
     min-width: 0;
   }
 
@@ -3866,7 +3866,7 @@ HEAD
   /*heatmap*/  
   .heatmap-grid {
   display: grid;
-  grid-template-columns: 140px repeat(4, 1fr);
+  grid-template-columns: 140px repeat(3, 1fr);
   gap: 1px;
   min-width: 400px;
   font-family: 'DM Sans', sans-serif;
