@@ -89,7 +89,7 @@ const gruendeNein = [
     { label: "Soziales Umfeld / Stigmatisierung / Erwartungen anderer",            pct: 11 },
 ];
 
-const colorJa   = "#5E3F35";
+const colorJa   = "var(--accent-light)";
 const colorNein = "#c8441a";
 
 function buildReasonBars(containerId, data, color) {
@@ -1098,23 +1098,27 @@ nutzenRisikoRender();
 
 
 // ══════════════════════════════════════════════════════
-// DUMBBELL-CHART: GEWISSENSKONFLIKTE NACH GESCHLECHT
-// Frage 19: "Ich hätte Gewissenskonflikte, wenn ich im
-// Defense-Bereich arbeiten würde." — gleiche Frage wie beim
-// Spannungs-Slider oben, hier aufgeschlüsselt nach Geschlecht.
+// DUMBBELL-CHART: VOLLE ZUSTIMMUNG NACH GESCHLECHT
+// Drei zentrale Einstellungsdimensionen, jeweils nur der Anteil,
+// der voll und ganz zustimmt (Skalenwert 5/5):
+//   Frage 12: "Ich kann mir vorstellen, in einem Unternehmen oder
+//              Projekt mit Bezug zum Rüstungs-/Verteidigungsbereich
+//              zu arbeiten."
+//   Frage 19: "Ich hätte Gewissenskonflikte, wenn ich im
+//              Defense-Bereich arbeiten würde."
+//   Frage 11: "(Berufs)ethik bietet für mich eine Orientierung
+//              für mein Handeln."
 // Quelle: Eigene Umfrage, n = 242 (162 männlich / 80 weiblich).
 // 1 Person "Divers" wird aus Anonymitätsgründen bei dieser
 // Zwei-Gruppen-Aufschlüsselung nicht separat ausgewiesen.
 // ══════════════════════════════════════════════════════
 const gewissenLabels = [
-    'Stimme überhaupt nicht zu',
-    'Stimme eher nicht zu',
-    'Teils-teils',
-    'Stimme eher zu',
-    'Stimme voll und ganz zu',
+    '„Ich kann mir vorstellen, im Rüstungs-/Verteidigungsbereich zu arbeiten."',
+    '„Ich hätte Gewissenskonflikte, wenn ich im Defense-Bereich arbeiten würde."',
+    '„(Berufs)ethik bietet für mich eine Orientierung für mein Handeln."',
 ];
-const gewissenMaenner = [36.4, 24.7, 16.7, 9.9, 12.3];
-const gewissenFrauen  = [12.5, 16.3, 15.0, 27.5, 28.8];
+const gewissenMaenner = [40.1, 12.3, 6.8];
+const gewissenFrauen  = [11.3, 28.8, 17.5];
 const DUMBBELL_SCALE_MAX = 45; // Achsen-Obergrenze in %
 
 // Erzeugt Delta-Betrag + erklärenden Satz für den Tap-Callout einer Zeile
@@ -1122,12 +1126,12 @@ function gewissenCalloutText(m, f) {
     const diff = m - f; // positiv = mehr Männer, negativ = mehr Frauen
     const abs = Math.round(Math.abs(diff));
     if (abs < 2) {
-        return { abs, text: 'Männer und Frauen antworten hier fast identisch.', dominant: 'neutral' };
+        return { abs, text: 'Männer und Frauen stimmen hier fast gleich häufig voll zu.', dominant: 'neutral' };
     }
     if (diff > 0) {
-        return { abs, text: `${abs} Prozentpunkte mehr Männer als Frauen wählen diese Antwort.`, dominant: 'm' };
+        return { abs, text: `${abs} Prozentpunkte mehr Männer als Frauen stimmen hier voll zu.`, dominant: 'm' };
     }
-    return { abs, text: `${abs} Prozentpunkte mehr Frauen als Männer wählen diese Antwort.`, dominant: 'f' };
+    return { abs, text: `${abs} Prozentpunkte mehr Frauen als Männer stimmen hier voll zu.`, dominant: 'f' };
 }
 
 function buildGewissenDumbbell() {
