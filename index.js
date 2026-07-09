@@ -1407,12 +1407,42 @@ counts.forEach((item, rank) => {
     barsEl.appendChild(row);
 
     // Mit Verzögerung pro Zeile einfahren
-    const delay = rank * 80;
-    setTimeout(() => {
-      fill.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-      fill.style.width = `${((maxAvg - item.avg) / (maxAvg - 1)) * 100}%`;
-      fill.querySelector('span').textContent = `Ø ${item.avg}`;
-    }, delay);
+ const delay = rank * 80;
+
+setTimeout(() => {
+  const width = ((maxAvg - item.avg) / (maxAvg - 1)) * 100;
+
+  fill.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+  fill.style.width = `${width}%`;
+
+  const span = fill.querySelector('span');
+span.textContent = `Ø ${item.avg}`;
+
+// Immer zurücksetzen
+span.className = '';
+span.style.color = '';
+
+// Nur auf Mobile auslagern
+if (window.matchMedia('(max-width: 768px)').matches && width < 28) {
+    span.classList.add('outside');
+    span.style.color = getComputedStyle(fill).backgroundColor;
+}
+
+  // Standardzustand (Desktop)
+  span.classList.remove('outside');
+  span.style.color = '';
+  span.style.left = '';
+  span.style.position = '';
+  span.style.transform = '';
+  span.style.top = '';
+
+  // Nur auf Mobile ändern
+  if (window.innerWidth <= 768 && width < 28) {
+    span.classList.add('outside');
+    span.style.color = getComputedStyle(fill).backgroundColor;
+  }
+
+}, delay);
   });
 
   // Absolute Nennungen

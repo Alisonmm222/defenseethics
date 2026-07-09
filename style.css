@@ -2829,6 +2829,28 @@ input[type=range].tension-slider::-ms-track {
   margin-bottom: 16px;
   display: none;
 }
+@media (max-width:768px){
+
+  .race-track{
+    overflow:visible;
+  }
+
+  .race-fill{
+    position:relative;
+    overflow:visible;
+  }
+
+  .race-fill span.outside{
+    position:absolute;
+    left:calc(100% + 8px);
+    top:50%;
+    transform:translateY(-50%);
+    white-space:nowrap;
+    font-weight:700;
+  }
+  
+
+}
 
 /*heatmap*/  
   .heatmap-grid {
