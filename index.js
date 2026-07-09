@@ -442,8 +442,10 @@ function updateTensionFor(key, v) {
   const numEl = document.getElementById(ids.num);
   if (numEl) numEl.textContent = v;
 
-  const textEl = document.getElementById(ids.text);
-  if (textEl) textEl.textContent = `${messages[idx] || ''}`;
+const textEl = document.getElementById(ids.text);
+if (textEl && textEl.dataset.touched === 'true') {
+  textEl.textContent = `${messages[idx] || ''}`;
+}
 
   // Balken aktualisieren; ids for bars are namespaced
   studyData.forEach((_, i) => {
@@ -489,8 +491,13 @@ window.addEventListener('load', () => {
       sliderEl.max = scaleMaxLocal;
       if (!sliderEl.value) sliderEl.value = Math.round((scaleMinLocal + scaleMaxLocal) / 2);
       // attach inline change handler to call update function (also supports keyboard)
-      sliderEl.addEventListener('input', (e) => updateTensionFor(key, e.target.value));
+      sliderEl.addEventListener('input', (e) => {
+  const textEl = document.getElementById(ids.text);
+  if (textEl) textEl.dataset.touched = 'true';
+  updateTensionFor(key, e.target.value);
+});
     }
+
 
     buildComparisonBarsFor(ids.bars, cfg.data, key);
     updateTensionFor(key);
