@@ -1383,6 +1383,8 @@ counts.forEach((item, rank) => {
   ).join('');
 }
 
+
+
  // ── HEATMAP ──
  const HM_COLS = ['Ja','Nur am Rande','Nein'];
 
