@@ -713,8 +713,9 @@ function buildRows(view, instant = false) {
     block.dataset.key = item.label;
     block.style.marginBottom = '20px';
     block.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1)';
-const deOutside = item.de <= 10;
-const usaOutside = item.usa <= 10;
+    
+    const deOutside = window.innerWidth <= 768 ? item.de <= 50 : item.de <= 10;
+    const usaOutside = window.innerWidth <= 768 ? item.usa <= 50 : item.usa <= 10;
 
 block.innerHTML = `
   <div class="priority-row" style="margin-bottom:2px;">
