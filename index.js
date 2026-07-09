@@ -714,29 +714,23 @@ function buildRows(view, instant = false) {
     block.style.marginBottom = '20px';
     block.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1)';
 
-    block.innerHTML = `
-      <div class="priority-row" style="margin-bottom:2px;">
-        <div class="priority-label">${item.label.replace('\n','<br>')}</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
-            <div class="priority-bar-fill"
-              style="width:${instant ? item.de : 0}%;background:${deColor};"
-              data-target-width="${item.de}"><span class="${window.innerWidth <= 768 && item.de < 50 ? 'outside' : ''}"
-      style="color:${window.innerWidth <= 768 && item.de < 50 ? deColor : 'white'}">
-  ${item.de}%
-</span></div>
-          </div>
-          <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
-            <div class="priority-bar-fill"
-              style="width:${instant ? item.usa : 0}%;background:${usaColor};"
-              data-target-width="${item.usa}"><span class="${window.innerWidth <= 768 && item.usa < 50 ? 'outside' : ''}"
-      style="color:${window.innerWidth <= 768 && item.usa < 50 ? usaColor : 'white'}">
-  ${item.usa}%
-</span></div>
-          </div>
+block.innerHTML = `
+  <div class="priority-row" style="margin-bottom:2px;">
+    <div class="priority-label">${item.label.replace('\n','<br>')}</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
+        <div class="priority-bar-fill" style="width:${instant ? item.de : 0}%;background:${deColor};" data-target-width="${item.de}">
+          <span class="${window.innerWidth <= 768 && item.de < 20 ? 'outside' : ''}" style="color:${window.innerWidth <= 768 && item.de < 20 ? deColor : 'white'}">${item.de}%</span>
         </div>
       </div>
-    `;
+      <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
+        <div class="priority-bar-fill" style="width:${instant ? item.usa : 0}%;background:${usaColor};" data-target-width="${item.usa}">
+          <span class="${item.usa < 20 ? 'outside' : ''}" style="color:${item.usa < 20 ? usaColor : 'white'}">${item.usa}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
     rowWrapper.appendChild(block);
   });
 
