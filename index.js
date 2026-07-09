@@ -1548,13 +1548,14 @@ function renderHeatmap() {
 
 // ── DOT PLOT: Dual-Use Frage ──
 const DOTPLOT_GROUPS = [
-  { key: 'gesamt',       label: 'Gesamt',          mean: 3.42, color: '#1a1814',  shape: 'circle', },
-  { key: 'frauen',       label: 'Frauen',           mean: 3.18, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
-  { key: 'maenner',      label: 'Männer',           mean: 3.67, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
-  { key: 'maschinenbau', label: 'Maschinenbau',     mean: 3.55, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
-  { key: 'elektro',      label: 'Elektrotechnik',   mean: 3.30, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
-  { key: 'informatik',   label: 'Informatik',       mean: 3.70, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
-  { key: 'bwl',          label: 'BWL / Wirtschaft', mean: 2.90, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
+  { key: 'gesamt',       label: 'Gesamt',               mean: 2.76, color: '#1a1814',  shape: 'circle', },
+  { key: 'frauen',       label: 'Frauen',               mean: 3.64, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maenner',      label: 'Männer',               mean: 2.29, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maschinenbau', label: 'Maschinenbau',         mean: 2.46, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
+  { key: 'elektro',      label: 'Elektrotechnik',       mean: 2.64, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
+  { key: 'informatik',   label: '(Wirtschafts-)informatik', mean: 3.26, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
+  { key: 'bwl',          label: 'BWL / Wirtschaft',     mean: 2.82, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
+  { key: 'sds',          label: 'Social Data Science',  mean: 3.14, color: '#f5d4c4',  shape: 'circle', group: 'studiengang' },
 ];
 
 const DOTPLOT_MIN = 1, DOTPLOT_MAX = 5;
@@ -1706,13 +1707,14 @@ dotplotRender();
 
 // ── DOT PLOT 2: Einstellung hat sich verändert ──
 const DOTPLOT2_GROUPS = [
-  { key: 'gesamt',        label: 'Gesamt',          mean: 3.21, color: '#1a1814',  shape: 'circle' },
-  { key: 'frauen2',       label: 'Frauen',           mean: 3.45, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
-  { key: 'maenner2',      label: 'Männer',           mean: 3.05, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
-  { key: 'maschinenbau2', label: 'Maschinenbau',     mean: 3.10, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
-  { key: 'elektro2',      label: 'Elektrotechnik',   mean: 3.30, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
-  { key: 'informatik2',   label: 'Informatik',       mean: 3.55, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
-  { key: 'bwl2',          label: 'BWL / Wirtschaft', mean: 2.80, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
+  { key: 'gesamt',        label: 'Gesamt',               mean: 2.59, color: '#1a1814',  shape: 'circle' },
+  { key: 'frauen2',       label: 'Frauen',               mean: 2.51, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maenner2',      label: 'Männer',               mean: 2.76, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maschinenbau2', label: 'Maschinenbau',         mean: 2.49, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
+  { key: 'elektro2',      label: 'Elektrotechnik',       mean: 2.38, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
+  { key: 'informatik2',   label: '(Wirtschafts-)Informatik', mean: 2.10, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
+  { key: 'bwl2',          label: 'BWL / Wirtschaft',     mean: 3.09, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
+  { key: 'sds2',          label: 'Social Data Science',  mean: 2.93, color: '#f5d4c4',  shape: 'circle', group: 'studiengang' },
 ];
 
 // TODO: echte Mittelwerte oben eintragen
