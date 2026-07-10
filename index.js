@@ -1277,7 +1277,14 @@ Papa.parse(CSV_PATH, {
 
 function buildFilterButtons() {
   const geschlechter = [...new Set(allRows.map(r => r[COL_GESCHLECHT]).filter(Boolean))].sort();
-  const studiengaenge = [...new Set(allRows.map(r => r[COL_STUDIENGANG]).filter(Boolean))].sort();
+
+  // Informatik + Wirtschaftsinformatik zusammenführen
+  const studiengaengeRaw = allRows.map(r => r[COL_STUDIENGANG]).filter(Boolean);
+  const studiengaenge = [...new Set(studiengaengeRaw.map(s => {
+    if (s.toLowerCase().includes('informatik')) return 'Informatik / Wirtschaftsinformatik';
+    return s;
+  }))].sort();
+
   const alterGruppen = ['< 23', '23–26', '27–30'];
 
   renderFilterBtns('filter-geschlecht', geschlechter, 'geschlecht');
@@ -1332,14 +1339,14 @@ function getFilteredRows() {
     if (activeFilters.alter) {
       const age = parseInt(r[COL_ALTER]);
       if (isNaN(age)) return false;
-     if (activeFilters.alter === '18–22') {
+     if (activeFilters.alter === '< 23') {
        const raw = r[COL_ALTER]?.trim();
        const age = parseInt(raw);
        if (raw === 'Unter 18') return true;
-       if (isNaN(age) || age < 18 || age > 22) return false;
+       if (isNaN(age) || age >= 23) return false;
      }
-      if (activeFilters.alter === '23–26' && !(age >= 23 && age <= 26)) return false;
-      if (activeFilters.alter === '27–30' && !(age >= 27 && age <= 30)) return false;
+     if (activeFilters.alter === '23–26' && !(age >= 23 && age <= 26)) return false;
+     if (activeFilters.alter === '27–30' && !(age >= 27 && age <= 30)) return false;
     }
     return true;
   });
@@ -1350,9 +1357,10 @@ function renderChart(rows) {
   const nEl    = document.getElementById('race-n');
   const barsEl = document.getElementById('race-bars');
   const absEl  = document.getElementById('race-absolute');
-  if (!nEl || !barsEl || !absEl) return;
+  if (!barsEl || !absEl) return;
 
-  nEl.textContent = `n = ${n}`;
+  if (nEl) nEl.textContent = `n = ${n}`;
+
 
   if (n === 0) {
     barsEl.innerHTML = `

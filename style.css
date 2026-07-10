@@ -2719,6 +2719,20 @@ input[type=range].tension-slider::-ms-track {
   gap: 6px;
   align-items: center;
 }
+.race-filters-wrap {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.race-n-display {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 400;
+ color: var(--ink-faint);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 
 .race-btn {
   font-family: 'DM Sans', sans-serif;
