@@ -168,31 +168,6 @@ const nutzenRisikoData = [
 
 let nutzenRisikoCurrentGroup = 'all';
 
-// ══════════════════════════════════════════════
-// DATEN UND VISUALISIERUNG FÜR VERANTWORTUNG
-// ══════════════════════════════════════════════
-
-const CSV_PATH = 'data/rohdaten.csv';
-
-const VERANTWORTUNG_COLS = [
-  { key: 'ingenieur',    label: 'Ingenieur*in selbst' },
-  { key: 'arbeitgeber',  label: 'Arbeitgeber' },
-  { key: 'gesetzgeber',  label: 'Gesetzgeber / Politik' },
-  { key: 'auftraggeber', label: 'Auftraggeber' },
-  { key: 'gesellschaft', label: 'Gesellschaft als Ganzes' },
-];
-
-let allRows = [];
-
-// Aktive Filter — mehrere gleichzeitig möglich
-let activeFilters = { geschlecht: null, studiengang: null, alter: null };
-
-const COL_GESCHLECHT  = 2;
-const COL_ALTER       = 3;
-const COL_STUDIENGANG = 14;
-const COL_V_START     = 34;
-
-
 
 // ══════════════════════════════════════════════════════
 // DUMBBELL-CHART: VOLLE ZUSTIMMUNG NACH GESCHLECHT
@@ -206,7 +181,64 @@ const gewissenMaenner = [40.1, 12.3, 6.8];
 const gewissenFrauen  = [11.3, 28.8, 17.5];
 const DUMBBELL_SCALE_MAX = 45;
 
+// ══════════════════════════════════════════════════════
+// ── HEATMAP ──
+// ══════════════════════════════════════════════════════
 
+ const HM_COLS = ['Ja','Nur am Rande','Nein'];
+
+ const HM_RAW = [
+   {sg:'Social Data Science',   n:40, vals:{Ja:19,'Nur am Rande':19,Nein:2}},
+   {sg:'Int. Business',   n:43, vals:{Ja:17,'Nur am Rande':22,Nein:4}},
+   {sg:'Wirtschafts-/informatik', n:30, vals:{Ja:1, 'Nur am Rande':7, Nein:22}},
+   {sg:'Elektrotechnik',        n:44, vals:{Ja:1, 'Nur am Rande':5, Nein:38}},
+   {sg:'Maschinenbau',          n:64, vals:{Ja:1, 'Nur am Rande':8, Nein:55}},
+ ];
+
+
+// ══════════════════════════════════════════════════════
+// ── DOT PLOT: Dual-Use Frage ──
+// ══════════════════════════════════════════════════════
+
+
+const DOTPLOT_GROUPS = [
+  { key: 'gesamt',       label: 'Gesamt',               mean: 2.76, color: '#1a1814',  shape: 'circle', },
+  { key: 'frauen',       label: 'Frauen',               mean: 3.64, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maenner',      label: 'Männer',               mean: 2.29, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maschinenbau', label: 'Maschinenbau',         mean: 2.46, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
+  { key: 'elektro',      label: 'Elektrotechnik',       mean: 2.64, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
+  { key: 'informatik',   label: '(Wirtschafts-)informatik', mean: 3.26, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
+  { key: 'bwl',          label: 'BWL / Wirtschaft',     mean: 2.82, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
+  { key: 'sds',          label: 'Social Data Science',  mean: 3.14, color: '#f5d4c4',  shape: 'circle', group: 'studiengang' },
+];
+
+const DOTPLOT_MIN = 1, DOTPLOT_MAX = 5;
+let dotplotActiveGroup = null; // 'geschlecht' | 'studiengang' | null
+
+const dotplotFiltersEl  = document.getElementById('dotplotFilters');
+const dotplotAxisEl     = document.getElementById('dotplotAxis');
+const dotplotGesamtLine = document.getElementById('dotplotGesamtLine');
+let dotplotTooltip    = document.getElementById('dotplotTooltip');
+
+// ── DOT PLOT 2: Einstellung hat sich verändert ──
+const DOTPLOT2_GROUPS = [
+  { key: 'gesamt',        label: 'Gesamt',               mean: 2.59, color: '#1a1814',  shape: 'circle' },
+  { key: 'frauen2',       label: 'Frauen',               mean: 2.51, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maenner2',      label: 'Männer',               mean: 2.76, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
+  { key: 'maschinenbau2', label: 'Maschinenbau',         mean: 2.49, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
+  { key: 'elektro2',      label: 'Elektrotechnik',       mean: 2.38, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
+  { key: 'informatik2',   label: '(Wirtschafts-)Informatik', mean: 2.10, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
+  { key: 'bwl2',          label: 'BWL / Wirtschaft',     mean: 3.09, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
+  { key: 'sds2',          label: 'Social Data Science',  mean: 2.93, color: '#f5d4c4',  shape: 'circle', group: 'studiengang' },
+];
+
+const DOTPLOT2_MIN = 1, DOTPLOT2_MAX = 5;
+let dotplot2ActiveGroup = 'geschlecht';
+
+const dotplot2FiltersEl   = document.getElementById('dotplot2Filters');
+const dotplot2AxisEl      = document.getElementById('dotplot2Axis');
+const dotplot2GesamtLine  = document.getElementById('dotplot2GesamtLine');
+let dotplot2Tooltip     = document.getElementById('dotplot2Tooltip');
 
   // ══════════════════════════════════════════════
   // FUNCTIONS
@@ -668,7 +700,6 @@ if (compassBreak) {
 // ══════════════════════════════════════════════
 // PRIORITÄTEN – VERGLEICH DE vs USA (FLIP-Animation)
 // ══════════════════════════════════════════════
-
 
 const chartDE = document.getElementById('priority-chart-de');
 if (chartDE) {
@@ -1178,6 +1209,25 @@ buildGewissenDumbbell();
 // DATEN UND VISUALISIERUNG FÜR VERANTWORTUNG
 // ══════════════════════════════════════════════
 
+const CSV_PATH = 'data/rohdaten.csv';
+
+const VERANTWORTUNG_COLS = [
+  { key: 'ingenieur',    label: 'Ingenieur*in selbst' },
+  { key: 'arbeitgeber',  label: 'Arbeitgeber' },
+  { key: 'gesetzgeber',  label: 'Gesetzgeber / Politik' },
+  { key: 'auftraggeber', label: 'Auftraggeber' },
+  { key: 'gesellschaft', label: 'Gesellschaft als Ganzes' },
+];
+let allRows = [];
+
+// Aktive Filter — mehrere gleichzeitig möglich
+let activeFilters = { geschlecht: null, studiengang: null, alter: null };
+
+const COL_GESCHLECHT  = 2;
+const COL_ALTER       = 3;
+const COL_STUDIENGANG = 14;
+const COL_V_START     = 34;
+
 
 Papa.parse(CSV_PATH, {
   download: true,
@@ -1386,16 +1436,9 @@ function renderChart(rows) {
 }
 
 
- // ── HEATMAP ──
- const HM_COLS = ['Ja','Nur am Rande','Nein'];
-
- const HM_RAW = [
-   {sg:'Social Data Science',   n:40, vals:{Ja:19,'Nur am Rande':19,Nein:2}},
-   {sg:'Int. Business',   n:43, vals:{Ja:17,'Nur am Rande':22,Nein:4}},
-   {sg:'Wirtschafts-/informatik', n:30, vals:{Ja:1, 'Nur am Rande':7, Nein:22}},
-   {sg:'Elektrotechnik',        n:44, vals:{Ja:1, 'Nur am Rande':5, Nein:38}},
-   {sg:'Maschinenbau',          n:64, vals:{Ja:1, 'Nur am Rande':8, Nein:55}},
- ];
+// ══════════════════════════════════════════════════════
+// ── HEATMAP ──
+// ══════════════════════════════════════════════════════
 
 function hmPctToColor(pct) {
   const t = Math.max(0, Math.min(1, pct / 100));
@@ -1475,26 +1518,9 @@ function renderHeatmap() {
   }
   renderHeatmap();
 
-
+//
 // ── DOT PLOT: Dual-Use Frage ──
-const DOTPLOT_GROUPS = [
-  { key: 'gesamt',       label: 'Gesamt',               mean: 2.76, color: '#1a1814',  shape: 'circle', },
-  { key: 'frauen',       label: 'Frauen',               mean: 3.64, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
-  { key: 'maenner',      label: 'Männer',               mean: 2.29, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
-  { key: 'maschinenbau', label: 'Maschinenbau',         mean: 2.46, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
-  { key: 'elektro',      label: 'Elektrotechnik',       mean: 2.64, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
-  { key: 'informatik',   label: '(Wirtschafts-)informatik', mean: 3.26, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
-  { key: 'bwl',          label: 'BWL / Wirtschaft',     mean: 2.82, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
-  { key: 'sds',          label: 'Social Data Science',  mean: 3.14, color: '#f5d4c4',  shape: 'circle', group: 'studiengang' },
-];
-
-const DOTPLOT_MIN = 1, DOTPLOT_MAX = 5;
-let dotplotActiveGroup = null; // 'geschlecht' | 'studiengang' | null
-
-const dotplotFiltersEl  = document.getElementById('dotplotFilters');
-const dotplotAxisEl     = document.getElementById('dotplotAxis');
-const dotplotGesamtLine = document.getElementById('dotplotGesamtLine');
-let dotplotTooltip    = document.getElementById('dotplotTooltip');
+//
 
 // Verschiebe Tooltip zu body, um overflow:hidden Problem zu beheben
 if (dotplotTooltip) {
@@ -1636,26 +1662,6 @@ dotplotRender();
 }
 
 // ── DOT PLOT 2: Einstellung hat sich verändert ──
-const DOTPLOT2_GROUPS = [
-  { key: 'gesamt',        label: 'Gesamt',               mean: 2.59, color: '#1a1814',  shape: 'circle' },
-  { key: 'frauen2',       label: 'Frauen',               mean: 2.51, color: '#c8441a',  shape: 'circle', group: 'geschlecht' },
-  { key: 'maenner2',      label: 'Männer',               mean: 2.76, color: '#d4623d',  shape: 'circle', group: 'geschlecht' },
-  { key: 'maschinenbau2', label: 'Maschinenbau',         mean: 2.49, color: '#c8441a',  shape: 'circle', group: 'studiengang' },
-  { key: 'elektro2',      label: 'Elektrotechnik',       mean: 2.38, color: '#d4623d',  shape: 'circle', group: 'studiengang' },
-  { key: 'informatik2',   label: '(Wirtschafts-)Informatik', mean: 2.10, color: '#e0815f',  shape: 'circle', group: 'studiengang' },
-  { key: 'bwl2',          label: 'BWL / Wirtschaft',     mean: 3.09, color: '#eba98e',  shape: 'circle', group: 'studiengang' },
-  { key: 'sds2',          label: 'Social Data Science',  mean: 2.93, color: '#f5d4c4',  shape: 'circle', group: 'studiengang' },
-];
-
-// TODO: echte Mittelwerte oben eintragen
-
-const DOTPLOT2_MIN = 1, DOTPLOT2_MAX = 5;
-let dotplot2ActiveGroup = 'geschlecht';
-
-const dotplot2FiltersEl   = document.getElementById('dotplot2Filters');
-const dotplot2AxisEl      = document.getElementById('dotplot2Axis');
-const dotplot2GesamtLine  = document.getElementById('dotplot2GesamtLine');
-let dotplot2Tooltip     = document.getElementById('dotplot2Tooltip');
 
 // Verschiebe Tooltip zu body, um overflow:hidden Problem zu beheben
 if (dotplot2Tooltip) {
