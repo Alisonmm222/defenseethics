@@ -197,6 +197,8 @@ let activeOpinion = null;
 // ══════════════════════════════════════
 window.addEventListener("DOMContentLoaded", () => {
     setActiveOpinion(null);
+
+
   // Beim initialisieren — Ergebnis-Block verstecken
   const tensionResultelement = document.getElementById('tensionResult');
   if (tensionResultelement){
@@ -575,55 +577,6 @@ if (compassBreak) {
   }
 });
 
-
-// PRIORITÄTEN US Tech workers
-const priorityData = [
-    { label: "Jobsicherheit", usa: 68 },
-    { label: "Gehalt", usa: 66 },
-    { label: "Work-Life-Balance", usa: 63 },
-    { label: "Interesse & Spaß\nan der Tätigkeit", usa: 54 },
-    { label: "Gutes Arbeitsklima", usa: 52 },
-    { label: "Übereinstimmungmit \nmoralischen Werten", usa: 47 },
-    { label: "Karriere &\nAufstiegsmöglichkeiten", usa: 30 },
-    { label: "Gesellschaftlicher\nBeitrag", usa: 30 },
-];
-
-const colorUSA = "#c8441a";
-
-const chart = document.getElementById('priority-chart');
-if (chart) {
-  // Header
-  const header = document.createElement('div');
-  header.className = 'priority-header-row';
-  header.innerHTML = `
-    <div></div>
-    <div class="priority-header-label" style="color:#1a1814"> USA</div>
-  `;
-  chart.appendChild(header);
-
-  // Rows
-
-  priorityData.forEach(item => {
-      const row = document.createElement('div');
-      row.className = 'priority-row';
-
-      row.innerHTML = `
-          <div class="priority-label">${item.label.replace('\n','<br>')}</div>
-
-          <div class="priority-bar-wrap">
-              <div class="priority-bar-track">
-                  <div class="priority-bar-fill" style="width:0%; background:${colorUSA}" data-target-width="${item.usa}">
-                      <span>${item.usa}%</span>
-                  </div>
-              </div>
-          </div>
-      `;
-
-      chart.appendChild(row);
-  });
-} else {
-  console.warn('priority-chart element not found; skipping priority chart render');
-}
 
 // PRIORITÄTEN – VERGLEICH DE vs USA (FLIP-Animation)
 const combinedPriorityData = [
