@@ -1367,7 +1367,6 @@ function renderChart(rows) {
 
   if (nEl) nEl.textContent = `n = ${n}`;
 
-
   if (n === 0) {
     barsEl.innerHTML = `
       <div style="padding:32px 0;text-align:center;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink-faint);line-height:1.6;">
@@ -1378,32 +1377,29 @@ function renderChart(rows) {
     return;
   }
 
-  // Immer leeren bevor neu aufgebaut wird
-  barsEl.innerHTML = '';
+  const counts = VERANTWORTUNG_COLS.map((col, i) => {
+    const validRows = rows.filter(r => {
+      const val = parseInt(r[COL_V_START + i]);
+      return !isNaN(val) && val >= 1 && val <= 5;
+    });
+    const sum = validRows.reduce((acc, r) => acc + parseInt(r[COL_V_START + i]), 0);
+    const avg = validRows.length > 0 ? (sum / validRows.length) : 5;
+    return { key: col.key, label: col.label, count: validRows.length, avg: Math.round(avg * 10) / 10 };
+  });
 
-   const counts = VERANTWORTUNG_COLS.map((col, i) => {
-     const validRows = rows.filter(r => {
-       const val = parseInt(r[COL_V_START + i]);
-       return !isNaN(val) && val >= 1 && val <= 5;
-     });
-     const sum = validRows.reduce((acc, r) => acc + parseInt(r[COL_V_START + i]), 0);
-     const avg = validRows.length > 0 ? (sum / validRows.length) : 5;
-     return {
-       key:   col.key,
-       label: col.label,
-       count: validRows.length,
-       avg:   Math.round(avg * 10) / 10
-     };
-   });
+  counts.sort((a, b) => a.avg - b.avg);
+  const maxAvg = 5;
 
-   counts.sort((a, b) => a.avg - b.avg);
-   const maxAvg = 5;
+  // ── FLIP ──
+  const existing = {};
+  barsEl.querySelectorAll('.race-row[data-key]').forEach(el => {
+    existing[el.dataset.key] = el;
+    // FIRST — Position vor dem Umsortieren merken
+    existing[el.dataset.key]._firstRect = el.getBoundingClientRect();
+  });
 
-   const existing = {};
-   barsEl.querySelectorAll('.race-row[data-key]').forEach(el => {
-     existing[el.dataset.key] = el;
-   });
-counts.forEach((item, rank) => {
+  // Neu aufbauen / umsortieren
+  counts.forEach((item, rank) => {
     let row = existing[item.key];
 
     if (!row) {
@@ -1417,65 +1413,52 @@ counts.forEach((item, rank) => {
           <div class="race-fill" style="width:0%"><span></span></div>
         </div>
       `;
+      barsEl.appendChild(row);
+      existing[item.key] = row;
     }
 
-    // Erst auf 0 zurücksetzen
-    const fill = row.querySelector('.race-fill');
-    fill.style.transition = 'none';
-    fill.style.width = '0%';
-    fill.querySelector('span').textContent = '';
-
+    barsEl.appendChild(row);
     row.querySelector('.race-rank').textContent = rank + 1;
     row.querySelector('.race-rank').style.color = rank === 0 ? 'var(--accent)' : 'var(--ink-faint)';
-
-    barsEl.appendChild(row);
-
-    // Mit Verzögerung pro Zeile einfahren
- const delay = rank * 80;
-
-setTimeout(() => {
-  const width = ((maxAvg - item.avg) / (maxAvg - 1)) * 100;
-
-  fill.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-  fill.style.width = `${width}%`;
-
-  const span = fill.querySelector('span');
-span.textContent = `Ø ${item.avg}`;
-
-// Immer zurücksetzen
-span.className = '';
-span.style.color = '';
-
-// Nur auf Mobile auslagern
-if (window.matchMedia('(max-width: 768px)').matches && width < 28) {
-    span.classList.add('outside');
-    span.style.color = getComputedStyle(fill).backgroundColor;
-}
-
-  // Standardzustand (Desktop)
-  span.classList.remove('outside');
-  span.style.color = '';
-  span.style.left = '';
-  span.style.position = '';
-  span.style.transform = '';
-  span.style.top = '';
-
-  // Nur auf Mobile ändern
-  if (window.innerWidth <= 768 && width < 28) {
-    span.classList.add('outside');
-    span.style.color = getComputedStyle(fill).backgroundColor;
-  }
-
-}, delay);
   });
 
-  // Absolute Nennungen
+  // LAST + INVERT + PLAY
+  counts.forEach((item) => {
+    const row = existing[item.key];
+    if (!row) return;
 
-  absEl.innerHTML = counts.map(item =>
-    `<div class="race-absolute-item">
-      <strong>${item.count}</strong> ${item.label}
-    </div>`
-  ).join('');
+    const firstRect = row._firstRect;
+    const lastRect  = row.getBoundingClientRect();
+
+    if (firstRect) {
+      const dy = firstRect.top - lastRect.top;
+      if (Math.abs(dy) > 1) {
+        // Invert
+        row.style.transition = 'none';
+        row.style.transform  = `translateY(${dy}px)`;
+        // Play
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          row.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+          row.style.transform  = 'translateY(0)';
+        }));
+      }
+    }
+
+    // Balken animieren
+    const fill = row.querySelector('.race-fill');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      fill.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+      fill.style.width = `${((maxAvg - item.avg) / (maxAvg - 1)) * 100}%`;
+      fill.querySelector('span').textContent = `Ø ${item.avg}`;
+    }));
+  });
+
+  absEl.innerHTML = counts.map(item => `
+    <div class="race-absolute-item">
+      <strong>Ø ${item.avg}</strong> ${item.label}
+      <span style="color:var(--ink-faint);font-size:11px">(n=${item.count})</span>
+    </div>
+  `).join('');
 }
 
 
