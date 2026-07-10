@@ -1242,10 +1242,6 @@ h3.sub-heading {
   color: #fff;
   margin-bottom: 1.25rem;
 }
-.centered-heading {
-
-}
-
 .nowrap {
   white-space: nowrap;
   display: inline-block;
@@ -3063,4 +3059,5 @@ input[type=range].tension-slider::-ms-track {
   border-color: #eba98e;
   color: var(--ink);
 }
+
 
