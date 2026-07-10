@@ -1334,7 +1334,13 @@ function getFilteredRows() {
     // Geschlecht
     if (activeFilters.geschlecht && r[COL_GESCHLECHT] !== activeFilters.geschlecht) return false;
     // Studiengang
-    if (activeFilters.studiengang && r[COL_STUDIENGANG] !== activeFilters.studiengang) return false;
+    if (activeFilters.studiengang) {
+      const sg = r[COL_STUDIENGANG]?.trim() || '';
+      const mapped = (sg.toLowerCase().includes('informatik') || sg.toLowerCase().includes('wirtschafts'))
+        ? 'Informatik / Wirtschaftsinformatik'
+        : sg;
+      if (mapped !== activeFilters.studiengang) return false;
+    }
     // Alter
     if (activeFilters.alter) {
       const age = parseInt(r[COL_ALTER]);
