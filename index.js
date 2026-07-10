@@ -1455,7 +1455,6 @@ if (window.matchMedia('(max-width: 768px)').matches && width < 28) {
 }
 
 
-
  // ── HEATMAP ──
  const HM_COLS = ['Ja','Nur am Rande','Nein'];
 

@@ -1233,7 +1233,15 @@ h3.sub-heading {
   color: #fff;
   margin-bottom: 1.25rem;
 }
+.centered-heading {
 
+}
+
+.nowrap {
+  white-space: nowrap;
+  display: inline-block;
+  text-align: center;
+}
 .tension-block > p {
   font-family: 'DM Sans', sans-serif;
   font-size: 1rem;
