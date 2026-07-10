@@ -1013,6 +1013,59 @@ h3.sub-heading {
   color: var(--ink-light);
   line-height: 1.5;
 }
+.map-legend{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:22px;
+    flex-wrap:wrap;
+    margin-top:20px;
+
+    /* dieselbe Schrift wie deine Diagramme */
+    font-family: 'DM Sans', sans-serif;
+    font-size:0.7rem;
+    font-weight:500;
+    color:#1a1814;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.legend-color{
+    width:18px;
+    height:18px;
+    border-radius:4px;
+    border:1px solid rgba(0,0,0,.12);
+}
+
+.level-1{background:#fde7de;}
+.level-2{background:#f6c6b4;}
+.level-3{background:#ee9b7c;}
+.level-4{background:#dc6941;}
+.level-5{background:#c8441a;}
+
+/* Bayern */
+.legend-bavaria{
+    width:18px;
+    height:18px;
+    border:1.5px solid #c8441a;
+    border-radius:4px;
+
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent 0px,
+            transparent 6px,
+            #c8441a 6px,
+            #c8441a 8px
+        );
+
+    background-color:#fff;
+    flex-shrink:0;
+}
 
 /* ── INTERACTIVE: CHART TABS ── */
 .chart-block {
