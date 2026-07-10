@@ -442,8 +442,10 @@ function updateTensionFor(key, v) {
   const numEl = document.getElementById(ids.num);
   if (numEl) numEl.textContent = v;
 
-  const textEl = document.getElementById(ids.text);
-  if (textEl) textEl.textContent = `${messages[idx] || ''}`;
+const textEl = document.getElementById(ids.text);
+if (textEl && textEl.dataset.touched === 'true') {
+  textEl.textContent = `${messages[idx] || ''}`;
+}
 
   // Balken aktualisieren; ids for bars are namespaced
   studyData.forEach((_, i) => {
@@ -489,8 +491,13 @@ window.addEventListener('load', () => {
       sliderEl.max = scaleMaxLocal;
       if (!sliderEl.value) sliderEl.value = Math.round((scaleMinLocal + scaleMaxLocal) / 2);
       // attach inline change handler to call update function (also supports keyboard)
-      sliderEl.addEventListener('input', (e) => updateTensionFor(key, e.target.value));
+      sliderEl.addEventListener('input', (e) => {
+  const textEl = document.getElementById(ids.text);
+  if (textEl) textEl.dataset.touched = 'true';
+  updateTensionFor(key, e.target.value);
+});
     }
+
 
     buildComparisonBarsFor(ids.bars, cfg.data, key);
     updateTensionFor(key);
@@ -713,19 +720,22 @@ function buildRows(view, instant = false) {
     block.dataset.key = item.label;
     block.style.marginBottom = '20px';
     block.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1)';
+    
+    const deOutside = window.innerWidth <= 768 ? item.de <= 50 : item.de <= 10;
+    const usaOutside = window.innerWidth <= 768 ? item.usa <= 50 : item.usa <= 10;
 
 block.innerHTML = `
   <div class="priority-row" style="margin-bottom:2px;">
     <div class="priority-label">${item.label.replace('\n','<br>')}</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-      <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
-        <div class="priority-bar-fill" style="width:${instant ? item.de : 0}%;background:${deColor};" data-target-width="${item.de}">
-          <span class="${window.innerWidth <= 768 && item.de < 20 ? 'outside' : ''}" style="color:${window.innerWidth <= 768 && item.de < 20 ? deColor : 'white'}">${item.de}%</span>
+      <div class="priority-bar-track" style="background:rgba(0,0,0,0.05); overflow:visible; position:relative;">
+        <div class="priority-bar-fill" style="width:${instant ? item.de : 0}%;background:${deColor};position:relative;overflow:visible;" data-target-width="${item.de}">
+          <span style="${deOutside ? `position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);color:${deColor};white-space:nowrap;font-weight:700;` : 'color:white;padding-right:7px;'}">${item.de}%</span>
         </div>
       </div>
-      <div class="priority-bar-track" style="background:rgba(0,0,0,0.05);">
-        <div class="priority-bar-fill" style="width:${instant ? item.usa : 0}%;background:${usaColor};" data-target-width="${item.usa}">
-          <span class="${item.usa < 20 ? 'outside' : ''}" style="color:${item.usa < 20 ? usaColor : 'white'}">${item.usa}%</span>
+      <div class="priority-bar-track" style="background:rgba(0,0,0,0.05); overflow:visible; position:relative;">
+        <div class="priority-bar-fill" style="width:${instant ? item.usa : 0}%;background:${usaColor};position:relative;overflow:visible;" data-target-width="${item.usa}">
+          <span style="${usaOutside ? `position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);color:${usaColor};white-space:nowrap;font-weight:700;` : 'color:white;padding-right:7px;'}">${item.usa}%</span>
         </div>
       </div>
     </div>
