@@ -1,3 +1,220 @@
+  // ══════════════════════════════════════════════
+  // DATA, COLORS
+  // ══════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════
+// GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
+// ══════════════════════════════════════════════════════
+
+  const gruendeJa = [
+      { label: "Technische Innovation und interessante Projekte",   pct: 52 },
+      { label: "Finanzielle Günde",  pct: 47 },
+      { label: "Schutz demokratischer Werte und Sicherheit",  pct: 37 },
+      { label: "Berufliche Perspektiven (Karrierechancen)",                     pct: 36 },
+      { label: "Geopolitische Verantwortung Deutschlands/Europas",  pct: 26 },
+  ];
+
+  const gruendeNein = [
+      { label: "Moralische/Ethische Bedenken",               pct: 41 },
+      { label: "Politische Überzeugung",  pct: 16 },
+      { label: "Sicherheitsbedenken (Geheimhaltung, eingeschränkte Mobilität)", pct: 16 },
+      { label: "Unklare rechtliche Verantwortung",         pct: 14 },
+      { label: "Soziales Umfeld / Stigmatisierung / Erwartungen anderer",            pct: 11 },
+  ];
+
+const colorJa   = "var(--accent-light)";
+const colorNein = "#c8441a";
+
+
+ // ══════════════════════════════════════════════════════
+ // TENSION-SLIDER (ZUSTIMMUNG + SZENARIO)
+// ══════════════════════════════════════════════════════
+
+    // Zustimmung
+const messagesZustimmung = [
+  'Stimme überhaupt nicht zu',
+  'Stimme eher nicht zu',
+  'teils-teils',
+  'Stimme eher zu',
+  'Stimme voll und ganz zu',
+];
+const studyDataZustimmung = [29, 22, 16, 16, 17];
+
+    // Szenario
+const messagesSzenario = [
+  'Ich würde Angebot A (Ziviles Unternehmen) nehmen',
+  'Ich würde Angebot A (Ziviles Unternehmen) nehmen, aber der Gehaltsunterschied lässt mich zögern',
+  'Ich würde intensiv abwägen und beide Angebote in Betracht ziehen',
+  'Ich würde Angebot B (Rüstungsunternehmen) nehmen, weil das Gehalt ein legitimer Grund ist',
+  'Ich würde Angebot B (Rüstungsunternehmen) aus anderen Gründen wählen',
+];
+const studyDataSzenario = [10,16, 5, 41, 28];
+
+const sliderConfigs = {
+  zustimmung: {
+    messages: messagesZustimmung,
+    data: studyDataZustimmung,
+    ids: {
+      slider: 'tensionSlider',
+      fill: 'sliderFill',
+      num: 'tensionNum',
+      text: 'tensionText',
+      bars: 'comparisonBars',
+      compText: 'comparisonText',
+      resultBlock: 'tensionResultBlock'
+    }
+  },
+  szenario: {
+    messages: messagesSzenario,
+    data: studyDataSzenario,
+    ids: {
+      slider: 'tensionSliderScenario',
+      fill: 'sliderFillScenario',
+      num: 'tensionNumScenario',
+      text: 'tensionTextScenario',
+      bars: 'comparisonBarsScenario',
+      compText: 'comparisonTextScenario',
+      resultBlock: 'tensionResultBlockScenario'
+    }
+  }
+};
+// ══════════════════════════════════════════════════════
+// PRIORITÄTEN – VERGLEICH DE vs USA (FLIP-Animation)
+// ══════════════════════════════════════════════════════
+
+const combinedPriorityData = [
+  { label: "Interesse & Spaß\nan der Tätigkeit", de: 82, usa: 54 },
+  { label: "Gehalt",                              de: 76, usa: 66 },
+  { label: "Work-Life-Balance",                   de: 56, usa: 63 },
+  { label: "Gutes Arbeitsklima",                  de: 55, usa: 52 },
+  { label: "Jobsicherheit",                       de: 54, usa: 68 },
+  { label: "Karriere &\nAufstiegsmöglichkeiten",  de: 43, usa: 30 },
+  { label: "Übereinstimmung mit\nmoralischen Werten", de: 26, usa: 47 },
+  { label: "Gesellschaftlicher\nBeitrag",         de: 10, usa: 30 },
+];
+
+let colorPrimary   = "#c8441a";
+let colorSecondary = "#e0815f";
+let currentViewDE  = 'de';
+
+ // ══════════════════════════════════════════════════════
+    // DEUTSCHLAND KARTE
+ // ══════════════════════════════════════════════════════
+  const bundeslaender = {
+    "Hamburg": "29 Hochschulen, davon 3 mit Zivilklauseln.",
+    "Berlin": "49 Hochschulen, davon 2 mit Zivilklauseln.",
+    "Nordrhein-Westfalen": "79 Hochschulen. In Nordrhein-Westfalen ist die Situation rund um die Zivilklauseln durch eine dynamische politische Vergangenheit geprägt. 33 Hochschulen haben eine Zivilklausel.",
+    "Hessen": "43 Hochschulen, davon 5 mit Zivilklauseln.",
+    "Bayern": "59 Hochschulen. In Bayern wurde 2024 ein Verbot für Zivilklauseln an Hochschulen ausgesprochen.",
+    "Baden-Württemberg": "74 Hochschulen, davon 4 mit Zivilklauseln.",
+    "Schleswig-Holstein": "15 Hochschulen, davon 2 mit Zivilklauseln.",
+    "Mecklenburg-Vorpommern": "10 Hochschulen, davon eine mit Zivilklausel.",
+    "Brandenburg": "20 Hochschulen, davon 2 mit Zivilklauseln.",
+    "Sachsen-Anhalt": "11 Hochschulen, davon 2 mit Zivilklauseln. Staatliche Hochschulen sollen sich mit den Folgen ihrer Forschungsergebnisse auseinander setzen.",
+    "Sachsen": "25 Hochschulen, davon eine mit Zivilklausel.",
+    "Thüringen": "14 Hochschulen, davon 9 mit Zivilklauseln. Staatliche Hochschulen sollen geben sich selbstbestimmt eine Zivilklausel.",
+    "Rheinland-Pfalz": "23 Hochschulen, davon keine mit Zivilklausel.",
+    "Saarland": "7 Hochschulen, davon keine mit Zivilklausel.",
+    "Bremen": "9 Hochschulen, davon 3 mit Zivilklausel. Staatliche Hochschulen sind zu einer Zivilklausel verpflichtet.",
+    "Niedersachsen": "32 Hochschulen, davon 4 mit Zivilklauseln."
+  };
+
+  // Zivilklausel-Abdeckung pro Bundesland (Prozentsatz)
+  const zivilklauselDaten = {
+    "Hamburg": 3/29,
+    "Berlin": 2/49,
+    "Nordrhein-Westfalen": 33/79,
+    "Hessen": 5/43,
+    "Bayern": 0/59,
+    "Baden-Württemberg": 4/74,
+    "Schleswig-Holstein": 2/15,
+    "Mecklenburg-Vorpommern": 1/10,
+    "Brandenburg": 2/20,
+    "Sachsen-Anhalt": 2/11,
+    "Sachsen": 1/25,
+    "Thüringen": 9/14,
+    "Rheinland-Pfalz": 0/23,
+    "Saarland": 0/7,
+    "Bremen": 3/9,
+    "Niedersachsen": 4/32
+  };
+
+// ══════════════════════════════════════════════
+// ── UMFRAGE DIAGRAMM ──
+// ══════════════════════════════════════════════
+const umfrageData = [
+  { label: 'Gesamt',                     group: 'all',        garNicht: 9,  eherNicht: 8,  ambivalent: 33, eherZu: 28, sehrStark: 22 },
+  { label: 'Männer',                     group: 'geschlecht', garNicht: 9,  eherNicht: 7,  ambivalent: 24, eherZu: 31, sehrStark: 29 },
+  { label: 'Frauen',                     group: 'geschlecht', garNicht: 9,  eherNicht: 9,  ambivalent: 42, eherZu: 25, sehrStark: 14 },
+  { label: '16–34 Jahre',                group: 'alter',      garNicht: 9,  eherNicht: 10, ambivalent: 37, eherZu: 29, sehrStark: 15 },
+  { label: '35–64 Jahre',                group: 'alter',      garNicht: 10, eherNicht: 7,  ambivalent: 33, eherZu: 27, sehrStark: 23 },
+  { label: '65 Jahre und älter',         group: 'alter',      garNicht: 8,  eherNicht: 9,  ambivalent: 27, eherZu: 29, sehrStark: 27 },
+];
+const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
+let umfrageCurrentGroup = 'all';
+let umfrageCurrentView  = 'stacked';
+
+// ══════════════════════════════════════════════
+// ── NUTZEN VS. RISIKO: BUTTERFLY-DIAGRAMM ──
+// ══════════════════════════════════════════════
+
+const nutzenRisikoData = [
+  { label: 'Männer',             group: 'geschlecht', nuetzlich: 22, riskant: 4 },
+  { label: 'Frauen',             group: 'geschlecht', nuetzlich: 14, riskant: 4 },
+  { label: '16–34 Jahre',        group: 'alter',       nuetzlich: 13, riskant: 4 },
+  { label: '35–64 Jahre',        group: 'alter',       nuetzlich: 18, riskant: 3 },
+  { label: '65 Jahre und älter', group: 'alter',       nuetzlich: 25, riskant: 5 },
+];
+
+let nutzenRisikoCurrentGroup = 'all';
+
+// ══════════════════════════════════════════════
+// DATEN UND VISUALISIERUNG FÜR VERANTWORTUNG
+// ══════════════════════════════════════════════
+
+const CSV_PATH = 'data/rohdaten.csv';
+
+const VERANTWORTUNG_COLS = [
+  { key: 'ingenieur',    label: 'Ingenieur*in selbst' },
+  { key: 'arbeitgeber',  label: 'Arbeitgeber' },
+  { key: 'gesetzgeber',  label: 'Gesetzgeber / Politik' },
+  { key: 'auftraggeber', label: 'Auftraggeber' },
+  { key: 'gesellschaft', label: 'Gesellschaft als Ganzes' },
+];
+
+let allRows = [];
+
+// Aktive Filter — mehrere gleichzeitig möglich
+let activeFilters = { geschlecht: null, studiengang: null, alter: null };
+
+const COL_GESCHLECHT  = 2;
+const COL_ALTER       = 3;
+const COL_STUDIENGANG = 14;
+const COL_V_START     = 34;
+
+
+// ══════════════════════════════════════════════════════
+// DUMBBELL-CHART: VOLLE ZUSTIMMUNG NACH GESCHLECHT
+// ══════════════════════════════════════════════════════
+const gewissenLabels = [
+    '„Ich kann mir vorstellen, im Rüstungs-/Verteidigungsbereich zu arbeiten."',
+    '„Ich hätte Gewissenskonflikte, wenn ich im Defense-Bereich arbeiten würde."',
+    '„(Berufs)ethik bietet für mich eine Orientierung für mein Handeln."',
+];
+const gewissenMaenner = [40.1, 12.3, 6.8];
+const gewissenFrauen  = [11.3, 28.8, 17.5];
+const DUMBBELL_SCALE_MAX = 45;
+
+
+
+  // ══════════════════════════════════════════════
+  // FUNCTIONS
+  // ══════════════════════════════════════════════
+
+ // ══════════════════════════════════════════════
+ // Ethik Counter Animation (Zahlen hochzählen beim Scrollen)
+ // ══════════════════════════════════════════════
+
   function safeTooltipPos(tooltip, clientX, clientY) {
   const isMobile = window.innerWidth <= 600;
   if (isMobile) {
@@ -86,27 +303,8 @@ function animateDumbbellRow(row) {
 }
 
 // ══════════════════════════════════════════════
-// DATEN FÜR GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
+// GRÜNDE FÜR/GEGEN VERTEIDIGUNGSJOBS
 // ══════════════════════════════════════════════
-const gruendeJa = [
-    { label: "Technische Innovation und interessante Projekte",   pct: 52 },
-    { label: "Finanzielle Günde",  pct: 47 },
-    { label: "Schutz demokratischer Werte und Sicherheit",  pct: 37 },
-    { label: "Berufliche Perspektiven (Karrierechancen)",                     pct: 36 },
-    { label: "Geopolitische Verantwortung Deutschlands/Europas",  pct: 26 },
-];
-
-const gruendeNein = [
-    { label: "Moralische/Ethische Bedenken",               pct: 41 },
-    { label: "Politische Überzeugung",  pct: 16 },
-    { label: "Sicherheitsbedenken (Geheimhaltung, eingeschränkte Mobilität)", pct: 16 },
-    { label: "Unklare rechtliche Verantwortung",         pct: 14 },
-    { label: "Soziales Umfeld / Stigmatisierung / Erwartungen anderer",            pct: 11 },
-];
-
-const colorJa   = "var(--accent-light)";
-const colorNein = "#c8441a";
-
 function buildReasonBars(containerId, data, color) {
     const container = document.getElementById(containerId);
     if (!container) {
@@ -133,7 +331,6 @@ row.innerHTML = `
         container.appendChild(row);
     });
 }
-
 
 buildReasonBars('bars-ja',   gruendeJa,   colorJa);
 buildReasonBars('bars-nein', gruendeNein, colorNein);
@@ -162,42 +359,12 @@ if ('IntersectionObserver' in window) {
     toggleDemoObserver.observe(document.querySelector('.toggle-question'));
 }
 
-// ══════════════════════════════════════════════
-// OPINION EXPLORER
-// ══════════════════════════════════════════════
-
-const opinionData = [
-  {
-    id: 0,
-    value: 48,
-    title: "Auch auf dem Schlachtfeld",
-    desc: "Ich unterstütze militärische Nutzung aktiv.",
-    color: "#3d2d6e"
-  },
-  {
-    id: 1,
-    value: 31,
-    title: "Nur defensive Nutzung",
-    desc: "Ich unterstütze nur nicht-kampforientierte Anwendungen.",
-    color: "#7F77DD"
-  },
-  {
-    id: 2,
-    value: 21,
-    title: "Lehnt ab",
-    desc: "Ich lehne Rüstungsaufträge grundsätzlich ab.",
-    color: "#AFA9EC"
-  }
-];
-
-let activeOpinion = null;
 
 // ══════════════════════════════════════
-// INIT
+// TENSION SLIDERS (ZUSTIMMUNG + SZENARIO)
 // ══════════════════════════════════════
 window.addEventListener("DOMContentLoaded", () => {
     setActiveOpinion(null);
-
 
   // Beim initialisieren — Ergebnis-Block verstecken
   const tensionResultelement = document.getElementById('tensionResult');
@@ -205,7 +372,6 @@ window.addEventListener("DOMContentLoaded", () => {
       tensionResultelement.style.opacity = '0';
       tensionResultelement.style.transition = 'opacity 0.6s ease';
   }
-
 
   let tensionTouched = false;
 
@@ -217,14 +383,11 @@ window.addEventListener("DOMContentLoaded", () => {
       resultBlock.style.opacity = '1';
     }
   }
-
-  // allow keyboard users to reset selection with Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') setActiveOpinion(null);
   });
 });
 
-// ══════════════════════════════════════
 // INTERACTION
 // ══════════════════════════════════════
 function setActiveOpinion(id) {
@@ -246,11 +409,8 @@ function setActiveOpinion(id) {
       c.setAttribute('aria-pressed', activeNow ? 'true' : 'false');
     }
   });
-
-
   updateInsight(id);
 
-  // position the floating insight under the active circle (if any)
   const floatEl = document.getElementById('opinion-float-insight');
   if (!floatEl) return;
   if (id === null) {
@@ -258,14 +418,11 @@ function setActiveOpinion(id) {
   } else {
     const activeCircle = document.querySelector(`.opinion-circle[data-id="${id}"]`);
     if (activeCircle) positionFloatingInsight(activeCircle);
-    // after positioning, ensure the floating box is visible in the viewport
     const f = document.getElementById('opinion-float-insight');
     if (f) ensureVisibleInViewport(f);
   }
 }
 
-// Zum bestehenden IntersectionObserver hinzufügen
-// oder als eigenen Block einfügen:
 const chapterBreak = document.querySelector('.chapter-break');
 if (chapterBreak) {
   const cbObs = new IntersectionObserver(entries => {
@@ -279,11 +436,9 @@ if (chapterBreak) {
   cbObs.observe(chapterBreak);
 }
 
-// ══════════════════════════════════════
 // INSIGHT TEXT (Story Layer)
 // ══════════════════════════════════════
 function updateInsight(id) {
-  // We no longer render details under #stacked-legend — show them only in the floating insight
   const target = document.getElementById("stacked-legend");
   if (target) target.innerHTML = ""; // clear legacy legend content
 
@@ -297,7 +452,6 @@ function updateInsight(id) {
   }
 
   const item = opinionData[id];
-  // write the original detailed HTML into the floating insight only
   floatEl.innerHTML = `
     <div class="opinion-insight active">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
@@ -309,67 +463,12 @@ function updateInsight(id) {
   `;
 }
 
-// ── Tension sliders (zwei separate Skalen) ──
-// Zustimmung
-
-const messagesZustimmung = [
-  'Stimme überhaupt nicht zu',
-  'Stimme eher nicht zu',
-  'teils-teils',
-  'Stimme eher zu',
-  'Stimme voll und ganz zu',
-];
-const studyDataZustimmung = [29, 22, 16, 16, 17];
-
-// Szenario
-const messagesSzenario = [
-  'Ich würde Angebot A (Ziviles Unternehmen) nehmen',
-  'Ich würde Angebot A (Ziviles Unternehmen) nehmen, aber der Gehaltsunterschied lässt mich zögern',
-  'Ich würde intensiv abwägen und beide Angebote in Betracht ziehen',
-  'Ich würde Angebot B (Rüstungsunternehmen) nehmen, weil das Gehalt ein legitimer Grund ist',
-  'Ich würde Angebot B (Rüstungsunternehmen) aus anderen Gründen wählen',
-];
-const studyDataSzenario = [10,16, 5, 41, 28];
-
-const sliderConfigs = {
-  zustimmung: {
-    messages: messagesZustimmung,
-    data: studyDataZustimmung,
-    ids: {
-      slider: 'tensionSlider',
-      fill: 'sliderFill',
-      num: 'tensionNum',
-      text: 'tensionText',
-      bars: 'comparisonBars',
-      compText: 'comparisonText',
-      resultBlock: 'tensionResultBlock'
-    }
-  },
-  szenario: {
-    messages: messagesSzenario,
-    data: studyDataSzenario,
-    ids: {
-      slider: 'tensionSliderScenario',
-      fill: 'sliderFillScenario',
-      num: 'tensionNumScenario',
-      text: 'tensionTextScenario',
-      bars: 'comparisonBarsScenario',
-      compText: 'comparisonTextScenario',
-      resultBlock: 'tensionResultBlockScenario'
-    }
-  }
-
-};
-
-
-
 function buildComparisonBarsFor(containerId, data, prefix) {
   const wrap = document.getElementById(containerId);
   if (!wrap) return;
   const max = Math.max(...data);
   wrap.innerHTML = data.map((val, i) => {
     const h = Math.round((val / max) * 100);
-    // id namespaced by prefix to avoid collision
     return `<div class="comp-bar" id="${containerId}-bar-${i}" style="height:0%" data-target-height="${h}"></div>`;
   }).join('');
 }
@@ -390,7 +489,6 @@ function updateTensionFor(key, v) {
     v = s ? parseInt(s.value) : Math.round((scaleMin + scaleMax) / 2);
   } else {
     v = parseInt(v);
-    // Wenn der Slider bewegt wird, füge .touched Klasse hinzu
     if (ids.resultBlock) {
       const resultBlock = document.getElementById(ids.resultBlock);
       if (resultBlock && !resultBlock.classList.contains('touched')) {
@@ -398,8 +496,6 @@ function updateTensionFor(key, v) {
       }
     }
   }
-
-  // clamp index to valid range to avoid undefined messages or studyData
   let idx = v - scaleMin;
   if (idx < 0) idx = 0;
   if (idx > messages.length - 1) idx = messages.length - 1;
@@ -407,22 +503,18 @@ function updateTensionFor(key, v) {
   const span = scaleMax - scaleMin;
   const fillEl = document.getElementById(ids.fill);
   if (fillEl) {
-    // Scope the track to this slider's wrapper so multiple sliders don't interfere
     const sliderEl = document.getElementById(ids.slider);
     let trackEl = null;
     if (sliderEl) {
       const wrap = sliderEl.closest('.slider-track-wrap');
       if (wrap) trackEl = wrap.querySelector('.slider-track');
     }
-
-    // Compute thumb width dynamically from slider height (robust across browsers)
     let thumbWidth = 18;
     if (sliderEl) {
       try {
         const h = sliderEl.getBoundingClientRect().height;
         if (h && !Number.isNaN(h)) thumbWidth = Math.max(8, Math.round(h * 0.75));
       } catch (e) {
-        // fallback to default
       }
     }
 
@@ -461,7 +553,6 @@ if (textEl && textEl.dataset.touched === 'true') {
 }
 
 window.addEventListener('load', () => {
-  // ── Fade-in observer for general elements with class .fade-in (make content appear while scrolling)
   const fadeEls = document.querySelectorAll('.fade-in');
   if (fadeEls.length) {
     if ('IntersectionObserver' in window) {
@@ -479,7 +570,6 @@ window.addEventListener('load', () => {
       fadeEls.forEach(el => { el.classList.add('visible'); animateBarFills(el); });
     }
   }
-  // Setup für beide Slider-Konfigurationen
   Object.keys(sliderConfigs).forEach(key => {
     const cfg = sliderConfigs[key];
     const ids = cfg.ids;
@@ -492,15 +582,12 @@ window.addEventListener('load', () => {
       sliderEl.min = scaleMinLocal;
       sliderEl.max = scaleMaxLocal;
       if (!sliderEl.value) sliderEl.value = Math.round((scaleMinLocal + scaleMaxLocal) / 2);
-      // attach inline change handler to call update function (also supports keyboard)
       sliderEl.addEventListener('input', (e) => {
   const textEl = document.getElementById(ids.text);
   if (textEl) textEl.dataset.touched = 'true';
   updateTensionFor(key, e.target.value);
 });
     }
-
-
     buildComparisonBarsFor(ids.bars, cfg.data, key);
     updateTensionFor(key);
   });
@@ -567,7 +654,6 @@ if (compassBreak) {
       }
       lastY = y;
     }
-
     window.addEventListener('scroll', () => {
       if (!ticking) {
         requestAnimationFrame(() => { handleScroll(); ticking = false; });
@@ -578,21 +664,10 @@ if (compassBreak) {
 });
 
 
+// ══════════════════════════════════════════════
 // PRIORITÄTEN – VERGLEICH DE vs USA (FLIP-Animation)
-const combinedPriorityData = [
-  { label: "Interesse & Spaß\nan der Tätigkeit", de: 82, usa: 54 },
-  { label: "Gehalt",                              de: 76, usa: 66 },
-  { label: "Work-Life-Balance",                   de: 56, usa: 63 },
-  { label: "Gutes Arbeitsklima",                  de: 55, usa: 52 },
-  { label: "Jobsicherheit",                       de: 54, usa: 68 },
-  { label: "Karriere &\nAufstiegsmöglichkeiten",  de: 43, usa: 30 },
-  { label: "Übereinstimmung mit\nmoralischen Werten", de: 26, usa: 47 },
-  { label: "Gesellschaftlicher\nBeitrag",         de: 10, usa: 30 },
-];
+// ══════════════════════════════════════════════
 
-let colorPrimary   = "#c8441a";
-let colorSecondary = "#e0815f";
-let currentViewDE  = 'de';
 
 const chartDE = document.getElementById('priority-chart-de');
 if (chartDE) {
@@ -635,7 +710,6 @@ if (chartDE) {
   rowWrapper.style.position = 'relative';
   chartDE.appendChild(rowWrapper);
 
-  // Initial rendern
   buildRows('de');
 }
 
@@ -722,11 +796,8 @@ function flipSort(view) {
 
   const blocks = [...rowWrapper.querySelectorAll('[data-key]')];
 
-  // FLIP Schritt 1: Positionen vorher messen
   const before = {};
   blocks.forEach(b => { before[b.dataset.key] = b.getBoundingClientRect().top; });
-
-  // Schritt 2: DOM neu sortieren
   const sorted = [...combinedPriorityData].sort((a, b) =>
     view === 'de' ? b.de - a.de : b.usa - a.usa
   );
@@ -734,19 +805,13 @@ function flipSort(view) {
     const block = blocks.find(b => b.dataset.key === item.label);
     if (block) rowWrapper.appendChild(block);
   });
-
-  // Schritt 3: Positionen nachher messen
   const after = {};
   blocks.forEach(b => { after[b.dataset.key] = b.getBoundingClientRect().top; });
-
-  // Schritt 4: Zurücksetzen ohne Animation
   blocks.forEach(b => {
     const delta = before[b.dataset.key] - after[b.dataset.key];
     b.style.transition = 'none';
     b.style.transform  = `translateY(${delta}px)`;
   });
-
-  // Schritt 5: Fliegen lassen
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       blocks.forEach(b => {
@@ -755,16 +820,14 @@ function flipSort(view) {
       });
     });
   });
-
-  // Schritt 6: Nach Animation Farben neu rendern
   setTimeout(() => {
     buildRows(view, true);
   }, 600);
 }
 
  // ══════════════════════════════════════════════════════
-    // DEUTSCHLAND KARTE (MIT TOOLTIP)
-    // ══════════════════════════════════════════════════════
+ // DEUTSCHLAND KARTE (MIT TOOLTIP)
+// ══════════════════════════════════════════════════════
 
 const svgEl = document.getElementById('deutschland-svg');
 const tooltip = document.getElementById('map-tooltip');
@@ -794,7 +857,7 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
     ].join(" "));
 
     const svg = d3.select("#deutschland-svg");
-    
+
     // SVG Pattern für gestrichelte Fläche (Verbot)
     svg.append("defs")
       .append("pattern")
@@ -810,7 +873,7 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
       .attr("y2", 6)
       .attr("stroke", "#c8441a")
       .attr("stroke-width", 2);
-    
+
     // Farbskala für Zivilklausel-Abdeckung: hell (0%) → dunkel (50%+)
     const colorScale = d3.scaleLinear()
       .domain([0, 0.5])
@@ -855,45 +918,6 @@ fetch("https://raw.githubusercontent.com/isellsoap/deutschlandGeoJSON/main/2_bun
     console.error('Fehler beim Laden der Karte:', err);
   });
 
-  const bundeslaender = {
-    "Hamburg": "29 Hochschulen, davon 3 mit Zivilklauseln.",
-    "Berlin": "49 Hochschulen, davon 2 mit Zivilklauseln.",
-    "Nordrhein-Westfalen": "79 Hochschulen. In Nordrhein-Westfalen ist die Situation rund um die Zivilklauseln durch eine dynamische politische Vergangenheit geprägt. 33 Hochschulen haben eine Zivilklausel.",
-    "Hessen": "43 Hochschulen, davon 5 mit Zivilklauseln.",
-    "Bayern": "59 Hochschulen. In Bayern wurde 2024 ein Verbot für Zivilklauseln an Hochschulen ausgesprochen.",
-    "Baden-Württemberg": "74 Hochschulen, davon 4 mit Zivilklauseln.",
-    "Schleswig-Holstein": "15 Hochschulen, davon 2 mit Zivilklauseln.",
-    "Mecklenburg-Vorpommern": "10 Hochschulen, davon eine mit Zivilklausel.",
-    "Brandenburg": "20 Hochschulen, davon 2 mit Zivilklauseln.",
-    "Sachsen-Anhalt": "11 Hochschulen, davon 2 mit Zivilklauseln. Staatliche Hochschulen sollen sich mit den Folgen ihrer Forschungsergebnisse auseinander setzen.",
-    "Sachsen": "25 Hochschulen, davon eine mit Zivilklausel.",
-    "Thüringen": "14 Hochschulen, davon 9 mit Zivilklauseln. Staatliche Hochschulen sollen geben sich selbstbestimmt eine Zivilklausel.",
-    "Rheinland-Pfalz": "23 Hochschulen, davon keine mit Zivilklausel.",
-    "Saarland": "7 Hochschulen, davon keine mit Zivilklausel.",
-    "Bremen": "9 Hochschulen, davon 3 mit Zivilklausel. Staatliche Hochschulen sind zu einer Zivilklausel verpflichtet.",
-    "Niedersachsen": "32 Hochschulen, davon 4 mit Zivilklauseln."
-  };
-
-  // Zivilklausel-Abdeckung pro Bundesland (Prozentsatz)
-  const zivilklauselDaten = {
-    "Hamburg": 3/29,
-    "Berlin": 2/49,
-    "Nordrhein-Westfalen": 33/79,
-    "Hessen": 5/43,
-    "Bayern": 0/59,
-    "Baden-Württemberg": 4/74,
-    "Schleswig-Holstein": 2/15,
-    "Mecklenburg-Vorpommern": 1/10,
-    "Brandenburg": 2/20,
-    "Sachsen-Anhalt": 2/11,
-    "Sachsen": 1/25,
-    "Thüringen": 9/14,
-    "Rheinland-Pfalz": 0/23,
-    "Saarland": 0/7,
-    "Bremen": 3/9,
-    "Niedersachsen": 4/32
-  };
-
 function positionTooltip(e) {
   const rect = mapBlock.getBoundingClientRect();
   const ttW = 230;
@@ -902,13 +926,9 @@ function positionTooltip(e) {
   let x = e.clientX - rect.left + 14;
   let y = e.clientY - rect.top - 10;
 
-  // rechter Rand
   if (x + ttW > rect.width) x = rect.width - ttW - 8;
-  // linker Rand
   if (x < 8) x = 8;
-  // unterer Rand
   if (y + ttH > rect.height) y = rect.height - ttH - 8;
-  // oberer Rand
   if (y < 8) y = 8;
 
   tooltip.style.left = x + 'px';
@@ -917,19 +937,11 @@ function positionTooltip(e) {
 window.addEventListener('scroll', () => {
   if (tooltip) tooltip.classList.remove('visible');
 }, { passive: true });
-   // ── UMFRAGE DIAGRAMM ──
 
-const umfrageData = [
-  { label: 'Gesamt',                     group: 'all',        garNicht: 9,  eherNicht: 8,  ambivalent: 33, eherZu: 28, sehrStark: 22 },
-  { label: 'Männer',                     group: 'geschlecht', garNicht: 9,  eherNicht: 7,  ambivalent: 24, eherZu: 31, sehrStark: 29 },
-  { label: 'Frauen',                     group: 'geschlecht', garNicht: 9,  eherNicht: 9,  ambivalent: 42, eherZu: 25, sehrStark: 14 },
-  { label: '16–34 Jahre',                group: 'alter',      garNicht: 9,  eherNicht: 10, ambivalent: 37, eherZu: 29, sehrStark: 15 },
-  { label: '35–64 Jahre',                group: 'alter',      garNicht: 10, eherNicht: 7,  ambivalent: 33, eherZu: 27, sehrStark: 23 },
-  { label: '65 Jahre und älter',         group: 'alter',      garNicht: 8,  eherNicht: 9,  ambivalent: 27, eherZu: 29, sehrStark: 27 },
-];
-const COLORS = ['#c8441a','#d4623d','#e0815f','#eba98e','#f5d4c4'];
-let umfrageCurrentGroup = 'all';
-let umfrageCurrentView  = 'stacked';
+
+// ══════════════════════════════════════════════
+// UMFRAGE-CHART (BALKEN + NETTO)
+// ══════════════════════════════════════════════
 
 function umfrageGetFiltered() {
   if (umfrageCurrentGroup === 'all') return umfrageData;
@@ -1043,18 +1055,10 @@ function umfrageView(view, btn) {
 
 umfrageRender();
 animateUmfrageChart(document.getElementById('umfrage-chart'));
-   // ── NUTZEN VS. RISIKO: BUTTERFLY-DIAGRAMM ──
-   // Quelle: acatech/TechnikRadar 2025, N = 2.003 — Anteil "sehr nützlich" vs. "sehr riskant"
 
-const nutzenRisikoData = [
-  { label: 'Männer',             group: 'geschlecht', nuetzlich: 22, riskant: 4 },
-  { label: 'Frauen',             group: 'geschlecht', nuetzlich: 14, riskant: 4 },
-  { label: '16–34 Jahre',        group: 'alter',       nuetzlich: 13, riskant: 4 },
-  { label: '35–64 Jahre',        group: 'alter',       nuetzlich: 18, riskant: 3 },
-  { label: '65 Jahre und älter', group: 'alter',       nuetzlich: 25, riskant: 5 },
-];
-
-let nutzenRisikoCurrentGroup = 'all';
+// ══════════════════════════════════════════════
+// ── NUTZEN VS. RISIKO: BUTTERFLY-DIAGRAMM ──
+// ══════════════════════════════════════════════
 
 function nutzenRisikoGetFiltered() {
   if (nutzenRisikoCurrentGroup === 'all') return nutzenRisikoData;
@@ -1066,7 +1070,6 @@ function nutzenRisikoRender() {
   const container = document.getElementById('nutzenrisiko-rows');
   container.innerHTML = '';
 
-  // größter Wert füllt 90% der Halbspur, Rest ist Luft für die Prozent-Beschriftung
   const maxVal = Math.max(...data.flatMap(d => [d.nuetzlich, d.riskant]), 1);
   const scale = 90 / maxVal;
 
@@ -1103,8 +1106,6 @@ nutzenRisikoRender();
 
 // ══════════════════════════════════════════════════════
 // DUMBBELL-CHART: VOLLE ZUSTIMMUNG NACH GESCHLECHT
-// Drei zentrale Einstellungsdimensionen, jeweils nur der Anteil,
-// der voll und ganz zustimmt (Skalenwert 5/5):
 //   Frage 12: "Ich kann mir vorstellen, in einem Unternehmen oder
 //              Projekt mit Bezug zum Rüstungs-/Verteidigungsbereich
 //              zu arbeiten."
@@ -1112,22 +1113,10 @@ nutzenRisikoRender();
 //              Defense-Bereich arbeiten würde."
 //   Frage 11: "(Berufs)ethik bietet für mich eine Orientierung
 //              für mein Handeln."
-// Quelle: Eigene Umfrage, n = 242 (162 männlich / 80 weiblich).
-// 1 Person "Divers" wird aus Anonymitätsgründen bei dieser
-// Zwei-Gruppen-Aufschlüsselung nicht separat ausgewiesen.
 // ══════════════════════════════════════════════════════
-const gewissenLabels = [
-    '„Ich kann mir vorstellen, im Rüstungs-/Verteidigungsbereich zu arbeiten."',
-    '„Ich hätte Gewissenskonflikte, wenn ich im Defense-Bereich arbeiten würde."',
-    '„(Berufs)ethik bietet für mich eine Orientierung für mein Handeln."',
-];
-const gewissenMaenner = [40.1, 12.3, 6.8];
-const gewissenFrauen  = [11.3, 28.8, 17.5];
-const DUMBBELL_SCALE_MAX = 45; // Achsen-Obergrenze in %
 
-// Erzeugt Delta-Betrag + erklärenden Satz für den Tap-Callout einer Zeile
 function gewissenCalloutText(m, f) {
-    const diff = m - f; // positiv = mehr Männer, negativ = mehr Frauen
+    const diff = m - f;
     const abs = Math.round(Math.abs(diff));
     if (abs < 2) {
         return { abs, text: 'Männer und Frauen stimmen hier fast gleich häufig voll zu.', dominant: 'neutral' };
@@ -1188,25 +1177,6 @@ buildGewissenDumbbell();
 // DATEN UND VISUALISIERUNG FÜR VERANTWORTUNG
 // ══════════════════════════════════════════════
 
-const CSV_PATH = 'data/rohdaten.csv';
-
-const VERANTWORTUNG_COLS = [
-  { key: 'ingenieur',    label: 'Ingenieur*in selbst' },
-  { key: 'arbeitgeber',  label: 'Arbeitgeber' },
-  { key: 'gesetzgeber',  label: 'Gesetzgeber / Politik' },
-  { key: 'auftraggeber', label: 'Auftraggeber' },
-  { key: 'gesellschaft', label: 'Gesellschaft als Ganzes' },
-];
-
-let allRows = [];
-
-// Aktive Filter — mehrere gleichzeitig möglich
-let activeFilters = { geschlecht: null, studiengang: null, alter: null };
-
-const COL_GESCHLECHT  = 2;
-const COL_ALTER       = 3;
-const COL_STUDIENGANG = 14;
-const COL_V_START     = 34;
 
 Papa.parse(CSV_PATH, {
   download: true,
