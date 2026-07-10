@@ -610,19 +610,33 @@ window.addEventListener('load', () => {
     const scaleMinLocal = 1;
     const scaleMaxLocal = messages.length;
 
-    const sliderEl = document.getElementById(ids.slider);
-    if (sliderEl) {
-      sliderEl.min = scaleMinLocal;
-      sliderEl.max = scaleMaxLocal;
-      if (!sliderEl.value) sliderEl.value = Math.round((scaleMinLocal + scaleMaxLocal) / 2);
-      sliderEl.addEventListener('input', (e) => {
-  const textEl = document.getElementById(ids.text);
-  if (textEl) textEl.dataset.touched = 'true';
-  updateTensionFor(key, e.target.value);
-});
-    }
-    buildComparisonBarsFor(ids.bars, cfg.data, key);
-    updateTensionFor(key);
+const sliderEl = document.getElementById(ids.slider);
+if (sliderEl) {
+  sliderEl.min = scaleMinLocal;
+  sliderEl.max = scaleMaxLocal;
+  if (!sliderEl.value) sliderEl.value = Math.round((scaleMinLocal + scaleMaxLocal) / 2);
+  
+  const markTouched = (e) => {
+    const textEl = document.getElementById(ids.text);
+    if (textEl) textEl.dataset.touched = 'true';
+    updateTensionFor(key, e.target.value);
+  };
+
+  sliderEl.addEventListener('input', markTouched);
+  sliderEl.addEventListener('mousedown', () => {
+    const textEl = document.getElementById(ids.text);
+    if (textEl) textEl.dataset.touched = 'true';
+    updateTensionFor(key, sliderEl.value);
+  });
+  sliderEl.addEventListener('touchstart', () => {
+    const textEl = document.getElementById(ids.text);
+    if (textEl) textEl.dataset.touched = 'true';
+    updateTensionFor(key, sliderEl.value);
+  }, { passive: true });
+}
+
+buildComparisonBarsFor(ids.bars, cfg.data, key);
+updateTensionFor(key);
   });
 
   // ── Fade-in für alle fullscreen-inner Elemente (sichtbar machen, wenn sie in den Viewport kommen)
