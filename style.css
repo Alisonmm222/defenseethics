@@ -2941,6 +2941,22 @@ input[type=range].tension-slider::-ms-track {
 .chart-header p {
   font-size: 12px;
 }
+.heatmap-wrapper{
+    overflow: visible;
+}
+@media (max-width:768px){
+
+    .heatmap-wrapper{
+        overflow-x:auto;
+        overflow-y:auto;   /* wichtig */
+        -webkit-overflow-scrolling:touch;
+    }
+
+    .heatmap-grid{
+        min-width:520px;
+    }
+
+}
 
 /* ── DOT PLOT ── */
 .dotplot-filters {
