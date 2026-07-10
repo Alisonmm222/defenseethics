@@ -193,6 +193,7 @@ const COL_STUDIENGANG = 14;
 const COL_V_START     = 34;
 
 
+
 // ══════════════════════════════════════════════════════
 // DUMBBELL-CHART: VOLLE ZUSTIMMUNG NACH GESCHLECHT
 // ══════════════════════════════════════════════════════
