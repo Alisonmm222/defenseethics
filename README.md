@@ -17,10 +17,11 @@ Die Seite ist als responsive, statische HTML/CSS/JavaScript-Anwendung umgesetzt.
 ## Projektstruktur
 
 ```
+├── icons/          # Favicons und Bildsymbole
+├── data/           # Datenquelle
 ├── index.html      # Einstiegspunkt der Website
 ├── style.css       # Layout, Typografie und responsive Regeln
 ├── index.js        # Interaktive Komponenten, Daten-Rendering und Observer-Logik
-├── icons/          # Favicons und Bildsymbole
 ├── README.md       # Projektbeschreibung und Reproduzierbarkeit
 ```
 
