@@ -89,6 +89,8 @@
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/sourceserif4/v14/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUHf6OAVIJmeUDygwjisltrhw.ttf) format('truetype');
 }
+
+
 @keyframes needle-swing {
     0%   { transform: rotate(0deg);    }
     15%  { transform: rotate(35deg);   }
@@ -388,6 +390,13 @@ main.article {
   letter-spacing: 0.07em;
   color: #1a1814;
   text-align: center;
+}
+.priority-bar-fill span {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cream);
+  padding-right: 7px;
 }
 
 .priority-row {
