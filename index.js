@@ -1419,12 +1419,29 @@ function renderChart(rows) {
     }
 
     // Balken animieren
-    const fill = row.querySelector('.race-fill');
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      fill.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-      fill.style.width = `${((maxAvg - item.avg) / (maxAvg - 1)) * 100}%`;
-      fill.querySelector('span').textContent = `Ø ${item.avg}`;
-    }));
+  const fill = row.querySelector('.race-fill');
+const track = row.querySelector('.race-track');
+track.style.overflow = 'visible';
+fill.style.position = 'relative';
+fill.style.overflow = 'visible';
+
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  const width = ((maxAvg - item.avg) / (maxAvg - 1)) * 100;
+  fill.style.transition = 'width 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+  fill.style.width = `${width}%`;
+
+  const span = fill.querySelector('span');
+  span.textContent = `Ø ${item.avg}`;
+
+  const isNarrow = width < 30;
+  span.style.position = isNarrow ? 'absolute' : 'static';
+  span.style.left = isNarrow ? 'calc(100% + 6px)' : 'auto';
+  span.style.top = isNarrow ? '50%' : 'auto';
+  span.style.transform = isNarrow ? 'translateY(-50%)' : 'none';
+  span.style.color = isNarrow ? 'var(--accent)' : 'var(--cream)';
+  span.style.paddingRight = isNarrow ? '0' : '8px';
+  span.style.whiteSpace = 'nowrap';
+}));
   });
 
   absEl.innerHTML = counts.map(item => `
